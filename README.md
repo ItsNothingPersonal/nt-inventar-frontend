@@ -50,7 +50,7 @@ Server starten
 
 Hilfe wird immer gern gesehen! Einfach das Projekt forken, Änderungen einfügen und dann einen Pullrequest stellen!
 
-Bitte haltet euch dabei an den [Verhaltenscodex](Code_of_Conduct.md).
+Bitte haltet euch dabei an den [Verhaltenscodex](CODE_OF_CONDUCT.md).
 
 ## Acknowledgements
 
