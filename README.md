@@ -10,8 +10,9 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 
 ## Roadmap
 
-- Versand der Registrierungsmail
 - Eingabemasken für Pflege des Inventars
+- Versand der Registrierungsmail
+- Mobile-Ansicht
 
 ## Umgebungsvariablen
 
