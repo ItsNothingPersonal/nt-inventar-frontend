@@ -1,3 +1,5 @@
+import { PUBLIC_PB_BASE_URL } from '$env/static/public';
+
 export function isNullOrUndefined<T>(obj: T | null | undefined): obj is null | undefined {
 	return typeof obj === 'undefined' || obj === null;
 }
@@ -17,5 +19,5 @@ export function getImageURL(
 	fileName: string,
 	size = '0x0'
 ): string {
-	return `http://localhost:8090/api/files/${collectionId}/${recordId}/${fileName}?thumb=${size}`;
+	return `${PUBLIC_PB_BASE_URL}/api/files/${collectionId}/${recordId}/${fileName}?thumb=${size}`;
 }
