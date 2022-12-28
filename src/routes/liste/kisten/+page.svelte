@@ -4,12 +4,14 @@
 	export let data: PageData;
 </script>
 
-<DataTable
-	data={data.kisten}
-	dataFields={[
-		{ name: 'name' },
-		{ name: 'projekt', isExpanded: true, fieldName: 'name' },
-		{ name: 'lagerort', isExpanded: true, fieldName: 'name' }
-	]}
-	tableHeaders={['Name', 'Projekt', 'Lagerort']}
-/>
+<div class="w-full h-full px-2">
+	<DataTable
+		data={data.kisten}
+		dataFields={[
+			{ name: 'name' },
+			{ name: 'projekt', isExpanded: true, fieldName: 'name' },
+			{ name: 'lagerort', isExpanded: true, fieldName: 'name' }
+		]}
+		tableHeaders={['Name', 'Projekt', 'Lagerort']}
+	/>
+</div>

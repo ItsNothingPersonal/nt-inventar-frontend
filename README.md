@@ -5,14 +5,13 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 ## Features
 
 - Auflistung des Inventars des Nächtlichen Theater
-- Userprofile für jeden Anwender
+- Userprofile für jeden Anwender inklusive Profilbild(-upload)
+- Pflege sämtlicher Account-Daten über User-Profil
 
 ## Roadmap
 
-- Pflege der Account-Daten
 - Versand der Registrierungsmail
-- Möglichkeit das Passwort zu ändern
-- Möglichkeit die übrigen Profil-Daten zu ändern
+- Eingabemasken für Pflege des Inventars
 
 ## Umgebungsvariablen
 

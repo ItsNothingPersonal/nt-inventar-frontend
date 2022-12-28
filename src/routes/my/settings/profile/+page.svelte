@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import Input from '$lib/components/Input.svelte';
+	import { Input } from '$lib/components';
 	import { getImageURL, isNotNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { EditIcon } from 'svelte-feather-icons';
@@ -50,7 +50,10 @@
 		enctype="multipart/form-data"
 		use:enhance={submitUpdateProfile}
 	>
-		<h3 class="text-2xl">Profil</h3>
+		<div class="w-full">
+			<h3 class="text-2xl font-medium"><h3 class="text-2xl">Profil</h3></h3>
+			<div class="divider" />
+		</div>
 		<div class="form-control w-full max-w-lg">
 			<label for="avatar" class="label font-medium pb-1">
 				<span class="label-text"> Profil Bild </span>

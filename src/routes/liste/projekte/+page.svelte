@@ -5,8 +5,10 @@
 	export let data: PageData;
 </script>
 
-<DataTable
-	data={data.projekte}
-	dataFields={[{ name: 'name' }, { name: 'projektverantwortlicher' }]}
-	tableHeaders={['Name', 'Projektverantwortlicher']}
-/>
+<div class="w-full h-full px-2">
+	<DataTable
+		data={data.projekte}
+		dataFields={[{ name: 'name' }, { name: 'projektverantwortlicher' }]}
+		tableHeaders={['Name', 'Projektverantwortlicher']}
+	/>
+</div>

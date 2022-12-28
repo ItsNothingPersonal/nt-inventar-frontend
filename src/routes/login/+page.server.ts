@@ -1,10 +1,6 @@
 import type { FormUserLogin } from '$lib/server/formUserLogin';
 import { error, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
-
-export const load: PageServerLoad = async () => {
-	return {};
-};
+import type { Actions } from './$types';
 
 export const actions: Actions = {
 	login: async ({ request, locals }) => {
