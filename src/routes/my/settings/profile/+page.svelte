@@ -92,4 +92,6 @@
 			</button>
 		</div>
 	</form>
+	<div class="divider" />
+	<Input id="rolle" label="Rolle" value={data?.user?.role} disabled={true} />
 </div>

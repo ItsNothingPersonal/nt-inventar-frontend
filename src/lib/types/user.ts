@@ -1,3 +1,5 @@
+import type { UserRoles } from './userRoles';
+
 export interface PBUser {
 	id: string;
 	username: string;
@@ -5,4 +7,5 @@ export interface PBUser {
 	name: string;
 	avatar: string;
 	collectionId: string;
+	role: UserRoles;
 }
