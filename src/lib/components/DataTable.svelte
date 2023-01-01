@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
 	import type { DBField } from '../types/dataField';
-	import ModalDialog from './ImageModalDialog.svelte';
+	import ImageModalDialog from './ImageModalDialog.svelte';
 
 	export let tableHeaders: string[] = [];
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +26,7 @@
 							<td>{dataRow['expand'][dataField.name][dataField.fieldName ?? '']} </td>
 						{:else if dataField.isImage}
 							<td>
-								<ModalDialog
+								<ImageModalDialog
 									imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
 										dataRow['id']
 									}/${dataRow[dataField.name]}?thumb=WxHf`}
@@ -37,7 +37,7 @@
 											dataRow['id']
 										}/${dataRow[dataField.name]}`}
 									/>
-								</ModalDialog>
+								</ImageModalDialog>
 							</td>
 						{:else}
 							<td>{dataRow[dataField.name]}</td>
