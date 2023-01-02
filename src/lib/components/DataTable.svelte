@@ -26,18 +26,24 @@
 							<td>{dataRow['expand'][dataField.name][dataField.fieldName ?? '']} </td>
 						{:else if dataField.isImage}
 							<td>
-								<ImageModalDialog
-									imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
-										dataRow['id']
-									}/${dataRow[dataField.name]}?thumb=WxHf`}
-								>
-									<img
-										alt="Modal des Bildes ${dataRow[dataField.name]}"
-										src={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
+								{#if dataRow[dataField.name]}
+									<ImageModalDialog
+										id={dataRow[dataField.name]}
+										imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
 											dataRow['id']
-										}/${dataRow[dataField.name]}`}
-									/>
-								</ImageModalDialog>
+										}/${dataRow[dataField.name]}?thumb=WxHf`}
+									>
+										<img
+											id={`img-${dataRow[dataField.name]}`}
+											alt="Modal des Bildes"
+											src={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
+												dataRow['id']
+											}/${dataRow[dataField.name]}`}
+										/>
+									</ImageModalDialog>
+								{:else}
+									<span>Nicht vorhanden</span>
+								{/if}
 							</td>
 						{:else}
 							<td>{dataRow[dataField.name]}</td>

@@ -1,6 +1,12 @@
 import { isNotNullOrUndefined } from '$lib/util';
-import { error } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import { error, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load = (async ({ locals }) => {
+	if (!locals.pb.authStore.isValid) {
+		throw redirect(303, '/login');
+	}
+}) satisfies PageServerLoad;
 
 export const actions: Actions = {
 	updateProfile: async ({ request, locals }) => {
@@ -10,6 +16,7 @@ export const actions: Actions = {
 		if (isNotNullOrUndefined(userAvatar) && userAvatar.size === 0) {
 			formData.delete('avatar');
 		}
+
 		try {
 			const { name, avatar } = await locals.pb
 				.collection('users')

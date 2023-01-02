@@ -9,6 +9,6 @@
 	<DataTable
 		data={data.projekte}
 		dataFields={[{ name: 'name' }, { name: 'projektverantwortlicher' }]}
-		tableHeaders={['Name', 'Projektverantwortlicher']}
+		tableHeaders={['Name', 'Projektverantwortliche/r']}
 	/>
 </div>

@@ -74,15 +74,14 @@
 					/>
 				</div>
 			</label>
-			<input
+			<Input
 				type="file"
-				name="avatar"
 				id="avatar"
 				value=""
 				accept="image/*"
-				hidden
-				on:change={showPreview}
+				onChange={showPreview}
 				disabled={loading}
+				hidden
 			/>
 		</div>
 		<Input id="name" label="Name" value={data?.user?.name} disabled={loading} />

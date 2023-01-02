@@ -1,6 +1,12 @@
 import type { UpdatePassword } from '$lib/server/updatePassword';
 import { error, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load = (async ({ locals }) => {
+	if (!locals.pb.authStore.isValid) {
+		throw redirect(303, '/login');
+	}
+}) satisfies PageServerLoad;
 
 export const actions: Actions = {
 	updatePassword: async ({ request, locals }) => {

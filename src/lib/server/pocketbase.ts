@@ -1,5 +1,6 @@
 import type { Gegenstand } from '$lib/types/gegenstand';
 import type { Kiste } from '$lib/types/kiste';
+import type { Lagerort } from '$lib/types/lagerort';
 import type { Projekt } from '$lib/types/projekt';
 import type PocketBase from 'pocketbase';
 
@@ -47,4 +48,18 @@ const getProjekte = async (pb: PocketBase) => {
 	return data;
 };
 
-export { getGegenstaende, getKisten, getProjekte };
+const getLagerorte = async (pb: PocketBase) => {
+	let data: Lagerort[] = [];
+
+	try {
+		data = await pb.collection('lagerorte').getFullList<Lagerort>(200 /* batch size */, {
+			sort: '-created'
+		});
+	} catch (error) {
+		console.error(error);
+	}
+
+	return data;
+};
+
+export { getGegenstaende, getKisten, getProjekte, getLagerorte };

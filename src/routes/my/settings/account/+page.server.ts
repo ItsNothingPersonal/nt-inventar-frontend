@@ -1,13 +1,18 @@
 import type { UpdateUser } from '$lib/server/updateUser';
 import { isNotNullOrUndefined } from '$lib/util';
-import { error } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import { error, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load = (async ({ locals }) => {
+	if (!locals.pb.authStore.isValid) {
+		throw redirect(303, '/login');
+	}
+}) satisfies PageServerLoad;
 
 export const actions: Actions = {
 	updateEMail: async ({ request, locals }) => {
 		const formData = await request.formData();
 		const data: UpdateUser = Object.fromEntries(formData) as UpdateUser;
-		console.warn(data);
 
 		try {
 			await locals.pb.collection('users').requestEmailChange(data.email);

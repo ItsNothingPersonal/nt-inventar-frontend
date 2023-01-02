@@ -1,13 +1,14 @@
 <script lang="ts">
 	export let imageSrc: string;
+	export let id: string;
 </script>
 
-<label for="my-modal-4">
+<label for={`modal-${id}`}>
 	<img alt="Modal des Bildes" class="thumbnail" src={imageSrc} />
 </label>
 
-<input type="checkbox" id="my-modal-4" class="modal-toggle" />
-<label for="my-modal-4" class="modal cursor-pointer">
+<input type="checkbox" id={`modal-${id}`} class="modal-toggle" />
+<label for={`modal-${id}`} class="modal cursor-pointer" id={`label-${id}`}>
 	<label class="modal-box relative" for="">
 		<slot />
 	</label>
