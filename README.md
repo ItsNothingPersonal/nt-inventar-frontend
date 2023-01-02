@@ -7,10 +7,10 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 - Auflistung des Inventars des Nächtlichen Theater
 - Userprofile für jeden Anwender inklusive Profilbild(-upload)
 - Pflege sämtlicher Account-Daten über User-Profil
+- Eingabemasken für Pflege des Inventars
 
 ## Roadmap
 
-- Eingabemasken für Pflege des Inventars
 - Versand der Registrierungsmail
 - Mobile-Ansicht
 
