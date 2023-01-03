@@ -1,8 +1,38 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+	import { Input, Modal } from '$lib/components';
+	import type { ActionResult } from '@sveltejs/kit';
 	import { CodeIcon } from 'svelte-feather-icons';
 	import type { ActionData } from './$types';
 
 	export let form: ActionData;
+
+	let passwortresetModalOpen: boolean;
+	let loading: boolean;
+
+	$: passwortresetModalOpen = false;
+	$: loading = false;
+
+	const submitPasswortReset = () => {
+		loading = true;
+		passwortresetModalOpen = true;
+
+		return async ({ result }: { result: ActionResult }) => {
+			switch (result.type) {
+				case 'success':
+					await invalidateAll();
+					passwortresetModalOpen = false;
+					break;
+				case 'error':
+					break;
+				default:
+					applyAction(result);
+					break;
+			}
+			loading = false;
+		};
+	};
 </script>
 
 <div class="flex flex-col items-center h-full w-full pt-12">
@@ -32,8 +62,31 @@
 			<div class="w-full max-w-xs pt-3">
 				<button class="btn btn-primary w-full max-w-xs">Login</button>
 			</div>
+			<Modal label="reset-passwort" checked={passwortresetModalOpen}>
+				<span slot="trigger" class="text-primary hover:cursor-point hover:underline">
+					Ich habe mein Passwort vergessen
+				</span>
+				<h3 slot="heading">Passwort neu anfordern</h3>
+				<form
+					action="?/resetPassword"
+					method="post"
+					class="space-y-2"
+					use:enhance={submitPasswortReset}
+				>
+					<Input
+						id="email"
+						type="email"
+						required={true}
+						label="Gib deine E-Mail-Adresse ein"
+						disabled={loading}
+					/>
+					<button type="submit" class="btn btn-primary w-full" disabled={loading}>
+						Abschicken
+					</button>
+				</form>
+			</Modal>
 			{#if form?.notVerified}
-				<div class="alert alert-error shadow-lg">
+				<div class="alert alert-error shadow-lg w-fit m-2">
 					<div>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +100,7 @@
 								d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
 							/></svg
 						>
-						<span>Du musst deine EMailadresse bestätigen, bevor du dich einloggen kannst!</span>
+						<span>Du musst deine E-Mail-Adresse bestätigen, bevor du dich einloggen kannst!</span>
 					</div>
 				</div>
 			{/if}

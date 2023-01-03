@@ -12,6 +12,7 @@ export const actions: Actions = {
 			if (!locals.pb.authStore.model.verified) {
 				locals.pb.authStore.clear();
 				return {
+					success: false,
 					notVerified: true
 				};
 			}
@@ -21,5 +22,20 @@ export const actions: Actions = {
 		}
 
 		throw redirect(303, '/');
+	},
+	resetPassword: async ({ request, locals }) => {
+		const formData = await request.formData();
+
+		try {
+			await locals.pb.collection('users').requestPasswordReset(formData.get('email'));
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (err: any) {
+			throw error(err.status, err.message);
+		}
+
+		return {
+			success: true,
+			notVerified: false
+		};
 	}
 };

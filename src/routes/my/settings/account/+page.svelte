@@ -63,18 +63,18 @@
 		<div class="divider" />
 		<Modal label="change-email" checked={emailModalOpen}>
 			<span slot="trigger" class="btn btn-primary">EMail ändern</span>
-			<h3 slot="heading">Ändere deine EMailadresse</h3>
+			<h3 slot="heading">Ändere deine E-Mail-Adresse</h3>
 			<form action="?/updateEMail" method="post" class="space-y-2" use:enhance={submitUpdateEMail}>
 				<Input
 					id="email"
 					type="email"
 					required={true}
 					value={form?.data.email}
-					label="Gib deine neue Emailadresse ein"
+					label="Gib deine neue E-Mail-Adresse ein"
 					disabled={loading}
 				/>
 				<button type="submit" class="btn btn-primary w-full" disabled={loading}>
-					Ändere meine Emailadresse
+					Ändere meine E-Mail-Adresse
 				</button>
 			</form>
 		</Modal>

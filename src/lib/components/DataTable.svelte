@@ -13,7 +13,7 @@
 	export let data: any[] = [];
 	export let dataFields: DBField[] = [];
 	export let user: PBUser | undefined;
-	export let disableDelete: boolean = false;
+	export let disableDelete = false;
 
 	$: innerWidth = 0;
 	$: innerHeight = 0;
