@@ -1,6 +1,7 @@
 export interface LinkElement {
-	href: string;
 	label: string;
+	href?: string;
 	hidden?: boolean;
-	type?: 'Link' | 'Button';
+	type?: 'Link' | 'Button' | 'Input';
+	onClick?: () => void;
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import MobileMenu from '$lib/components/MobileMenu.svelte';
+	import { deleteMode } from '$lib/store';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { UserRoles } from '$lib/types/userRoles';
@@ -11,6 +12,10 @@
 
 	$: innerWidth = 0;
 	$: innerHeight = 0;
+
+	const toggleDeleteMode = () => {
+		deleteMode.set(!$deleteMode);
+	};
 
 	let mobileMenuData: MenuSegment[] = [
 		{
@@ -52,6 +57,17 @@
 				{ label: 'Login', href: '/login', hidden: data.user !== undefined },
 				{ label: 'Logout', href: '/logout', hidden: data.user === undefined, type: 'Button' }
 			]
+		},
+		{
+			categoryName: 'Modus',
+			entries: [
+				{
+					label: 'Lösch-Modus',
+					hidden: data.user?.role !== UserRoles.INVENTARIST,
+					type: 'Input',
+					onClick: toggleDeleteMode
+				}
+			]
 		}
 	];
 </script>
@@ -68,6 +84,18 @@
 			{#if innerWidth > BreakPoints.Large}
 				<ul class="menu menu-horizontal px-1">
 					{#if data.user?.role === UserRoles.INVENTARIST}
+						<li>
+							<div class="form-control">
+								<label class={'label cursor-pointer'}>
+									<span class="label-text pr-2">Lösch Modus</span>
+									<input
+										type="checkbox"
+										class="toggle toggle-sm md:toggle-md toggle-warning"
+										on:click={toggleDeleteMode}
+									/>
+								</label>
+							</div>
+						</li>
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 						<li tabindex="0" class="z-10">
 							<!-- svelte-ignore a11y-missing-attribute -->

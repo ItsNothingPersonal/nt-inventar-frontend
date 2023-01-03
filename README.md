@@ -11,11 +11,11 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 - Mobile-Ansicht
 - Versand der Registrierungsmail
 - Automatische Passwortrücksetzung per Mail
+- Lösch-Modus zum Löschen von Datensätzen
 
 ## Roadmap
 
 - Maske zum Updaten von Inventareinträgen
-- Maske zum Löschen von Inventareinträgen
 - Verständlichere Fehlermeldungen
 
 ## Umgebungsvariablen

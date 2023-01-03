@@ -13,5 +13,6 @@
 			{ name: 'kiste', isExpanded: true, fieldName: 'name' }
 		]}
 		tableHeaders={['Name', 'Bild', 'Kiste']}
+		user={data.user}
 	/>
 </div>
