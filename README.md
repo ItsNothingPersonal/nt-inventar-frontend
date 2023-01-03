@@ -9,10 +9,14 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 - Pflege sämtlicher Account-Daten über User-Profil
 - Eingabemasken für Pflege des Inventars
 - Mobile-Ansicht
+- Versand der Registrierungsmail
+- Automatische Passwortrücksetzung per Mail
 
 ## Roadmap
 
-- Versand der Registrierungsmail
+- Maske zum Updaten von Inventareinträgen
+- Maske zum Löschen von Inventareinträgen
+- Verständlichere Fehlermeldungen
 
 ## Umgebungsvariablen
 

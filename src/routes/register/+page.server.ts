@@ -9,11 +9,18 @@ export const actions: Actions = {
 	register: async ({ locals, request }) => {
 		const formData = await request.formData();
 		const data: FormUserCreate = Object.fromEntries(formData) as FormUserCreate;
-		const userToCreate: CreateUser = { ...data, name: data.username, role: UserRoles.MITGLIED };
+		const userToCreate: CreateUser = {
+			username: data.username,
+			name: data.username,
+			role: UserRoles.MITGLIED,
+			email: data.email,
+			password: data.password,
+			passwordConfirm: data.passwordConfirm
+		};
 
 		try {
 			await locals.pb.collection('users').create(userToCreate);
-			//await locals.pb.collection('users').requestVerification(data.email);
+			await locals.pb.collection('users').requestVerification(data.email);
 
 			locals.pb.authStore.clear();
 		} catch (error) {
