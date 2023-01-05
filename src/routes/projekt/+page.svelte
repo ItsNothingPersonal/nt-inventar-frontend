@@ -10,7 +10,6 @@
 		data={data.projekte}
 		dataFields={[{ name: 'name' }, { name: 'projektverantwortlicher' }]}
 		tableHeaders={['Name', 'Projektverantwortliche/r']}
-		user={data.user}
-		disableDelete={true}
+		disableEdit={true}
 	/>
 </div>

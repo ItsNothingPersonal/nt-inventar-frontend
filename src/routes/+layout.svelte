@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MobileMenu from '$lib/components/MobileMenu.svelte';
-	import { deleteMode } from '$lib/store';
+	import { editMode } from '$lib/store';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { UserRoles } from '$lib/types/userRoles';
@@ -13,36 +13,18 @@
 	$: innerWidth = 0;
 	$: innerHeight = 0;
 
-	const toggleDeleteMode = () => {
-		deleteMode.set(!$deleteMode);
+	const toggleEditMode = () => {
+		editMode.set(!$editMode);
 	};
 
 	let mobileMenuData: MenuSegment[] = [
 		{
-			categoryName: 'Gegenstände',
+			categoryName: 'Inventar',
 			entries: [
-				{ label: 'Übersicht', href: '/gegenstand/uebersicht' },
-				{
-					label: 'Anlegen',
-					href: '/gegenstand/anlegen',
-					hidden: data.user?.role !== UserRoles.INVENTARIST
-				}
+				{ label: 'Gegenstände', href: '/gegenstand' },
+				{ label: 'Kisten', href: '/kiste' },
+				{ label: 'Projekte', href: '/projekt' }
 			]
-		},
-		{
-			categoryName: 'Kisten',
-			entries: [
-				{ label: 'Übersicht', href: '/kiste/uebersicht' },
-				{
-					label: 'Anlegen',
-					href: '/kiste/anlegen',
-					hidden: data.user?.role !== UserRoles.INVENTARIST
-				}
-			]
-		},
-		{
-			categoryName: 'Projekte',
-			entries: [{ label: 'Übersicht', href: '/projekt/uebersicht' }]
 		},
 		{
 			categoryName: 'Impressum',
@@ -62,10 +44,10 @@
 			categoryName: 'Modus',
 			entries: [
 				{
-					label: 'Lösch-Modus',
+					label: 'Edit-Modus',
 					hidden: data.user?.role !== UserRoles.INVENTARIST,
 					type: 'Input',
-					onClick: toggleDeleteMode
+					onClick: toggleEditMode
 				}
 			]
 		}
@@ -87,61 +69,19 @@
 						<li>
 							<div class="form-control">
 								<label class={'label cursor-pointer'}>
-									<span class="label-text pr-2">Lösch Modus</span>
+									<span class="label-text pr-2">Bearbeiten</span>
 									<input
 										type="checkbox"
 										class="toggle toggle-sm md:toggle-md toggle-warning"
-										on:click={toggleDeleteMode}
+										on:click={toggleEditMode}
 									/>
 								</label>
 							</div>
 						</li>
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<li tabindex="0" class="z-10">
-							<!-- svelte-ignore a11y-missing-attribute -->
-							<a>
-								Gegenstände
-								<svg
-									class="fill-current"
-									xmlns="http://www.w3.org/2000/svg"
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg
-								>
-							</a>
-							<ul class="p-2 bg-base-100 border-2">
-								<li><a href="/gegenstand/uebersicht">Übersicht</a></li>
-								<li><a href="/gegenstand/anlegen">Anlegen</a></li>
-							</ul>
-						</li>
-					{:else}
-						<li><a href="/gegenstand/uebersicht">Gegenstände</a></li>
 					{/if}
-					{#if data.user?.role === UserRoles.INVENTARIST}
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<li tabindex="0" class="z-10">
-							<!-- svelte-ignore a11y-missing-attribute -->
-							<a>
-								Kisten
-								<svg
-									class="fill-current"
-									xmlns="http://www.w3.org/2000/svg"
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg
-								>
-							</a>
-							<ul class="p-2 bg-base-100 border-2">
-								<li><a href="/kiste/uebersicht">Übersicht</a></li>
-								<li><a href="/kiste/anlegen">Anlegen</a></li>
-							</ul>
-						</li>
-					{:else}
-						<li><a href="/kiste/uebersicht">Kisten</a></li>
-					{/if}
-					<li><a href="/projekt/uebersicht">Projekte</a></li>
+					<li><a href="/gegenstand">Gegenstände</a></li>
+					<li><a href="/kiste">Kisten</a></li>
+					<li><a href="/projekt">Projekte</a></li>
 					<li><a href="/impressum">Impressum</a></li>
 					{#if !data.user}
 						<li><a href="/login" role="button" class="btn btn-primary">Login</a></li>
