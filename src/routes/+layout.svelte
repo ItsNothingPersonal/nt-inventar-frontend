@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MobileMenu from '$lib/components/MobileMenu.svelte';
-	import { editMode } from '$lib/store';
+	import { editMode } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { UserRoles } from '$lib/types/userRoles';

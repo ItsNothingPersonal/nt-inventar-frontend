@@ -1,8 +1,7 @@
-import type { FormGegenstandCreate } from '$lib/server/formGegenstandCreate';
 import { getGegenstaende, getKisten } from '$lib/server/pocketbase';
 import type { Gegenstand } from '$lib/types/gegenstand';
 import type { Kiste } from '$lib/types/kiste';
-import { isNotNullOrUndefined, serializeNonPOJOs } from '$lib/util';
+import { isNotNullOrUndefined, isNullOrUndefined, serializeNonPOJOs } from '$lib/util';
 import { get, writable, type Writable } from 'svelte/store';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -25,7 +24,6 @@ export const load = (async ({
 export const actions: Actions = {
 	create: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const data: FormGegenstandCreate = Object.fromEntries(formData) as FormGegenstandCreate;
 
 		const kistenInStore: Kiste[] = get(kistenStore);
 		const kiste: Kiste | undefined = kistenInStore.find(
@@ -37,10 +35,47 @@ export const actions: Actions = {
 
 		if (isNotNullOrUndefined(bild) && bild.size === 0) {
 			formData.delete('bild');
+		} else {
+			formData.set('bild', bild);
 		}
 
 		try {
 			await locals.pb.collection('gegenstaende').create(formData);
+		} catch (error: unknown) {
+			console.error(error);
+			return {
+				error: true,
+				message: (error as Error).message
+			};
+		}
+
+		return {
+			success: true,
+			data: {
+				name: formData.get('name') as string,
+				kiste: formData.get('kiste') as string
+			}
+		};
+	},
+	update: async ({ locals, request }) => {
+		const formData = await request.formData();
+
+		const kistenInStore: Kiste[] = get(kistenStore);
+		const kiste: Kiste | undefined = kistenInStore.find(
+			(kisteStore) => kisteStore.name === formData.get('kiste')
+		);
+		formData.set('kiste', kiste?.id ?? '');
+
+		const bild: File = formData.get('bild-neu') as File;
+
+		if (isNullOrUndefined(bild) || (isNotNullOrUndefined(bild) && bild.size === 0)) {
+			formData.delete('bild');
+		} else {
+			formData.set('bild', bild);
+		}
+
+		try {
+			await locals.pb.collection('gegenstaende').update(formData.get('id'), formData);
 		} catch (error) {
 			console.error(error);
 			return {
@@ -52,8 +87,8 @@ export const actions: Actions = {
 		return {
 			success: true,
 			data: {
-				name: data.name,
-				kiste: data.kiste
+				name: formData.get('name') as string,
+				kiste: formData.get('kiste') as string
 			}
 		};
 	},

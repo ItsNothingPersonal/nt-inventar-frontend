@@ -5,6 +5,7 @@
 	export let required = false;
 	export let cssClass = 'select select-bordered w-full max-w-xs';
 	export let options: string[] = [];
+	export let value: string = options.length > 0 ? options[0] : '';
 </script>
 
 <div class="form-control w-full max-w-xs">
@@ -13,7 +14,7 @@
 			<span class="label-text">{label}</span>
 		</label>
 	{/if}
-	<select class={cssClass} {id} name={id} {required} {disabled}>
+	<select class={cssClass} {id} name={id} {required} {disabled} {value}>
 		{#each options as option}
 			<option>{option}</option>
 		{/each}

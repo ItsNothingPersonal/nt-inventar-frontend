@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
-	import { editMode } from '$lib/store';
+	import { editMode, selectedId } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { PBUser } from '$lib/types/user';
 	import { UserRoles } from '$lib/types/userRoles';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { EditIcon, XIcon } from 'svelte-feather-icons';
 	import { Modal } from '.';
 	import type { DBField } from '../types/dataField';
 	import ImageModalDialog from './ImageModalDialog.svelte';
@@ -17,6 +18,7 @@
 	export let user: PBUser | undefined = undefined;
 	export let disableEdit = false;
 	export let textButtonNeu = '';
+	export let textButtonBearbeiten = '';
 	export let enhanceDelete:
 		| (() => ({ result }: { result: ActionResult }) => Promise<void>)
 		| undefined = undefined;
@@ -36,13 +38,13 @@
 			<Modal label="create-button" checked={modalOpen}>
 				<span slot="trigger" class="btn btn-active btn-primary"> Neu </span>
 				<h3 slot="heading">{textButtonNeu}</h3>
-				<slot name="form-neu" />
+				<slot name="formNeu" />
 			</Modal>
-			<input type="submit" form="deleteForm" value="Massen-Löschen" class="btn btn-active" />
+			<input type="submit" form="massDeleteForm" value="Massen-Löschen" class="btn btn-active" />
 			<form
 				method="post"
 				action="?/delete"
-				id="deleteForm"
+				id="massDeleteForm"
 				use:enhance={enhanceDelete}
 				on:submit={() => (checkboxValues = [])}
 			>
@@ -70,27 +72,42 @@
 				<tr>
 					{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
 						<td>
-							<form method="post" action="?/delete" use:enhance={enhanceDelete}>
-								<input hidden class="hidden" name="id" value={dataRow['id']} />
+							<Modal label="update-button" checked={modalOpen}>
+								<span
+									slot="trigger"
+									class="btn btn-sm {innerWidth <= BreakPoints.Large
+										? 'btn-square'
+										: ''} btn-primary"
+									on:keydown={() => selectedId.set(`${dataRow['id']}`)}
+									on:click={() => selectedId.set(`${dataRow['id']}`)}
+								>
+									{#if innerWidth <= BreakPoints.Large}
+										<EditIcon />
+									{:else}
+										Aktualisieren
+									{/if}
+								</span>
+								<h3 slot="heading">{textButtonBearbeiten}</h3>
+								<slot name="formAktualisieren" />
+							</Modal>
+							<button
+								class="btn btn-sm {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
+								type="submit"
+								form="singleDeleteForm"
+							>
 								{#if innerWidth <= BreakPoints.Large}
-									<button class="btn btn-sm btn-square btn-primary" type="submit">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											class="h-6 w-6"
-											fill="none"
-											viewBox="0 0 24 24"
-											stroke="currentColor"
-											><path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M6 18L18 6M6 6l12 12"
-											/></svg
-										>
-									</button>
+									<XIcon />
 								{:else}
-									<button class="btn btn-sm btn-primary" type="submit"> Löschen </button>
+									Löschen
 								{/if}
+							</button>
+							<form
+								method="post"
+								action="?/delete"
+								use:enhance={enhanceDelete}
+								id="singleDeleteForm"
+							>
+								<input hidden class="hidden" name="id" value={dataRow['id']} />
 							</form>
 						</td>
 						<td>

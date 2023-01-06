@@ -3,6 +3,8 @@
 	import { invalidateAll } from '$app/navigation';
 	import { Input, Select } from '$lib/components';
 	import DataTable from '$lib/components/DataTable.svelte';
+	import { selectedId } from '$lib/storeClient';
+	import type { Kiste } from '$lib/types/kiste';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { ActionData, PageData } from './$types';
 
@@ -11,6 +13,11 @@
 
 	let loading: boolean;
 	$: loading = false;
+
+	let updateKiste: Kiste | undefined;
+	$: updateKiste = undefined;
+
+	selectedId.subscribe((id) => (updateKiste = data.kisten.find((k) => k.id === id)));
 
 	const submitEnhance = () => {
 		loading = true;
@@ -42,6 +49,7 @@
 		tableHeaders={['Name', 'Projekt', 'Lagerort']}
 		user={data.user}
 		textButtonNeu="Kiste anlegen"
+		textButtonBearbeiten="Kiste aktualisieren"
 		enhanceDelete={submitEnhance}
 	>
 		<form
@@ -50,7 +58,7 @@
 			class="space-y-2"
 			enctype="multipart/form-data"
 			use:enhance={submitEnhance}
-			slot="form-neu"
+			slot="formNeu"
 		>
 			<Input id="name" label="Name" value={form?.data?.name} required={true} disabled={loading} />
 			<Select
@@ -69,6 +77,43 @@
 			/>
 
 			<button type="submit" class="btn btn-primary w-full" disabled={loading}> Anlegen </button>
+		</form>
+		<form
+			action="?/update"
+			method="post"
+			class="space-y-2"
+			enctype="multipart/form-data"
+			use:enhance={submitEnhance}
+			slot="formAktualisieren"
+		>
+			<Input id="id" hidden required={true} disabled={loading} value={updateKiste?.id ?? ''} />
+			<Input
+				id="name"
+				label="Name"
+				required={true}
+				disabled={loading}
+				value={updateKiste?.name ?? ''}
+			/>
+			<Select
+				id="projekt"
+				label="Projekt"
+				options={data.projekte}
+				required={true}
+				disabled={loading}
+				value={updateKiste?.expand.projekt.name}
+			/>
+			<Select
+				id="lagerort"
+				label="Lagerort"
+				options={data.lagerorte}
+				required={true}
+				disabled={loading}
+				value={updateKiste?.expand.lagerort.name}
+			/>
+
+			<button type="submit" class="btn btn-primary w-full" disabled={loading}>
+				Aktualisieren
+			</button>
 		</form>
 	</DataTable>
 </div>

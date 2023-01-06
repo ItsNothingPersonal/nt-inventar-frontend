@@ -4,6 +4,8 @@ import type { Projekt } from './projekt';
 export interface Kiste {
 	id: string;
 	name: string;
-	projekt: Projekt;
-	lagerort: Lagerort;
+	expand: {
+		projekt: Projekt;
+		lagerort: Lagerort;
+	};
 }

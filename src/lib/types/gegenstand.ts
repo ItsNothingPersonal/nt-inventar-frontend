@@ -5,5 +5,7 @@ export interface Gegenstand {
 	bild: string;
 	collectionName: string;
 	id: string;
-	kiste: Kiste;
+	expand: {
+		kiste: Kiste;
+	};
 }
