@@ -5,12 +5,17 @@ import type { Kiste } from '$lib/types/kiste';
 import type { Lagerort } from '$lib/types/lagerort';
 import type { Projekt } from '$lib/types/projekt';
 import { serializeNonPOJOs } from '$lib/util';
+import { redirect } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({
 	locals
 }): Promise<{ kisten: Kiste[]; projekte: string[]; lagerorte: string[] }> => {
+	if (!locals.pb.authStore.isValid) {
+		throw redirect(303, '/login');
+	}
+
 	const projekte = await getProjekte(locals.pb);
 	projektStore.set(projekte);
 

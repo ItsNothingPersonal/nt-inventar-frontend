@@ -2,6 +2,7 @@ import { getGegenstaende, getKisten } from '$lib/server/pocketbase';
 import type { Gegenstand } from '$lib/types/gegenstand';
 import type { Kiste } from '$lib/types/kiste';
 import { isNotNullOrUndefined, isNullOrUndefined, serializeNonPOJOs } from '$lib/util';
+import { redirect } from '@sveltejs/kit';
 import { get, writable, type Writable } from 'svelte/store';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -10,6 +11,10 @@ const kistenStore: Writable<Kiste[]> = writable([] as Kiste[]);
 export const load = (async ({
 	locals
 }): Promise<{ gegenstaende: Gegenstand[]; kisten: string[] }> => {
+	if (!locals.pb.authStore.isValid) {
+		throw redirect(303, '/login');
+	}
+
 	const gegenstaende = await getGegenstaende(locals.pb);
 
 	const kisten = await getKisten(locals.pb);

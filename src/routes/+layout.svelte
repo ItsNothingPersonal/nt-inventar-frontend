@@ -21,9 +21,9 @@
 		{
 			categoryName: 'Inventar',
 			entries: [
-				{ label: 'Gegenstände', href: '/gegenstand' },
-				{ label: 'Kisten', href: '/kiste' },
-				{ label: 'Projekte', href: '/projekt' }
+				{ label: 'Gegenstände', href: '/gegenstand', hidden: !data.pb?.authStore.isValid },
+				{ label: 'Kisten', href: '/kiste', hidden: !data.pb?.authStore.isValid },
+				{ label: 'Projekte', href: '/projekt', hidden: !data.pb?.authStore.isValid }
 			]
 		},
 		{
@@ -33,11 +33,11 @@
 		{
 			categoryName: 'Profile',
 			entries: [
-				{ label: 'Profil', href: '/my/settings/profile', hidden: data.user === undefined },
-				{ label: 'Account', href: '/my/settings/account', hidden: data.user === undefined },
-				{ label: 'Security', href: '/my/settings/security', hidden: data.user === undefined },
-				{ label: 'Login', href: '/login', hidden: data.user !== undefined },
-				{ label: 'Logout', href: '/logout', hidden: data.user === undefined, type: 'Button' }
+				{ label: 'Profil', href: '/my/settings/profile', hidden: !data.pb?.authStore.isValid },
+				{ label: 'Account', href: '/my/settings/account', hidden: !data.pb?.authStore.isValid },
+				{ label: 'Security', href: '/my/settings/security', hidden: !data.pb?.authStore.isValid },
+				{ label: 'Login', href: '/login', hidden: data.pb?.authStore.isValid },
+				{ label: 'Logout', href: '/logout', hidden: !data.pb?.authStore.isValid, type: 'Button' }
 			]
 		},
 		{
@@ -79,9 +79,11 @@
 							</div>
 						</li>
 					{/if}
-					<li><a href="/gegenstand">Gegenstände</a></li>
-					<li><a href="/kiste">Kisten</a></li>
-					<li><a href="/projekt">Projekte</a></li>
+					{#if data.user}
+						<li><a href="/gegenstand">Gegenstände</a></li>
+						<li><a href="/kiste">Kisten</a></li>
+						<li><a href="/projekt">Projekte</a></li>
+					{/if}
 					<li><a href="/impressum">Impressum</a></li>
 					{#if !data.user}
 						<li><a href="/login" role="button" class="btn btn-primary">Login</a></li>
@@ -120,6 +122,5 @@
 			{/if}
 		</div>
 	</div>
-
 	<slot />
 </main>
