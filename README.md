@@ -5,17 +5,18 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 ## Features
 
 - Auflistung des Inventars des Nächtlichen Theater
+- Maske zum Anlegen von Inventareinträgen
+- Lösch-Modus zum Löschen von Inventareinträgen (Einzel + Mehrfach)
+- Maske zum Updaten von Inventareinträgen
+- Mobile-Ansicht
 - Userprofile für jeden Anwender inklusive Profilbild(-upload)
 - Pflege sämtlicher Account-Daten über User-Profil
-- Eingabemasken für Pflege des Inventars
-- Mobile-Ansicht
 - Versand der Registrierungsmail
 - Automatische Passwortrücksetzung per Mail
-- Lösch-Modus zum Löschen von Datensätzen
 
 ## Roadmap
 
-- Maske zum Updaten von Inventareinträgen
+- Bestellmöglichkeit von Kisten & Gegenständen für die Spielleitung
 - Verständlichere Fehlermeldungen
 
 ## Umgebungsvariablen
