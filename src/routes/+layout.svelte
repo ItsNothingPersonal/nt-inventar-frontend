@@ -4,7 +4,7 @@
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { UserRoles } from '$lib/types/userRoles';
-	import { getImageURL } from '$lib/util';
+	import { getImageURL, isNotNullOrUndefined, isNullOrUndefined } from '$lib/util';
 	import '../app.css';
 	import type { LayoutData } from './$types';
 
@@ -21,9 +21,9 @@
 		{
 			categoryName: 'Inventar',
 			entries: [
-				{ label: 'Gegenstände', href: '/gegenstand', hidden: !data.pb?.authStore.isValid },
-				{ label: 'Kisten', href: '/kiste', hidden: !data.pb?.authStore.isValid },
-				{ label: 'Projekte', href: '/projekt', hidden: !data.pb?.authStore.isValid }
+				{ label: 'Gegenstände', href: '/gegenstand', hidden: isNullOrUndefined(data.user) },
+				{ label: 'Kisten', href: '/kiste', hidden: isNullOrUndefined(data.user) },
+				{ label: 'Projekte', href: '/projekt', hidden: isNullOrUndefined(data.user) }
 			]
 		},
 		{
@@ -33,11 +33,11 @@
 		{
 			categoryName: 'Profile',
 			entries: [
-				{ label: 'Profil', href: '/my/settings/profile', hidden: !data.pb?.authStore.isValid },
-				{ label: 'Account', href: '/my/settings/account', hidden: !data.pb?.authStore.isValid },
-				{ label: 'Security', href: '/my/settings/security', hidden: !data.pb?.authStore.isValid },
-				{ label: 'Login', href: '/login', hidden: data.pb?.authStore.isValid },
-				{ label: 'Logout', href: '/logout', hidden: !data.pb?.authStore.isValid, type: 'Button' }
+				{ label: 'Profil', href: '/my/settings/profile', hidden: isNullOrUndefined(data.user) },
+				{ label: 'Account', href: '/my/settings/account', hidden: isNullOrUndefined(data.user) },
+				{ label: 'Security', href: '/my/settings/security', hidden: isNullOrUndefined(data.user) },
+				{ label: 'Login', href: '/login', hidden: isNotNullOrUndefined(data.user) },
+				{ label: 'Logout', href: '/logout', hidden: isNullOrUndefined(data.user), type: 'Button' }
 			]
 		},
 		{
