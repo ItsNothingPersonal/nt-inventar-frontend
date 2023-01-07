@@ -6,6 +6,8 @@
 	export let itemId: string;
 	export let label: string | undefined = undefined;
 	export let alt: string | undefined = undefined;
+	export let height = 512;
+	export let width = 512;
 </script>
 
 <div class="form-control w-full max-w-lg mb-2">
@@ -19,5 +21,7 @@
 		id={`img-${imageName}`}
 		{alt}
 		src={`${PUBLIC_PB_BASE_URL}/api/files/${imageCollection}/${itemId}/${imageName}`}
+		{height}
+		{width}
 	/>
 </div>

@@ -2,8 +2,9 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { Input, Modal } from '$lib/components';
+	import AlertError from '$lib/components/AlertError.svelte';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { CodeIcon, XOctagonIcon } from 'svelte-feather-icons';
+	import { CodeIcon } from 'svelte-feather-icons';
 	import type { ActionData } from './$types';
 
 	export let form: ActionData;
@@ -86,12 +87,9 @@
 				</form>
 			</Modal>
 			{#if form?.notVerified}
-				<div class="alert alert-error shadow-lg w-fit m-2">
-					<div>
-						<XOctagonIcon />
-						<span>Du musst deine E-Mail-Adresse bestätigen, bevor du dich einloggen kannst!</span>
-					</div>
-				</div>
+				<AlertError
+					message="Du musst deine E-Mail-Adresse bestätigen, bevor du dich einloggen kannst!"
+				/>
 			{/if}
 		</form>
 	</div>

@@ -98,8 +98,10 @@
 								<img
 									alt="Profilbild in Navbar"
 									src={data.user?.avatar
-										? getImageURL(data.user.collectionId, data.user.id, data.user.avatar)
+										? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '40x40')
 										: `https://ui-avatars.com/api/?name=${data.user?.name}`}
+									height="40"
+									width="40"
 								/>
 							</div>
 						</label>

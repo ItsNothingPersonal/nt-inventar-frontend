@@ -4,7 +4,13 @@
 
 <div class="hero min-h-screen bg-base-200">
 	<div class="hero-content flex-col lg:flex-row">
-		<img src={logo} alt="Logo des Nächtlichen Theaters" class="max-w-sm rounded-lg shadow-2xl" />
+		<img
+			src={logo}
+			width="384"
+			height="238"
+			alt="Logo des Nächtlichen Theaters"
+			class="rounded-lg shadow-2xl pb-4 md:pb-0"
+		/>
 		<div>
 			<h1 class="text-5xl font-bold">Inventar des Nächtlichen Theaters</h1>
 			<p class="py-6">

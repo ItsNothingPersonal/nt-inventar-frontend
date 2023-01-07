@@ -67,10 +67,12 @@
 				<div class="w-32 rounded-full">
 					<img
 						src={data.user?.avatar
-							? getImageURL(data.user.collectionId, data.user.id, data.user.avatar)
+							? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '128x128')
 							: `https://ui-avatars.com/api/?name=${data.user?.name}`}
 						alt="user avatar"
 						id="avatar-preview"
+						width="128"
+						height="128"
 					/>
 				</div>
 			</label>

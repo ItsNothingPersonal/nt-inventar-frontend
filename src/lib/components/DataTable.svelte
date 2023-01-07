@@ -9,6 +9,7 @@
 	import { EditIcon, XIcon } from 'svelte-feather-icons';
 	import { Modal } from '.';
 	import type { DBField } from '../types/dataField';
+	import Image from './Image.svelte';
 	import ImageModalDialog from './ImageModalDialog.svelte';
 
 	export let tableHeaders: string[] = [];
@@ -132,14 +133,15 @@
 										id={dataRow[dataField.name]}
 										imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
 											dataRow['id']
-										}/${dataRow[dataField.name]}?thumb=WxHf`}
+										}/${dataRow[dataField.name]}?thumb=48x48`}
 									>
-										<img
-											id={`img-${dataRow[dataField.name]}`}
+										<Image
+											imageCollection={dataRow['collectionName']}
+											imageName={dataRow[dataField.name]}
+											itemId={dataRow['id']}
 											alt="Modal des Bildes"
-											src={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
-												dataRow['id']
-											}/${dataRow[dataField.name]}`}
+											height={512}
+											width={512}
 										/>
 									</ImageModalDialog>
 								{:else}

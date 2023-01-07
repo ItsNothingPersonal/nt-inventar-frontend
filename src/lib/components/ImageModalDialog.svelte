@@ -1,10 +1,12 @@
 <script lang="ts">
 	export let imageSrc: string;
 	export let id: string;
+	export let height = 48;
+	export let width = 48;
 </script>
 
 <label for={`modal-${id}`}>
-	<img alt="Modal des Bildes" class="thumbnail" src={imageSrc} />
+	<img alt="Thumbnail des Bildes" class="thumbnail" src={imageSrc} {height} {width} />
 </label>
 
 <input type="checkbox" id={`modal-${id}`} class="modal-toggle" />

@@ -17,7 +17,7 @@ export function getImageURL(
 	collectionId: string,
 	recordId: string,
 	fileName: string,
-	size = '0x0'
+	size: string
 ): string {
 	return `${PUBLIC_PB_BASE_URL}/api/files/${collectionId}/${recordId}/${fileName}?thumb=${size}`;
 }
