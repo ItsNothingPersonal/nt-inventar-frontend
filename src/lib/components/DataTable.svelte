@@ -3,8 +3,10 @@
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
 	import { editMode, selectedId } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
+	import type { DataObject } from '$lib/types/dataRow';
 	import type { PBUser } from '$lib/types/user';
 	import { UserRoles } from '$lib/types/userRoles';
+	import { isNotNullOrUndefined, startCsvDownload } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { EditIcon, XIcon } from 'svelte-feather-icons';
 	import { Modal } from '.';
@@ -23,6 +25,7 @@
 	export let enhanceDelete:
 		| (() => ({ result }: { result: ActionResult }) => Promise<void>)
 		| undefined = undefined;
+	export let csvName: string;
 
 	let modalOpen: boolean;
 	let checkboxValues: string[] = [];
@@ -30,18 +33,49 @@
 	$: innerWidth = 0;
 	$: innerHeight = 0;
 	$: modalOpen = false;
+
+	async function download() {
+		const downloadData: DataObject[] = [];
+
+		data.map((row) => {
+			let trimmedRow: DataObject = {} as DataObject;
+			dataFields.forEach((field) => {
+				if (field.isExpanded) {
+					trimmedRow[field.name] = row['expand'][field.name][field.fieldName ?? ''];
+				} else {
+					trimmedRow[field.name] = row[field.name];
+				}
+			});
+			downloadData.push(trimmedRow);
+		});
+
+		startCsvDownload(
+			downloadData,
+			dataFields.map((entry) =>
+				isNotNullOrUndefined(entry.fieldName) && entry.isExpanded !== true
+					? entry.fieldName
+					: entry.name
+			),
+			csvName
+		);
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 	{#if user?.role === UserRoles.INVENTARIST && $editMode === true}
 		<div class="pb-4">
-			<Modal label="create-button" checked={modalOpen}>
-				<span slot="trigger" class="btn btn-active btn-primary"> Neu </span>
-				<h3 slot="heading">{textButtonNeu}</h3>
-				<slot name="formNeu" />
-			</Modal>
-			<input type="submit" form="massDeleteForm" value="Massen-Löschen" class="btn btn-active" />
+			{#if !disableEdit}
+				<Modal label="create-button" checked={modalOpen}>
+					<span slot="trigger" class="btn btn-active btn-primary"> Neu </span>
+					<h3 slot="heading">{textButtonNeu}</h3>
+					<slot name="formNeu" />
+				</Modal>
+				<input type="submit" form="massDeleteForm" value="Massen-Löschen" class="btn btn-active" />
+			{/if}
+			<button class="btn btn-active btn-primary" type="submit" on:click={download}>
+				CSV-Download
+			</button>
 			<form
 				method="post"
 				action="?/delete"
@@ -125,7 +159,7 @@
 					{/if}
 					{#each dataFields as dataField}
 						{#if dataField.isExpanded}
-							<td>{dataRow['expand'][dataField.name][dataField.fieldName ?? '']} </td>
+							<td> {dataRow['expand'][dataField.name][dataField.fieldName ?? '']} </td>
 						{:else if dataField.isImage}
 							<td>
 								{#if dataRow[dataField.name]}

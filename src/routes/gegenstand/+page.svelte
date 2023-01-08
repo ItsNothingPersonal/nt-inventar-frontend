@@ -52,6 +52,7 @@
 		textButtonNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
 		enhanceDelete={submitEnhance}
+		csvName="gegenstaende.csv"
 	>
 		<form
 			action="?/create"

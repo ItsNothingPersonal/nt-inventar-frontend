@@ -13,6 +13,7 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 - Pflege sämtlicher Account-Daten über User-Profil
 - Versand der Registrierungsmail
 - Automatische Passwortrücksetzung per Mail
+- Tabellen-Export als .csv-Datei
 
 ## Roadmap
 

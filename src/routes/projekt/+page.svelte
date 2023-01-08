@@ -10,6 +10,8 @@
 		data={data.projekte}
 		dataFields={[{ name: 'name' }, { name: 'projektverantwortlicher' }]}
 		tableHeaders={['Name', 'Projektverantwortliche/r']}
+		user={data.user}
 		disableEdit={true}
+		csvName="projekte.csv"
 	/>
 </div>

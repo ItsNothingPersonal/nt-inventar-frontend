@@ -51,6 +51,7 @@
 		textButtonNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"
 		enhanceDelete={submitEnhance}
+		csvName="kisten.csv"
 	>
 		<form
 			action="?/create"
