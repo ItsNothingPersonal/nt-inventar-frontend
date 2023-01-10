@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let value = '';
+	export let value: string | number = '';
 	export let placeholder = '';
 	export let id: string;
 	export let label: string | undefined = undefined;

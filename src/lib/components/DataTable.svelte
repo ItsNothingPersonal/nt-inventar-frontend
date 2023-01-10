@@ -110,9 +110,7 @@
 							<Modal label="update-button" checked={modalOpen}>
 								<span
 									slot="trigger"
-									class="btn {innerWidth <= BreakPoints.Large
-										? 'btn-square'
-										: ''} btn-primary"
+									class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
 									on:keydown={() => selectedId.set(`${dataRow['id']}`)}
 									on:click={() => selectedId.set(`${dataRow['id']}`)}
 								>

@@ -58,6 +58,7 @@ export const actions: Actions = {
 			success: true,
 			data: {
 				name: formData.get('name') as string,
+				anzahl: parseInt(formData.get('anzahl') as string),
 				kiste: formData.get('kiste') as string
 			}
 		};
@@ -93,6 +94,7 @@ export const actions: Actions = {
 			success: true,
 			data: {
 				name: formData.get('name') as string,
+				anzahl: parseInt(formData.get('anzahl') as string),
 				kiste: formData.get('kiste') as string
 			}
 		};

@@ -44,10 +44,11 @@
 		data={data.gegenstaende}
 		dataFields={[
 			{ name: 'name' },
+			{ name: 'anzahl' },
 			{ name: 'bild', isImage: true },
 			{ name: 'kiste', isExpanded: true, fieldName: 'name' }
 		]}
-		tableHeaders={['Name', 'Bild', 'Kiste']}
+		tableHeaders={['Name', 'Anzahl', 'Bild', 'Kiste']}
 		user={data.user}
 		textButtonNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
@@ -68,6 +69,14 @@
 				value={form?.data?.name ?? ''}
 				required={true}
 				disabled={loading}
+			/>
+			<Input
+				id="anzahl"
+				label="Anzahl"
+				value={form?.data?.anzahl ?? 0}
+				required={true}
+				disabled={loading}
+				type="number"
 			/>
 			<Select id="kiste" label="Kiste" options={data.kisten} required={true} disabled={loading} />
 			<Input
@@ -96,6 +105,14 @@
 				value={updateGegenstand?.name ?? ''}
 				required={true}
 				disabled={loading}
+			/>
+			<Input
+				id="anzahl"
+				label="Anzahl"
+				value={updateGegenstand?.anzahl ?? 0}
+				required={true}
+				disabled={loading}
+				type="number"
 			/>
 			<Select
 				id="kiste"
