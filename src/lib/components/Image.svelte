@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
+	import { LazyImage } from 'svelte-lazy-image';
 
-	export let imageName: string;
-	export let imageCollection: string;
-	export let itemId: string;
+	export let imageName: string | undefined = undefined;
+	export let imageCollection: string | undefined = undefined;
+	export let itemId: string | undefined = undefined;
+	export let src: string | undefined = undefined;
 	export let label: string | undefined = undefined;
 	export let alt: string | undefined = undefined;
-	export let height = 512;
 	export let width = 512;
 </script>
 
@@ -17,11 +18,11 @@
 		</label>
 	{/if}
 
-	<img
+	<LazyImage
 		id={`img-${imageName}`}
-		{alt}
-		src={`${PUBLIC_PB_BASE_URL}/api/files/${imageCollection}/${itemId}/${imageName}`}
-		{height}
-		{width}
+		src={src ? src : `${PUBLIC_PB_BASE_URL}/api/files/${imageCollection}/${itemId}/${imageName}`}
+		placeholder="https://via.placeholder.com/{width}?text=placeholder"
+		alt={alt ?? ''}
+		sizes="(max-width: {width}px) {width}px, {width}px"
 	/>
 </div>

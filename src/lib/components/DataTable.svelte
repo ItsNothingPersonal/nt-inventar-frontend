@@ -165,14 +165,13 @@
 										id={dataRow[dataField.name]}
 										imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
 											dataRow['id']
-										}/${dataRow[dataField.name]}?thumb=48x48`}
+										}/${dataRow[dataField.name]}`}
 									>
 										<Image
 											imageCollection={dataRow['collectionName']}
 											imageName={dataRow[dataField.name]}
 											itemId={dataRow['id']}
 											alt="Modal des Bildes"
-											height={512}
 											width={512}
 										/>
 									</ImageModalDialog>

@@ -2,6 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { Input } from '$lib/components';
+	import Image from '$lib/components/Image.svelte';
 	import { getImageURL, isNotNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { EditIcon } from 'svelte-feather-icons';
@@ -19,7 +20,7 @@
 		if (isNotNullOrUndefined(files) && files.length > 0) {
 			const src = URL.createObjectURL(files[0]);
 			const preview: HTMLImageElement = document.getElementById(
-				'avatar-preview'
+				'img-avatar-preview'
 			) as HTMLImageElement;
 			preview.src = src;
 		}
@@ -65,14 +66,13 @@
 					</span>
 				</label>
 				<div class="w-32 rounded-full">
-					<img
+					<Image
 						src={data.user?.avatar
 							? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '128x128')
 							: `https://ui-avatars.com/api/?name=${data.user?.name}`}
 						alt="user avatar"
-						id="avatar-preview"
-						width="128"
-						height="128"
+						imageName="avatar-preview"
+						width={128}
 					/>
 				</div>
 			</label>

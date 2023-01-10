@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Image from '$lib/components/Image.svelte';
 	import MobileMenu from '$lib/components/MobileMenu.svelte';
 	import { editMode } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
@@ -94,13 +95,13 @@
 						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<label tabindex="0" class="btn btn-ghost btn-circle avatar">
 							<div class="w-10 rounded-full">
-								<img
-									alt="Profilbild in Navbar"
+								<Image
+									imageName="profilbild"
 									src={data.user?.avatar
-										? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '40x40')
+										? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '48x48')
 										: `https://ui-avatars.com/api/?name=${data.user?.name}`}
-									height="40"
-									width="40"
+									alt="Profilbild in Navbar"
+									width={48}
 								/>
 							</div>
 						</label>
