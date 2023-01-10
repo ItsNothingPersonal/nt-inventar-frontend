@@ -3,7 +3,6 @@
 	import { editMode } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
-	import { UserRoles } from '$lib/types/userRoles';
 	import { getImageURL, isNotNullOrUndefined, isNullOrUndefined } from '$lib/util';
 	import '../app.css';
 	import type { LayoutData } from './$types';
@@ -45,7 +44,7 @@
 			entries: [
 				{
 					label: 'Edit-Modus',
-					hidden: data.user?.role !== UserRoles.INVENTARIST,
+					hidden: isNullOrUndefined(data.user),
 					type: 'Input',
 					onClick: toggleEditMode
 				}
@@ -65,7 +64,7 @@
 		<div class="flex-none">
 			{#if innerWidth > BreakPoints.Large}
 				<ul class="menu menu-horizontal px-1">
-					{#if data.user?.role === UserRoles.INVENTARIST}
+					{#if isNotNullOrUndefined(data.user)}
 						<li>
 							<div class="form-control">
 								<label class={'label cursor-pointer'}>

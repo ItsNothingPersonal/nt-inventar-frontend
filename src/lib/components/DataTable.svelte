@@ -63,9 +63,9 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-	{#if user?.role === UserRoles.INVENTARIST && $editMode === true}
+	{#if $editMode === true}
 		<div class="pb-4">
-			{#if !disableEdit}
+			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 				<Modal label="create-button" checked={modalOpen}>
 					<span slot="trigger" class="btn btn-active btn-primary"> Neu </span>
 					<h3 slot="heading">{textButtonNeu}</h3>
@@ -110,7 +110,7 @@
 							<Modal label="update-button" checked={modalOpen}>
 								<span
 									slot="trigger"
-									class="btn btn-sm {innerWidth <= BreakPoints.Large
+									class="btn {innerWidth <= BreakPoints.Large
 										? 'btn-square'
 										: ''} btn-primary"
 									on:keydown={() => selectedId.set(`${dataRow['id']}`)}
@@ -126,7 +126,7 @@
 								<slot name="formAktualisieren" />
 							</Modal>
 							<button
-								class="btn btn-sm {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
+								class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
 								type="submit"
 								form="singleDeleteForm"
 							>
