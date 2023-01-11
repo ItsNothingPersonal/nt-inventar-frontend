@@ -172,6 +172,7 @@
 											imageName={dataRow[dataField.name]}
 											itemId={dataRow['id']}
 											alt="Modal des Bildes"
+											height={512}
 											width={512}
 										/>
 									</ImageModalDialog>

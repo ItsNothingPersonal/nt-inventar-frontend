@@ -128,6 +128,7 @@
 					imageCollection="gegenstaende"
 					itemId={updateGegenstand?.id ?? ''}
 					label="Aktuelles Bild"
+					height={460}
 					width={460}
 				/>
 			{/if}

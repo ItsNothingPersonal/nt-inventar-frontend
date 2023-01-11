@@ -94,13 +94,14 @@
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<label tabindex="0" class="btn btn-ghost btn-circle avatar">
-							<div class="w-10 rounded-full">
+							<div class="rounded-full">
 								<Image
 									imageName="profilbild"
 									src={data.user?.avatar
 										? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '48x48')
 										: `https://ui-avatars.com/api/?name=${data.user?.name}`}
 									alt="Profilbild in Navbar"
+									height={48}
 									width={48}
 								/>
 							</div>

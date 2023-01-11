@@ -8,6 +8,7 @@
 	export let src: string | undefined = undefined;
 	export let label: string | undefined = undefined;
 	export let alt: string | undefined = undefined;
+	export let height = 512;
 	export let width = 512;
 </script>
 
@@ -24,5 +25,7 @@
 		placeholder="https://via.placeholder.com/{width}?text=placeholder"
 		alt={alt ?? ''}
 		sizes="(max-width: {width}px) {width}px, {width}px"
+		{height}
+		{width}
 	/>
 </div>

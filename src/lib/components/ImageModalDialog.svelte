@@ -10,12 +10,15 @@
 </script>
 
 <label for={`modal-${id}`}>
-	<Image
-		src={`${imageSrc}?thumb=${thumbnailWidth}x${thumbnailHeight}`}
-		alt="Thumbnail des Bildes"
-		width={thumbnailWidth}
-		imageName="thumbnail von {id}"
-	/>
+	<div class="w-12">
+		<Image
+			src={`${imageSrc}?thumb=${thumbnailWidth}x${thumbnailHeight}`}
+			alt="Thumbnail des Bildes"
+			width={thumbnailWidth}
+			height={thumbnailHeight}
+			imageName="thumbnail von {id}"
+		/>
+	</div>
 </label>
 
 <input type="checkbox" id={`modal-${id}`} class="modal-toggle" bind:value={modalShown} />

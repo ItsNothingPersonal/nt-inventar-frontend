@@ -72,6 +72,7 @@
 							: `https://ui-avatars.com/api/?name=${data.user?.name}`}
 						alt="user avatar"
 						imageName="avatar-preview"
+						height={128}
 						width={128}
 					/>
 				</div>
