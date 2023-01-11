@@ -22,7 +22,7 @@
 	<LazyImage
 		id={`img-${imageName}`}
 		src={src ? src : `${PUBLIC_PB_BASE_URL}/api/files/${imageCollection}/${itemId}/${imageName}`}
-		placeholder="https://via.placeholder.com/{width}?text=placeholder"
+		placeholder="https://via.placeholder.com/{width}?text=lade%20Bild"
 		alt={alt ?? ''}
 		sizes="(max-width: {width}px) {width}px, {width}px"
 		{height}
