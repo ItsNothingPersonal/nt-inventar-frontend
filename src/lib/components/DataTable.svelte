@@ -107,7 +107,7 @@
 				<tr>
 					{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
 						<td>
-							<Modal label="update-button" checked={modalOpen}>
+							<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
 								<span
 									slot="trigger"
 									class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
@@ -126,7 +126,7 @@
 							<button
 								class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
 								type="submit"
-								form="singleDeleteForm"
+								form="singleDeleteForm{dataRow['id']}"
 							>
 								{#if innerWidth <= BreakPoints.Large}
 									<XIcon />
@@ -138,7 +138,7 @@
 								method="post"
 								action="?/delete"
 								use:enhance={enhanceDelete}
-								id="singleDeleteForm"
+								id="singleDeleteForm{dataRow['id']}"
 							>
 								<input hidden class="hidden" name="id" value={dataRow['id']} />
 							</form>

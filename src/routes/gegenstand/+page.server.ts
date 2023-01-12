@@ -103,7 +103,19 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const deletionIds = formData.getAll('id') as string[];
 
-		deletionIds.forEach(async (id) => await locals.pb.collection('gegenstaende').delete(id));
+		deletionIds.forEach(async (id) => {
+			try {
+				await locals.pb.collection('gegenstaende').delete(id);
+			} catch (error) {
+				console.error(
+					`Es ist ein Fehler beim Versuch, den Gegenstand mit ID ${id} zu löschen, aufgetreten: ${error}`
+				);
+				return {
+					error: true,
+					message: 'Es ist ein Fehler beim Löschen des Gegenstands aufgetreten.'
+				};
+			}
+		});
 
 		return { success: true, data: undefined };
 	}

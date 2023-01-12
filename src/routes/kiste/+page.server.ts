@@ -103,7 +103,19 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const deletionIds = formData.getAll('id') as string[];
 
-		deletionIds.forEach(async (id) => await locals.pb.collection('kisten').delete(id));
+		deletionIds.forEach(async (id) => {
+			try {
+				await locals.pb.collection('kisten').delete(id);
+			} catch (error) {
+				console.error(
+					`Es ist ein Fehler beim Versuch, die Kiste mit id ${id} zu löschen, aufgetreten: ${error}`
+				);
+				return {
+					error: true,
+					message: 'Es ist ein Fehler beim Versuch, die Kiste zu löschen, aufgetreten.'
+				};
+			}
+		});
 
 		return { success: true, data: undefined };
 	}

@@ -97,6 +97,7 @@
 			enctype="multipart/form-data"
 			use:enhance={submitEnhance}
 			slot="formAktualisieren"
+			id="formAktualisieren{updateGegenstand?.id}"
 		>
 			<Input id="id" hidden required={true} disabled={loading} value={updateGegenstand?.id ?? ''} />
 			<Input
