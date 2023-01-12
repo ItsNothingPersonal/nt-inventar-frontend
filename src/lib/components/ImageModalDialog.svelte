@@ -22,10 +22,11 @@
 </label>
 
 <input type="checkbox" id={`modal-${id}`} class="modal-toggle" bind:value={modalShown} />
-<label for={`modal-${id}`} class="modal cursor-pointer" id={`label-${id}`}>
-	<label class="modal-box relative" for="">
+<div class="modal cursor-pointer">
+	<div class="modal-box relative">
+		<label for={`modal-${id}`} class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
 		{#if modalShown}
 			<slot />
 		{/if}
-	</label>
-</label>
+	</div>
+</div>
