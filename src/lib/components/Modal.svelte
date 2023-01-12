@@ -8,8 +8,9 @@
 </label>
 
 <input type="checkbox" id={label} class="modal-toggle" {checked} />
-<label for={label} class="modal modal-bottom sm:modal-middle">
-	<label for="" class="modal-box">
+<div class="modal">
+	<div class="modal-box relative">
+		<label for={label} class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
 		<div class="font-bold text-xl text-center">
 			<slot name="heading" />
 		</div>
@@ -19,5 +20,5 @@
 		<div class="modal-action justify-center">
 			<slot name="actions" />
 		</div>
-	</label>
-</label>
+	</div>
+</div>
