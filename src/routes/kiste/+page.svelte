@@ -41,12 +41,8 @@
 <div class="w-full h-full px-2">
 	<DataTable
 		data={data.kisten}
-		dataFields={[
-			{ name: 'name' },
-			{ name: 'projekt', isExpanded: true, fieldName: 'name' },
-			{ name: 'lagerort', isExpanded: true, fieldName: 'name' }
-		]}
-		tableHeaders={['Name', 'Projekt', 'Lagerort']}
+		dataFields={[{ name: 'name' }, { name: 'lagerort', isExpanded: true, fieldName: 'name' }]}
+		tableHeaders={['Name', 'Lagerort']}
 		user={data.user}
 		textButtonNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"
@@ -62,13 +58,6 @@
 			slot="formNeu"
 		>
 			<Input id="name" label="Name" value={form?.data?.name} required={true} disabled={loading} />
-			<Select
-				id="projekt"
-				label="Projekt"
-				options={data.projekte}
-				required={true}
-				disabled={loading}
-			/>
 			<Select
 				id="lagerort"
 				label="Lagerort"
@@ -95,14 +84,6 @@
 				required={true}
 				disabled={loading}
 				value={updateKiste?.name ?? ''}
-			/>
-			<Select
-				id="projekt"
-				label="Projekt"
-				options={data.projekte}
-				required={true}
-				disabled={loading}
-				value={updateKiste?.expand.projekt.name}
 			/>
 			<Select
 				id="lagerort"

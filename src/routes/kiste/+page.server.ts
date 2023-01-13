@@ -1,23 +1,17 @@
 import type { FormKisteCreate } from '$lib/server/formKisteCreate';
-import { getKisten, getLagerorte, getProjekte } from '$lib/server/pocketbase';
-import { kistenStore, lagerortStore, projektStore } from '$lib/server/storeServer';
+import { getKisten, getLagerorte } from '$lib/server/pocketbase';
+import { kistenStore, lagerortStore } from '$lib/server/storeServer';
 import type { Kiste } from '$lib/types/kiste';
 import type { Lagerort } from '$lib/types/lagerort';
-import type { Projekt } from '$lib/types/projekt';
 import { serializeNonPOJOs } from '$lib/util';
 import { redirect } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({
-	locals
-}): Promise<{ kisten: Kiste[]; projekte: string[]; lagerorte: string[] }> => {
+export const load = (async ({ locals }): Promise<{ kisten: Kiste[]; lagerorte: string[] }> => {
 	if (!locals.pb.authStore.isValid) {
 		throw redirect(303, '/login');
 	}
-
-	const projekte = await getProjekte(locals.pb);
-	projektStore.set(projekte);
 
 	const lagerorte = await getLagerorte(locals.pb);
 	lagerortStore.set(lagerorte);
@@ -27,7 +21,6 @@ export const load = (async ({
 
 	return {
 		kisten: JSON.parse(JSON.stringify(kisten)),
-		projekte: projekte.map((x: Projekt) => x.name),
 		lagerorte: lagerorte.map((x: Lagerort) => x.name)
 	};
 }) satisfies PageServerLoad;
@@ -36,12 +29,6 @@ export const actions: Actions = {
 	create: async ({ locals, request }) => {
 		const formData = await request.formData();
 		const data: FormKisteCreate = Object.fromEntries(formData) as FormKisteCreate;
-
-		const projekteInStore: Projekt[] = get(projektStore);
-		const projekt: Projekt | undefined = projekteInStore.find(
-			(projektStore) => projektStore.name === formData.get('projekt')
-		);
-		data.projekt = projekt?.id ?? '';
 
 		const lagerortInStore: Lagerort[] = get(lagerortStore);
 		const lagerort: Lagerort | undefined = lagerortInStore.find(
@@ -69,12 +56,6 @@ export const actions: Actions = {
 	update: async ({ locals, request }) => {
 		const formData = await request.formData();
 		const data: FormKisteCreate = Object.fromEntries(formData) as FormKisteCreate;
-
-		const projekteInStore: Projekt[] = get(projektStore);
-		const projekt: Projekt | undefined = projekteInStore.find(
-			(projektStore) => projektStore.name === formData.get('projekt')
-		);
-		data.projekt = projekt?.id ?? '';
 
 		const lagerortInStore: Lagerort[] = get(lagerortStore);
 		const lagerort: Lagerort | undefined = lagerortInStore.find(
