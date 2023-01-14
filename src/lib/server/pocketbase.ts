@@ -18,11 +18,42 @@ const getGegenstaende = async (pb: PocketBase) => {
 	return data;
 };
 
+const getGegenstaendeForKiste = async (pb: PocketBase, id: string) => {
+	let data: Gegenstand[] = [];
+
+	try {
+		data = await pb.collection('gegenstaende').getFullList<Gegenstand>(200, {
+			sort: '-created',
+			filter: `kiste.id = "${id}"`,
+			expand: 'kiste'
+		});
+	} catch (error) {
+		console.error(error);
+	}
+
+	return data;
+};
+
 const getKisten = async (pb: PocketBase) => {
 	let data: Kiste[] = [];
 
 	try {
 		data = await pb.collection('kisten').getFullList<Kiste>(200, {
+			sort: '-created',
+			expand: 'projekt, lagerort'
+		});
+	} catch (error) {
+		console.error(error);
+	}
+
+	return data;
+};
+
+const getKistenById = async (pb: PocketBase, id: string) => {
+	let data: Kiste | undefined = undefined;
+
+	try {
+		data = await pb.collection('kisten').getFirstListItem<Kiste>(`id="${id}"`, {
 			sort: '-created',
 			expand: 'projekt, lagerort'
 		});
@@ -47,4 +78,4 @@ const getLagerorte = async (pb: PocketBase) => {
 	return data;
 };
 
-export { getGegenstaende, getKisten, getLagerorte };
+export { getGegenstaende, getGegenstaendeForKiste, getKisten, getKistenById, getLagerorte };

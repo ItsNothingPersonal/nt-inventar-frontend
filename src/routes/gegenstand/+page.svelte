@@ -46,7 +46,7 @@
 			{ name: 'name' },
 			{ name: 'anzahl' },
 			{ name: 'bild', isImage: true },
-			{ name: 'kiste', isExpanded: true, fieldName: 'name' }
+			{ name: 'kiste', isExpanded: true, fieldName: 'name', detailsLink: 'kiste' }
 		]}
 		tableHeaders={['Name', 'Anzahl', 'Bild', 'Kiste']}
 		user={data.user}
