@@ -14,13 +14,8 @@
 
 	<DataTable
 		data={data.gegenstaende}
-		dataFields={[
-			{ name: 'name' },
-			{ name: 'anzahl' },
-			{ name: 'bild', isImage: true },
-			{ name: 'kiste', isExpanded: true, fieldName: 'name' }
-		]}
-		tableHeaders={['Name', 'Anzahl', 'Bild', 'Kiste']}
+		dataFields={[{ name: 'name' }, { name: 'anzahl' }, { name: 'bild', isImage: true }]}
+		tableHeaders={['Name', 'Anzahl', 'Bild']}
 		user={data.user}
 		disableEdit={true}
 		csvName="{`gegenstaende-${data.kiste.name}`}.csv"
