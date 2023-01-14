@@ -3,4 +3,5 @@ export interface DBField {
 	isExpanded?: boolean;
 	fieldName?: string;
 	isImage?: boolean;
+	detailsLink?: boolean | string;
 }

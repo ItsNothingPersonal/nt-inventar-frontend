@@ -41,7 +41,10 @@
 <div class="w-full h-full px-2">
 	<DataTable
 		data={data.kisten}
-		dataFields={[{ name: 'name' }, { name: 'lagerort', isExpanded: true, fieldName: 'name' }]}
+		dataFields={[
+			{ name: 'name', detailsLink: true },
+			{ name: 'lagerort', isExpanded: true, fieldName: 'name' }
+		]}
 		tableHeaders={['Name', 'Lagerort']}
 		user={data.user}
 		textButtonNeu="Kiste anlegen"

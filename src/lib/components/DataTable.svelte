@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
 	import { editMode, selectedId } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
@@ -62,7 +63,7 @@
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
 	{#if $editMode === true}
 		<div class="pb-4">
 			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
@@ -157,7 +158,20 @@
 					{/if}
 					{#each dataFields as dataField}
 						{#if dataField.isExpanded}
-							<td> {dataRow['expand'][dataField.name][dataField.fieldName ?? '']} </td>
+							{#if dataField.detailsLink}
+								<td>
+									<a
+										class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
+										href="{typeof dataField.detailsLink === 'string'
+											? dataField.detailsLink
+											: $page.url.pathname}/{dataRow['expand'][dataField.name]['id']}"
+									>
+										{dataRow['expand'][dataField.name][dataField.fieldName ?? '']}
+									</a>
+								</td>
+							{:else}
+								<td> {dataRow['expand'][dataField.name][dataField.fieldName ?? '']} </td>
+							{/if}
 						{:else if dataField.isImage}
 							<td>
 								{#if dataRow[dataField.name]}
@@ -180,8 +194,19 @@
 									<span>Nicht vorhanden</span>
 								{/if}
 							</td>
+						{:else if dataField.detailsLink}
+							<td>
+								<a
+									class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
+									href="{typeof dataField.detailsLink === 'string'
+										? dataField.detailsLink
+										: $page.url.pathname}/{dataRow['id']}"
+								>
+									{dataRow[dataField.name]}
+								</a>
+							</td>
 						{:else}
-							<td>{dataRow[dataField.name]}</td>
+							<td> {dataRow[dataField.name]} </td>
 						{/if}
 					{/each}
 				</tr>
