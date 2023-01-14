@@ -25,7 +25,7 @@ const getGegenstaendeForKiste = async (pb: PocketBase, id: string) => {
 		data = await pb.collection('gegenstaende').getFullList<Gegenstand>(200, {
 			sort: '-created',
 			filter: `kiste.id = "${id}"`,
-			expand: 'kiste'
+			expand: 'kiste, kiste.lagerort'
 		});
 	} catch (error) {
 		console.error(error);

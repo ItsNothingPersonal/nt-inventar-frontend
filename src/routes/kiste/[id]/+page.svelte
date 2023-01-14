@@ -6,7 +6,12 @@
 </script>
 
 <div class="w-full h-full px-2">
-	<h1 class="text-4xl font-bold">{data.kiste?.name}</h1>
+	<h1 class="text-4xl font-bold mb-4">{data.kiste?.name}</h1>
+	<label for="lagerort">
+		<span class="font-bold"> Lagerort: </span>
+	</label>
+	<span id="lagerort"> {data.kiste?.expand.lagerort.name} </span>
+
 	<DataTable
 		data={data.gegenstaende}
 		dataFields={[
