@@ -20,9 +20,6 @@ export const load = (async ({
 	const kisten = await getKisten(locals.pb);
 	kistenStore.set(kisten);
 
-	gegenstaende.forEach((element) => {
-		console.warn(element.expand.kiste.id);
-	});
 	return {
 		gegenstaende: JSON.parse(JSON.stringify(gegenstaende)),
 		kisten: kisten.map((x: Kiste) => x.name)
