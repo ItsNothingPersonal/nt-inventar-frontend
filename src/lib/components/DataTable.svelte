@@ -163,7 +163,7 @@
 									<a
 										class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
 										href="{typeof dataField.detailsLink === 'string'
-											? dataField.detailsLink
+											? `${$page.url.origin}/${dataField.detailsLink}`
 											: $page.url.pathname}/{dataRow['expand'][dataField.name]['id']}"
 									>
 										{dataRow['expand'][dataField.name][dataField.fieldName ?? '']}
@@ -199,7 +199,7 @@
 								<a
 									class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
 									href="{typeof dataField.detailsLink === 'string'
-										? dataField.detailsLink
+										? `${$page.url.origin}/${dataField.detailsLink}`
 										: $page.url.pathname}/{dataRow['id']}"
 								>
 									{dataRow[dataField.name]}

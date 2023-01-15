@@ -40,7 +40,7 @@ const getKisten = async (pb: PocketBase) => {
 	try {
 		data = await pb.collection('kisten').getFullList<Kiste>(200, {
 			sort: '-created',
-			expand: 'projekt, lagerort'
+			expand: 'lagerort'
 		});
 	} catch (error) {
 		console.error(error);
@@ -49,13 +49,28 @@ const getKisten = async (pb: PocketBase) => {
 	return data;
 };
 
-const getKistenById = async (pb: PocketBase, id: string) => {
+const getKisteById = async (pb: PocketBase, id: string) => {
 	let data: Kiste | undefined = undefined;
 
 	try {
 		data = await pb.collection('kisten').getFirstListItem<Kiste>(`id="${id}"`, {
 			sort: '-created',
-			expand: 'projekt, lagerort'
+			expand: 'lagerort'
+		});
+	} catch (error) {
+		console.error(error);
+	}
+
+	return data;
+};
+
+const getKistenByLagerortId = async (pb: PocketBase, id: string) => {
+	let data: Kiste[] = [];
+
+	try {
+		data = await pb.collection('kisten').getFullList<Kiste>(200, {
+			filter: `lagerort.id="${id}"`,
+			sort: '-created'
 		});
 	} catch (error) {
 		console.error(error);
@@ -68,7 +83,7 @@ const getLagerorte = async (pb: PocketBase) => {
 	let data: Lagerort[] = [];
 
 	try {
-		data = await pb.collection('lagerorte').getFullList<Lagerort>(200 /* batch size */, {
+		data = await pb.collection('lagerorte').getFullList<Lagerort>(200, {
 			sort: '-created'
 		});
 	} catch (error) {
@@ -78,4 +93,26 @@ const getLagerorte = async (pb: PocketBase) => {
 	return data;
 };
 
-export { getGegenstaende, getGegenstaendeForKiste, getKisten, getKistenById, getLagerorte };
+const getLagerortById = async (pb: PocketBase, id: string) => {
+	let data: Lagerort | undefined = undefined;
+
+	try {
+		data = await pb.collection('lagerorte').getFirstListItem<Lagerort>(`id="${id}"`, {
+			sort: '-created'
+		});
+	} catch (error) {
+		console.error(error);
+	}
+
+	return data;
+};
+
+export {
+	getGegenstaende,
+	getGegenstaendeForKiste,
+	getKisten,
+	getKisteById,
+	getLagerorte,
+	getLagerortById,
+	getKistenByLagerortId
+};

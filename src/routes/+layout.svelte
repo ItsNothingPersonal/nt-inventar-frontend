@@ -22,7 +22,8 @@
 			categoryName: 'Inventar',
 			entries: [
 				{ label: 'Gegenstände', href: '/gegenstand', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Kisten', href: '/kiste', hidden: isNullOrUndefined(data.user) }
+				{ label: 'Kisten', href: '/kiste', hidden: isNullOrUndefined(data.user) },
+				{ label: 'Lagerorte', href: '/lagerort', hidden: isNullOrUndefined(data.user) }
 			]
 		},
 		{
@@ -81,6 +82,7 @@
 					{#if data.user}
 						<li><a href="/gegenstand">Gegenstände</a></li>
 						<li><a href="/kiste">Kisten</a></li>
+						<li><a href="/lagerort">Lagerorte</a></li>
 					{/if}
 					<li><a href="/impressum">Impressum</a></li>
 					{#if !data.user}
