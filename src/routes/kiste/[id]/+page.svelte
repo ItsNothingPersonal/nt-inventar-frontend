@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import type { PageData } from './$types';
 
@@ -10,7 +11,13 @@
 	<label for="lagerort">
 		<span class="font-bold"> Lagerort: </span>
 	</label>
-	<span id="lagerort"> {data.kiste?.expand.lagerort.name} </span>
+	<a
+		id="lagerort"
+		class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
+		href={`${$page.url.origin}/lagerort/${data.kiste?.expand.lagerort.id}`}
+	>
+		{data.kiste?.expand.lagerort.name}
+	</a>
 
 	<DataTable
 		data={data.gegenstaende}
