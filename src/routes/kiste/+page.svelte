@@ -43,7 +43,7 @@
 		data={data.kisten}
 		dataFields={[
 			{ name: 'name', detailsLink: true },
-			{ name: 'lagerort', isExpanded: true, fieldName: 'name' }
+			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' }
 		]}
 		tableHeaders={['Name', 'Lagerort']}
 		user={data.user}
