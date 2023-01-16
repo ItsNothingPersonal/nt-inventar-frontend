@@ -1,6 +1,15 @@
 import type { FormUserLogin } from '$lib/server/formUserLogin';
 import { error, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load = (async ({ locals }) => {
+	const authMethods = await locals.pb.collection('users').listAuthMethods();
+	return {
+		authProviders: authMethods.authProviders.sort((a: { name: string }, b: { name: string }) =>
+			a.name.localeCompare(b.name)
+		)
+	};
+}) satisfies PageServerLoad;
 
 export const actions: Actions = {
 	login: async ({ request, locals }) => {

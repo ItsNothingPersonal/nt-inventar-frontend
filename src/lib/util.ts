@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { PUBLIC_PB_BASE_URL } from '$env/static/public';
 import type { DataObject } from './types/dataRow';
 
@@ -65,4 +66,14 @@ export function toTitleCase(str: string): string | undefined {
 		.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
 		?.map((x) => x.charAt(0).toUpperCase() + x.slice(1))
 		.join(' ');
+}
+
+export function sqlTimeNow(): string {
+	const time = new Date().toISOString().replace('T', ' ');
+
+	return time;
+}
+
+export function sessionStore(field: string, value: string) {
+	if (browser) window.sessionStorage.setItem(field, value);
 }
