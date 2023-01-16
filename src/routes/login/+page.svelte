@@ -1,13 +1,19 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { Input, Modal } from '$lib/components';
 	import AlertError from '$lib/components/AlertError.svelte';
+	import { sessionStore } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
+	import type { AuthProviderInfo } from 'pocketbase';
 	import { CodeIcon } from 'svelte-feather-icons';
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
+	export let data: PageData;
 	export let form: ActionData;
+	const redirectUrl = `${$page.url.origin}/redirect`;
 
 	let passwortresetModalOpen: boolean;
 	let loading: boolean;
@@ -34,6 +40,25 @@
 			loading = false;
 		};
 	};
+
+	function gotoAuthProvider(providerData: AuthProviderInfo) {
+		if (browser && providerData) {
+			const jsonProvider = JSON.stringify(providerData);
+			document.cookie = `oauth=${jsonProvider}`;
+			sessionStorage.removeItem('oauths');
+			sessionStore('oauths', jsonProvider);
+			const redirectURL = `${providerData.authUrl}${redirectUrl}`;
+			window.location.href = redirectURL || '';
+		}
+	}
+
+	function getProviderImageName(name: string = 'bitcoin') {
+		if (name === 'discord') name = 'discord-alt';
+		let imageProvider = `bxl:${name}`;
+		if (name == 'kakao') imageProvider = `simple-icons:kakaotalk`;
+
+		return imageProvider;
+	}
 </script>
 
 <div class="flex flex-col items-center h-full w-full pt-12">
@@ -42,9 +67,9 @@
 		Logg dich ein
 	</h2>
 	<p class="text-center mt-1">
-		Oder <a href="/register" class="text-primary font-medium hover:cursor-pointer"
-			>registrier dich</a
-		> falls du noch keinen Account hast.
+		Oder <a href="/register" class="text-primary font-medium hover:cursor-pointer">
+			registrier dich
+		</a> falls du noch keinen Account hast.
 	</p>
 	<div class="bg-white py-6 shadow-md rounded-lg w-full max-w-sm mt-6">
 		<form method="POST" action="?/login" class="flex flex-col items-center space-y-2 w-full">
@@ -92,5 +117,27 @@
 				/>
 			{/if}
 		</form>
+		<div class="divider mb-0" />
+		<div class="card">
+			<div class="card-body items-center text-center">
+				<span class="text-sm font-black pb-4"> oder nutze einen der folgenden Logins... </span>
+
+				<div class="card-actions justify-center text-center">
+					{#each data.authProviders as p}
+						<button class="btn btn-wide gap-2" on:click={() => gotoAuthProvider(p)}>
+							<span class="justify-center">
+								<img
+									alt={p.name}
+									src="https://api.iconify.design/{getProviderImageName(
+										p.name
+									)}.svg?color=%23888888"
+								/>
+							</span>
+							<span>{p.name}</span>
+						</button>
+					{/each}
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
