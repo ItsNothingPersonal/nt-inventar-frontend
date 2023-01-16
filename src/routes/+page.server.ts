@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals }) => {
 	if (isNotNullOrUndefined(locals.user)) {
-		throw redirect(303, '/gegenstand');
+		throw redirect(303, '/kiste');
 	}
 	return {};
 }) satisfies PageServerLoad;
