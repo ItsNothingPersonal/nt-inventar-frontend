@@ -10,6 +10,7 @@
 	export let alt: string | undefined = undefined;
 	export let height = 512;
 	export let width = 512;
+	export let lazy = true;
 </script>
 
 <div class="form-control w-full max-w-lg mb-2">
@@ -19,13 +20,25 @@
 		</label>
 	{/if}
 
-	<LazyImage
-		id={`img-${imageName}`}
-		src={src ? src : `${PUBLIC_PB_BASE_URL}/api/files/${imageCollection}/${itemId}/${imageName}`}
-		placeholder="https://via.placeholder.com/{width}?text=lade%20Bild"
-		alt={alt ?? ''}
-		sizes="(max-width: {width}px) {width}px, {width}px"
-		{height}
-		{width}
-	/>
+	{#if lazy}
+		<LazyImage
+			id={`img-${imageName}`}
+			src={src ? src : `${PUBLIC_PB_BASE_URL}/api/files/${imageCollection}/${itemId}/${imageName}`}
+			placeholder="https://via.placeholder.com/{width}?text=lade%20Bild"
+			alt={alt ?? ''}
+			sizes="(max-width: {width}px) {width}px, {width}px"
+			{height}
+			{width}
+		/>
+	{:else}
+		<img
+			id={`img-${imageName}`}
+			src={src ? src : `${PUBLIC_PB_BASE_URL}/api/files/${imageCollection}/${itemId}/${imageName}`}
+			placeholder="https://via.placeholder.com/{width}?text=lade%20Bild"
+			alt={alt ?? ''}
+			sizes="(max-width: {width}px) {width}px, {width}px"
+			{height}
+			{width}
+		/>
+	{/if}
 </div>

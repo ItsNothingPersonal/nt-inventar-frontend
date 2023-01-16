@@ -63,7 +63,7 @@
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+<div class="relative overflow-x-auto shadow-md print:shadow-none sm:rounded-lg mt-4">
 	{#if $editMode === true}
 		<div class="pb-4">
 			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
@@ -90,7 +90,7 @@
 			</form>
 		</div>
 	{/if}
-	<table class="table table-zebra w-full">
+	<table class="table table-zebra print:table-compact w-full">
 		<thead>
 			<tr>
 				{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
@@ -161,7 +161,7 @@
 							{#if dataField.detailsLink}
 								<td>
 									<a
-										class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
+										class="underline underline-offset-4 decoration-dotted print:no-underline hover:cursor-pointer"
 										href="{typeof dataField.detailsLink === 'string'
 											? `${$page.url.origin}/${dataField.detailsLink}`
 											: $page.url.pathname}/{dataRow['expand'][dataField.name]['id']}"
@@ -197,7 +197,7 @@
 						{:else if dataField.detailsLink}
 							<td>
 								<a
-									class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
+									class="underline underline-offset-4 decoration-dotted print:no-underline hover:cursor-pointer"
 									href="{typeof dataField.detailsLink === 'string'
 										? `${$page.url.origin}/${dataField.detailsLink}`
 										: $page.url.pathname}/{dataRow['id']}"
