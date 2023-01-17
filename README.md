@@ -14,6 +14,8 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 - Versand der Registrierungsmail
 - Automatische Passwortrücksetzung per Mail
 - Tabellen-Export als .csv-Datei
+- Login via Discord, Twitch und Github möglich (OAuth)
+- Bereinigte Print-Ansicht um die verschiedenen Tabellen zu drucken
 
 ## Roadmap
 

@@ -13,7 +13,7 @@
 	</label>
 	<a
 		id="lagerort"
-		class="underline underline-offset-4 decoration-dotted hover:cursor-pointer"
+		class="underline underline-offset-4 decoration-dotted print:no-underline hover:cursor-pointer"
 		href={`${$page.url.origin}/lagerort/${data.kiste?.expand.lagerort.id}`}
 	>
 		{data.kiste?.expand.lagerort.name}

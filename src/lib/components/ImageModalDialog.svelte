@@ -17,6 +17,7 @@
 			width={thumbnailWidth}
 			height={thumbnailHeight}
 			imageName="thumbnail von {id}"
+			lazy={false}
 		/>
 	</div>
 </label>

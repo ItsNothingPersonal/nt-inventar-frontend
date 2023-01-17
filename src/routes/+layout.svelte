@@ -55,8 +55,8 @@
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
-<main class="container mx-auto">
-	<div class="navbar bg-base-100">
+<main class="container mx-auto print:p-0">
+	<div class="navbar bg-base-100 print:hidden">
 		<div class="flex flex-1">
 			<a class="btn btn-ghost normal-case text-xl pl-0" href="/">
 				Nächtliches Theater - Inventar

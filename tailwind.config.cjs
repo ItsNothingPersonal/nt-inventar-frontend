@@ -2,7 +2,11 @@
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
-		extend: {}
+		extend: {
+			screens: {
+				print: { raw: 'print' }
+			}
+		}
 	},
 	plugins: [require('daisyui')],
 	daisyui: {
