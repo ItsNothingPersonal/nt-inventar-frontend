@@ -3,8 +3,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { Input, Modal } from '$lib/components';
-	import AlertError from '$lib/components/AlertError.svelte';
+	import { AlertError, Input, Modal } from '$lib/components';
 	import { sessionStore } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { AuthProviderInfo } from 'pocketbase';
