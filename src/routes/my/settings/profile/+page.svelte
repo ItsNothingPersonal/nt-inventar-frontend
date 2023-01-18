@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { Input } from '$lib/components';
-	import Image from '$lib/components/Image.svelte';
+	import { Image, Input } from '$lib/components';
 	import { getImageURL, isNotNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { EditIcon } from 'svelte-feather-icons';

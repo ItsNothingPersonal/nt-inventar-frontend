@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Image from '$lib/components/Image.svelte';
-	import MobileMenu from '$lib/components/MobileMenu.svelte';
+	import { Image, MobileMenu } from '$lib/components';
 	import { editMode } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';

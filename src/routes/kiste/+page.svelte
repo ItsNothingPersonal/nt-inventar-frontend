@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { Input, Select } from '$lib/components';
-	import DataTable from '$lib/components/DataTable.svelte';
+	import { DataTable, Input, Select } from '$lib/components';
 	import { selectedId } from '$lib/storeClient';
 	import type { Kiste } from '$lib/types/kiste';
 	import type { ActionResult } from '@sveltejs/kit';

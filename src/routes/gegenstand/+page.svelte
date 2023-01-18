@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { Input, Select } from '$lib/components';
-	import DataTable from '$lib/components/DataTable.svelte';
-	import Image from '$lib/components/Image.svelte';
+	import { DataTable, Image, Input, Select } from '$lib/components';
 	import { selectedId } from '$lib/storeClient';
 	import type { Gegenstand } from '$lib/types/gegenstand';
 	import type { ActionResult } from '@sveltejs/kit';
