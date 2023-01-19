@@ -35,7 +35,11 @@ export const actions: Actions = {
 	create: async ({ locals, request }) => {
 		const formData = await request.formData();
 
-		formData.set('kiste', kisteInBearbeitung?.id ?? '');
+		const kistenInStore: Kiste[] = get(kistenStore);
+		const kiste: Kiste | undefined = kistenInStore.find(
+			(kisteStore) => kisteStore.name === formData.get('kiste')
+		);
+		formData.set('kiste', kiste?.id ?? '');
 
 		const bild: File = formData.get('bild') as File;
 

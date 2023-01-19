@@ -86,7 +86,14 @@
 				disabled={loading}
 				type="number"
 			/>
-			<Input id="kiste" required={true} disabled={true} value={data.kiste.name} hidden />
+			<Select
+				id="kiste"
+				label="Kiste"
+				options={data.kisten}
+				required={true}
+				disabled={loading}
+				value={data.kiste.name}
+			/>
 			<Input
 				label="Bild"
 				id="bild"
