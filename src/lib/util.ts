@@ -77,3 +77,12 @@ export function sqlTimeNow(): string {
 export function sessionStore(field: string, value: string) {
 	if (browser) window.sessionStorage.setItem(field, value);
 }
+
+export function changeToTheme(currentTheme: string, newTheme: string): boolean {
+	if (currentTheme !== newTheme) {
+		document.documentElement.setAttribute('data-theme', newTheme);
+		return true;
+	} else {
+		return false;
+	}
+}

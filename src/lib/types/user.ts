@@ -8,4 +8,5 @@ export interface PBUser {
 	avatar: string;
 	collectionId: string;
 	role: UserRoles;
+	theme: string;
 }

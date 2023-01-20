@@ -16,6 +16,7 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 - Tabellen-Export als .csv-Datei
 - Login via Discord, Twitch und Github möglich (OAuth)
 - Bereinigte Print-Ansicht um die verschiedenen Tabellen zu drucken
+- Theme-Selector für angemeldete User
 
 ## Roadmap
 
