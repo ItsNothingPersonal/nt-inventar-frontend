@@ -1,13 +1,19 @@
 <script lang="ts">
 	import { Image, MobileMenu } from '$lib/components';
-	import { editMode } from '$lib/storeClient';
+	import { editMode, selectedTheme } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
-	import { getImageURL, isNotNullOrUndefined, isNullOrUndefined } from '$lib/util';
+	import { changeToTheme, getImageURL, isNotNullOrUndefined, isNullOrUndefined } from '$lib/util';
+	import { onMount } from 'svelte';
 	import '../app.css';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
+
+	onMount(() => {
+		selectedTheme.set(data.user?.theme ?? 'dark');
+		changeToTheme('', $selectedTheme);
+	});
 
 	$: innerWidth = 0;
 	$: innerHeight = 0;

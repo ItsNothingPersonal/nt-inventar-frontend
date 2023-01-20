@@ -2,6 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { Image, Input } from '$lib/components';
+	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte';
 	import { getImageURL, isNotNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { EditIcon } from 'svelte-feather-icons';
@@ -9,8 +10,42 @@
 
 	export let data: PageData;
 	let loading: boolean;
-
 	$: loading = false;
+
+	let themeSelected: string;
+	$: themeSelected = data.user?.theme ?? 'dark';
+
+	const possibleThemes = [
+		'light',
+		'dark',
+		'cupcake',
+		'bumblebee',
+		'emerald',
+		'corporate',
+		'synthwave',
+		'retro',
+		'cyberpunk',
+		'valentine',
+		'halloween',
+		'garden',
+		'forest',
+		'aqua',
+		'lofi',
+		'pastel',
+		'fantasy',
+		'wireframe',
+		'black',
+		'luxury',
+		'dracula',
+		'cmyk',
+		'autumn',
+		'business',
+		'acid',
+		'lemonade',
+		'night',
+		'coffee',
+		'winter'
+	];
 
 	const showPreview = (event: Event) => {
 		const target = event.target as HTMLInputElement;
@@ -76,6 +111,12 @@
 					/>
 				</div>
 			</label>
+			<ThemeSwitch
+				bind:value={themeSelected}
+				id={'theme'}
+				options={possibleThemes}
+				preselected={themeSelected}
+			/>
 			<Input
 				type="file"
 				id="avatar"
