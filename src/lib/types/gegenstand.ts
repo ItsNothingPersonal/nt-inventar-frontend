@@ -2,7 +2,7 @@ import type { Kiste } from './kiste';
 
 export interface Gegenstand {
 	name: string;
-	bild: string;
+	bild?: string;
 	collectionName: string;
 	id: string;
 	anzahl: number;

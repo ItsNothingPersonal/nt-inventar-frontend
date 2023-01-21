@@ -1,9 +1,8 @@
-import type { FormKisteCreate } from '$lib/server/formKisteCreate';
 import { getKisten, getLagerorte } from '$lib/server/pocketbase';
 import { kistenStore, lagerortStore } from '$lib/server/storeServer';
 import type { Kiste } from '$lib/types/kiste';
 import type { Lagerort } from '$lib/types/lagerort';
-import { serializeNonPOJOs } from '$lib/util';
+import { isNotNullOrUndefined, isNullOrUndefined, serializeNonPOJOs } from '$lib/util';
 import { redirect } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { Actions, PageServerLoad } from './$types';
@@ -28,43 +27,56 @@ export const load = (async ({ locals }): Promise<{ kisten: Kiste[]; lagerorte: s
 export const actions: Actions = {
 	create: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const data: FormKisteCreate = Object.fromEntries(formData) as FormKisteCreate;
 
 		const lagerortInStore: Lagerort[] = get(lagerortStore);
 		const lagerort: Lagerort | undefined = lagerortInStore.find(
 			(lagerortStore) => lagerortStore.name === formData.get('lagerort')
 		);
-		data.lagerort = lagerort?.id ?? '';
+		formData.set('lagerort', lagerort?.id ?? '');
+
+		const bild: File = formData.get('bild') as File;
+		if (isNotNullOrUndefined(bild) && bild.size === 0) {
+			formData.delete('bild');
+		} else {
+			formData.set('bild', bild);
+		}
 
 		try {
-			await locals.pb.collection('kisten').create(data);
+			await locals.pb.collection('kisten').create(formData);
 		} catch (error) {
 			console.error(error);
 			return {
 				error: true,
-				message: serializeNonPOJOs(error)
+				message: (error as Error).message
 			};
 		}
 
 		return {
 			success: true,
 			data: {
-				name: data.name
+				name: formData.get('name') as string,
+				lagerort: formData.get('kiste') as string
 			}
 		};
 	},
 	update: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const data: FormKisteCreate = Object.fromEntries(formData) as FormKisteCreate;
 
 		const lagerortInStore: Lagerort[] = get(lagerortStore);
 		const lagerort: Lagerort | undefined = lagerortInStore.find(
 			(lagerortStore) => lagerortStore.name === formData.get('lagerort')
 		);
-		data.lagerort = lagerort?.id ?? '';
+		formData.set('lagerort', lagerort?.id ?? '');
+
+		const bild: File = formData.get('bild-neu') as File;
+		if (isNullOrUndefined(bild) || (isNotNullOrUndefined(bild) && bild.size === 0)) {
+			formData.delete('bild');
+		} else {
+			formData.set('bild', bild);
+		}
 
 		try {
-			await locals.pb.collection('kisten').update(formData.get('id'), data);
+			await locals.pb.collection('kisten').update(formData.get('id'), formData);
 		} catch (error) {
 			console.error(error);
 			return {
@@ -76,7 +88,8 @@ export const actions: Actions = {
 		return {
 			success: true,
 			data: {
-				name: data.name
+				name: formData.get('name') as string,
+				lagerort: formData.get('kiste') as string
 			}
 		};
 	},
