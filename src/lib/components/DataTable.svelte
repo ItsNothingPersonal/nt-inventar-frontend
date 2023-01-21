@@ -10,10 +10,8 @@
 	import { isNotNullOrUndefined, startCsvDownload } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { EditIcon, XIcon } from 'svelte-feather-icons';
-	import { Modal } from '.';
+	import { Image, ImageModalDialog, Modal } from '.';
 	import type { DBField } from '../types/dataField';
-	import Image from './Image.svelte';
-	import ImageModalDialog from './ImageModalDialog.svelte';
 
 	export let tableHeaders: string[] = [];
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
