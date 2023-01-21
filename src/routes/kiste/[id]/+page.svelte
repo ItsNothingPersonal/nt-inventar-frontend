@@ -2,7 +2,8 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { DataTable, Image, Input, Select } from '$lib/components';
+	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
+	import { DataTable, Image, ImageModalDialog, Input, Select } from '$lib/components';
 	import { selectedId } from '$lib/storeClient';
 	import type { Gegenstand } from '$lib/types/gegenstand';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -41,18 +42,46 @@
 </script>
 
 <div class="w-full h-full px-2">
-	<h1 class="text-4xl font-bold mb-4">{data.kiste?.name}</h1>
-	<label for="lagerort">
-		<span class="font-bold"> Lagerort: </span>
-	</label>
-	<a
-		id="lagerort"
-		class="underline underline-offset-4 decoration-dotted print:no-underline hover:cursor-pointer"
-		href={`${$page.url.origin}/lagerort/${data.kiste?.expand.lagerort.id}`}
-	>
-		{data.kiste?.expand.lagerort.name}
-	</a>
+	<div>
+		<h1 class="text-4xl font-bold mb-4">{data.kiste?.name}</h1>
+	</div>
 
+	<div class="flex flex-col gap-y-4">
+		<div class="flex flex-row gap-x-2">
+			<label for="lagerort">
+				<span class="font-bold"> Lagerort: </span>
+			</label>
+			<a
+				id="lagerort"
+				class="underline underline-offset-4 decoration-dotted print:no-underline hover:cursor-pointer"
+				href={`${$page.url.origin}/lagerort/${data.kiste?.expand.lagerort.id}`}
+			>
+				{data.kiste?.expand.lagerort.name}
+			</a>
+		</div>
+		<div class="flex flex-row items-baseline gap-x-2 print:hidden">
+			<label for={data.kiste?.bild}>
+				<span class="font-bold"> Bild: </span>
+			</label>
+			{#if data.kiste?.bild}
+				<ImageModalDialog
+					id={data.kiste?.bild}
+					imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/kisten/${data.kiste?.id}/${data.kiste?.bild}`}
+				>
+					<Image
+						imageCollection="kisten"
+						imageName={data.kiste?.bild}
+						itemId={data.kiste?.id}
+						alt="Modal des Bildes"
+						height={512}
+						width={512}
+					/>
+				</ImageModalDialog>
+			{:else}
+				<span>Nicht vorhanden</span>
+			{/if}
+		</div>
+	</div>
 	<DataTable
 		data={data.gegenstaende}
 		dataFields={[{ name: 'name' }, { name: 'anzahl' }, { name: 'bild', isImage: true }]}

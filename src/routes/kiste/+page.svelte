@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { DataTable, Input, Select } from '$lib/components';
+	import { DataTable, Image, Input, Select } from '$lib/components';
 	import { selectedId } from '$lib/storeClient';
 	import type { Kiste } from '$lib/types/kiste';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -42,9 +42,10 @@
 		data={data.kisten}
 		dataFields={[
 			{ name: 'name', detailsLink: true },
+			{ name: 'bild', isImage: true },
 			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' }
 		]}
-		tableHeaders={['Name', 'Lagerort']}
+		tableHeaders={['Name', 'Bild', 'Lagerort']}
 		user={data.user}
 		textButtonNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"
@@ -66,6 +67,14 @@
 				options={data.lagerorte}
 				required={true}
 				disabled={loading}
+			/>
+			<Input
+				label="Bild"
+				id="bild"
+				type="file"
+				accept="image/*"
+				disabled={loading}
+				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
 			<button type="submit" class="btn btn-primary w-full" disabled={loading}> Anlegen </button>
@@ -94,6 +103,24 @@
 				required={true}
 				disabled={loading}
 				value={updateKiste?.expand.lagerort.name}
+			/>
+			{#if updateKiste?.bild}
+				<Image
+					imageName={updateKiste?.bild ?? ''}
+					imageCollection="kisten"
+					itemId={updateKiste?.id ?? ''}
+					label="Aktuelles Bild"
+					height={460}
+					width={460}
+				/>
+			{/if}
+			<Input
+				label="Neues Bild"
+				id="bild-neu"
+				type="file"
+				accept="image/*"
+				disabled={loading}
+				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
 			<button type="submit" class="btn btn-primary w-full" disabled={loading}>
