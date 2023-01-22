@@ -26,8 +26,10 @@ export const actions: Actions = {
 				};
 			}
 		} catch (err) {
-			console.error(error);
-			throw error(500, `Etwas ist beim Login schief gegangen`);
+			return {
+				success: false,
+				notVerified: false
+			};
 		}
 
 		throw redirect(303, '/');
