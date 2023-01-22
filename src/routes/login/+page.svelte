@@ -112,8 +112,12 @@
 			</Modal>
 			{#if form?.notVerified}
 				<AlertError
+					title="Fehler beim Login"
 					message="Du musst deine E-Mail-Adresse bestätigen, bevor du dich einloggen kannst!"
 				/>
+			{/if}
+			{#if form?.success === false && form?.notVerified === false}
+				<AlertError title="Fehler beim Login" message="Passwort oder E-Mail-Adresse ist falsch" />
 			{/if}
 		</form>
 		<div class="divider mb-0" />
