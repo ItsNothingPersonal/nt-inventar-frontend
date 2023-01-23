@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { editMode } from '$lib/storeClient';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { MenuIcon } from 'svelte-feather-icons';
 
@@ -31,11 +32,7 @@
 									<div class="form-control">
 										<label class={'label cursor-pointer'}>
 											<span class="label-text pr-2">{menuLink.label}</span>
-											<input
-												type="checkbox"
-												class="toggle toggle-sm md:toggle-md toggle-warning"
-												on:click={menuLink.onClick}
-											/>
+											<input type="Input" class={menuLink.cssClass} on:click={menuLink.onClick} />
 										</label>
 									</div>
 								</li>
@@ -57,5 +54,21 @@
 				{/if}
 			{/if}
 		{/each}
+		<li class="menu-title">
+			<span>Modus</span>
+		</li>
+		<li>
+			<div class="form-control">
+				<label class={'label cursor-pointer'}>
+					<span class="label-text pr-2">Edit-Modus</span>
+					<input
+						type="checkbox"
+						class="toggle toggle-sm md:toggle-md toggle-warning"
+						on:click={() => editMode.set(!$editMode)}
+						checked={$editMode}
+					/>
+				</label>
+			</div>
+		</li>
 	</ul>
 </div>
