@@ -18,10 +18,6 @@
 	$: innerWidth = 0;
 	$: innerHeight = 0;
 
-	const toggleEditMode = () => {
-		editMode.set(!$editMode);
-	};
-
 	let mobileMenuData: MenuSegment[] = [
 		{
 			categoryName: 'Inventar',
@@ -43,17 +39,6 @@
 				{ label: 'Security', href: '/my/settings/security', hidden: isNullOrUndefined(data.user) },
 				{ label: 'Login', href: '/login', hidden: isNotNullOrUndefined(data.user) },
 				{ label: 'Logout', href: '/logout', hidden: isNullOrUndefined(data.user), type: 'Button' }
-			]
-		},
-		{
-			categoryName: 'Modus',
-			entries: [
-				{
-					label: 'Edit-Modus',
-					hidden: isNullOrUndefined(data.user),
-					type: 'Input',
-					onClick: toggleEditMode
-				}
 			]
 		}
 	];
@@ -78,7 +63,8 @@
 									<input
 										type="checkbox"
 										class="toggle toggle-sm md:toggle-md toggle-warning"
-										on:click={toggleEditMode}
+										on:click={() => editMode.set(!$editMode)}
+										checked={$editMode}
 									/>
 								</label>
 							</div>

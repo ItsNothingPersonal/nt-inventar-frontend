@@ -4,4 +4,5 @@ export interface LinkElement {
 	hidden?: boolean;
 	type?: 'Link' | 'Button' | 'Input';
 	onClick?: () => void;
+	cssClass?: string;
 }
