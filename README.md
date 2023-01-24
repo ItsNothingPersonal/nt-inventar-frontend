@@ -21,7 +21,6 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 ## Roadmap
 
 - Bestellmöglichkeit von Kisten & Gegenständen für die Spielleitung
-- Verständlichere Fehlermeldungen
 
 ## Umgebungsvariablen
 
