@@ -1,7 +1,3 @@
-<script lang="ts">
-	export const prerender = true;
-</script>
-
 <main class="container mx-auto">
 	<div class="w-full h-full px-2">
 		<h1 class="text-4xl font-bold">Impressum</h1>
