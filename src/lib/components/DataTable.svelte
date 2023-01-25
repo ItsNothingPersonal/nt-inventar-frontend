@@ -104,72 +104,99 @@
 	<table class="table table-zebra print:table-compact w-full">
 		<thead>
 			<tr>
-				{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-					<th scope="col" class="w-3 print:hidden" />
-					<th scope="col" class="w-3 print:hidden" />
+				{#if $editMode === true}
+					{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
+						<th scope="col" class="w-3 print:hidden" />
+						<th scope="col" class="w-3 print:hidden" />
+					{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
+						<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+					{/if}
 				{/if}
 
 				{#each tableHeaders as tableHeader}
 					<th scope="col">{tableHeader}</th>
 				{/each}
-
-				{#if user?.role === UserRoles.SPIELLEITUNG && $editMode === true && allowSLOrders}
-					<th scope="col" class="w-3 print:hidden"> Bestellung </th>
-				{/if}
 			</tr>
 		</thead>
 		<tbody>
 			{#each data as dataRow}
 				<tr>
-					{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-						<td class="print:hidden">
-							<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
-								<span
-									slot="trigger"
+					{#if $editMode === true}
+						{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
+							<td class="print:hidden">
+								<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
+									<span
+										slot="trigger"
+										class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
+										on:keydown={() => selectedId.set(`${dataRow['id']}`)}
+										on:click={() => selectedId.set(`${dataRow['id']}`)}
+									>
+										{#if innerWidth <= BreakPoints.Large}
+											<EditIcon />
+										{:else}
+											Aktualisieren
+										{/if}
+									</span>
+									<h3 slot="heading">{textButtonBearbeiten}</h3>
+									<slot name="formAktualisieren" />
+								</Modal>
+								<button
 									class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-									on:keydown={() => selectedId.set(`${dataRow['id']}`)}
-									on:click={() => selectedId.set(`${dataRow['id']}`)}
+									type="submit"
+									form="singleDeleteForm{dataRow['id']}"
 								>
 									{#if innerWidth <= BreakPoints.Large}
-										<EditIcon />
+										<XIcon />
 									{:else}
-										Aktualisieren
+										Löschen
 									{/if}
-								</span>
-								<h3 slot="heading">{textButtonBearbeiten}</h3>
-								<slot name="formAktualisieren" />
-							</Modal>
-							<button
-								class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-								type="submit"
-								form="singleDeleteForm{dataRow['id']}"
-							>
-								{#if innerWidth <= BreakPoints.Large}
-									<XIcon />
-								{:else}
-									Löschen
-								{/if}
-							</button>
-							<form
-								method="post"
-								action="?/delete"
-								use:enhance={enhanceDelete}
-								id="singleDeleteForm{dataRow['id']}"
-							>
-								<input hidden class="hidden" name="id" value={dataRow['id']} />
-							</form>
-						</td>
-						<td class="print:hidden">
-							<label>
-								<input
-									type="checkbox"
-									class="checkbox"
-									bind:group={checkboxValues}
-									value={dataRow['id']}
-									id={`delete-checkbox-${dataRow['id']}`}
-								/>
-							</label>
-						</td>
+								</button>
+								<form
+									method="post"
+									action="?/delete"
+									use:enhance={enhanceDelete}
+									id="singleDeleteForm{dataRow['id']}"
+								>
+									<input hidden class="hidden" name="id" value={dataRow['id']} />
+								</form>
+							</td>
+							<td class="print:hidden">
+								<label>
+									<input
+										type="checkbox"
+										class="checkbox"
+										bind:group={checkboxValues}
+										value={dataRow['id']}
+										id={`delete-checkbox-${dataRow['id']}`}
+									/>
+								</label>
+							</td>
+						{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
+							<td class="print:hidden">
+								<button
+									class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
+									type="submit"
+									form="order{dataRow['id']}"
+									id="buttonOrder{dataRow['id']}"
+									disabled={alreadyOrdered(dataRow['id'], userProject)}
+								>
+									{#if innerWidth <= BreakPoints.Large}
+										<PlusSquareIcon />
+									{:else}
+										Bestellen
+									{/if}
+								</button>
+								<form
+									method="post"
+									action="?/order"
+									use:enhance={enhanceDelete}
+									id="order{dataRow['id']}"
+								>
+									<input hidden class="hidden" name="id" value={dataRow['id']} />
+									<input hidden class="hidden" name="projectId" value={userProject} />
+								</form>
+							</td>
+						{/if}
 					{/if}
 					{#each dataFields as dataField}
 						{#if dataField.isExpanded}
@@ -224,49 +251,23 @@
 							<td> {dataRow[dataField.name]} </td>
 						{/if}
 					{/each}
-					{#if user?.role === UserRoles.SPIELLEITUNG && $editMode === true && allowSLOrders}
-						<td class="print:hidden">
-							<button
-								class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-								type="submit"
-								form="order{dataRow['id']}"
-								id="buttonOrder{dataRow['id']}"
-								disabled={alreadyOrdered(dataRow['id'], userProject)}
-							>
-								{#if innerWidth <= BreakPoints.Large}
-									<PlusSquareIcon />
-								{:else}
-									Bestellen
-								{/if}
-							</button>
-							<form
-								method="post"
-								action="?/order"
-								use:enhance={enhanceDelete}
-								id="order{dataRow['id']}"
-							>
-								<input hidden class="hidden" name="id" value={dataRow['id']} />
-								<input hidden class="hidden" name="projectId" value={userProject} />
-							</form>
-						</td>
-					{/if}
 				</tr>
 			{/each}
 		</tbody>
 		<tfoot>
 			<tr>
-				{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-					<th scope="col" class="w-3 print:hidden" />
-					<th scope="col" class="w-3 print:hidden" />
+				{#if $editMode === true}
+					{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
+						<th scope="col" class="w-3 print:hidden" />
+						<th scope="col" class="w-3 print:hidden" />
+					{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
+						<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+					{/if}
 				{/if}
 
 				{#each tableHeaders as tableHeader}
 					<th scope="col">{tableHeader}</th>
 				{/each}
-
-				{#if user?.role === UserRoles.SPIELLEITUNG && $editMode === true && allowSLOrders}
-					<th scope="col" class="w-3 print:hidden"> Bestellung </th>
-				{/if}
 			</tr>
 		</tfoot>
 	</table>
