@@ -3,7 +3,7 @@
 	import { editMode } from '$lib/storeClient';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { MenuIcon } from 'svelte-feather-icons';
-	import { Toggle } from '.';
+	import ToggleButton from './ToggleButton.svelte';
 
 	export let menuEntries: MenuSegment[] = [] as MenuSegment[];
 </script>
@@ -60,11 +60,11 @@
 			<span>Modus</span>
 		</li>
 		<li>
-			<Toggle
+			<ToggleButton
 				id="mobile-edit-mode"
-				label={Label.INTERACTIVE_MODE}
-				onClick={() => editMode.set(!$editMode)}
-				checked={$editMode}
+				labelNotToggled={{ desktop: Label.INTERACTIVE_MODE }}
+				labelToggled={{ desktop: Label.INTERACTIVE_MODE }}
+				toggled={$editMode}
 			/>
 		</li>
 	</ul>

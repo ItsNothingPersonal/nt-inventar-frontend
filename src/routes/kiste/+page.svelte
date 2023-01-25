@@ -49,7 +49,7 @@
 		user={data.user}
 		textButtonNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"
-		enhanceDelete={submitEnhance}
+		enhanceForm={submitEnhance}
 		csvName="kisten.csv"
 		allowSLOrders={true}
 		orders={data.bestellungen}

@@ -50,7 +50,7 @@
 		user={data.user}
 		textButtonNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
-		enhanceDelete={submitEnhance}
+		enhanceForm={submitEnhance}
 		csvName="gegenstaende.csv"
 	>
 		<form

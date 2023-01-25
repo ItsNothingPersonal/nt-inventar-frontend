@@ -176,5 +176,37 @@ export const actions: Actions = {
 		}
 
 		return { success: true, data: undefined };
+	},
+	orderRemove: async ({ locals, request }) => {
+		const formData = await request.formData();
+		const kisteId = formData.get('id') as string;
+		const projectId = formData.get('projectId') as string;
+
+		const existingOrder = await getBestellungByProjektId(locals.pb, projectId);
+
+		if (existingOrder) {
+			const updateOrder: BestellungAnlegen = {
+				kiste: [...existingOrder.kiste.filter((existingKisteId) => existingKisteId !== kisteId)],
+				besteller: locals.user?.id,
+				projekt: projectId
+			};
+
+			try {
+				if (updateOrder.kiste.length === 0) {
+					await locals.pb.collection('bestellungen').delete(existingOrder.id);
+				} else {
+					await locals.pb.collection('bestellungen').update(existingOrder.id, updateOrder);
+				}
+			} catch (err) {
+				return {
+					error: true,
+					message: `Fehler beim Entfernen einer Kiste aus der bestehenden Bestellung: ${
+						(err as Error).message
+					}`
+				};
+			}
+		}
+
+		return { success: true, data: undefined };
 	}
 };

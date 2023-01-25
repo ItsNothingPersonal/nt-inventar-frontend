@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
+	import { Label } from '$lib/constants';
 	import { editMode, selectedId } from '$lib/storeClient';
 	import type { Bestellung } from '$lib/types/bestellung';
 	import { BreakPoints } from '$lib/types/breakpoints';
@@ -10,8 +11,8 @@
 	import { UserRoles } from '$lib/types/userRoles';
 	import { isNotNullOrUndefined, isNullOrUndefined, startCsvDownload } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { EditIcon, PlusSquareIcon, XIcon } from 'svelte-feather-icons';
-	import { Image, ImageModalDialog, Modal } from '.';
+	import { EditIcon, MinusSquareIcon, PlusSquareIcon, XIcon } from 'svelte-feather-icons';
+	import { Image, ImageModalDialog, Modal, ToggleButton } from '.';
 	import type { DBField } from '../types/dataField';
 
 	export let tableHeaders: string[] = [];
@@ -22,7 +23,7 @@
 	export let disableEdit = false;
 	export let textButtonNeu = '';
 	export let textButtonBearbeiten = '';
-	export let enhanceDelete:
+	export let enhanceForm:
 		| (() => ({ result }: { result: ActionResult }) => Promise<void>)
 		| undefined = undefined;
 	export let csvName: string;
@@ -92,7 +93,7 @@
 				method="post"
 				action="?/delete"
 				id="massDeleteForm"
-				use:enhance={enhanceDelete}
+				use:enhance={enhanceForm}
 				on:submit={() => (checkboxValues = [])}
 			>
 				{#each checkboxValues as idToDelete}
@@ -154,7 +155,7 @@
 								<form
 									method="post"
 									action="?/delete"
-									use:enhance={enhanceDelete}
+									use:enhance={enhanceForm}
 									id="singleDeleteForm{dataRow['id']}"
 								>
 									<input hidden class="hidden" name="id" value={dataRow['id']} />
@@ -173,24 +174,35 @@
 							</td>
 						{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
 							<td class="print:hidden">
-								<button
-									class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-									type="submit"
-									form="order{dataRow['id']}"
+								<ToggleButton
 									id="buttonOrder{dataRow['id']}"
-									disabled={alreadyOrdered(dataRow['id'], userProject)}
-								>
-									{#if innerWidth <= BreakPoints.Large}
-										<PlusSquareIcon />
-									{:else}
-										Bestellen
-									{/if}
-								</button>
+									toggled={alreadyOrdered(dataRow['id'], userProject)}
+									isMobile={innerWidth <= BreakPoints.Large}
+									labelNotToggled={{
+										desktop: Label.BESTELLEN,
+										mobile: PlusSquareIcon,
+										form: `order-${dataRow['id']}`
+									}}
+									labelToggled={{
+										desktop: Label.BESTELLT,
+										mobile: MinusSquareIcon,
+										form: `order-remove-${dataRow['id']}`
+									}}
+								/>
 								<form
 									method="post"
 									action="?/order"
-									use:enhance={enhanceDelete}
-									id="order{dataRow['id']}"
+									use:enhance={enhanceForm}
+									id="order-{dataRow['id']}"
+								>
+									<input hidden class="hidden" name="id" value={dataRow['id']} />
+									<input hidden class="hidden" name="projectId" value={userProject} />
+								</form>
+								<form
+									method="post"
+									action="?/orderRemove"
+									use:enhance={enhanceForm}
+									id="order-remove-{dataRow['id']}"
 								>
 									<input hidden class="hidden" name="id" value={dataRow['id']} />
 									<input hidden class="hidden" name="projectId" value={userProject} />

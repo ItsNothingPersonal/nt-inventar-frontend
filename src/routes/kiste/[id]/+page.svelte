@@ -89,7 +89,7 @@
 		user={data.user}
 		textButtonNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
-		enhanceDelete={submitEnhance}
+		enhanceForm={submitEnhance}
 		csvName="{`kiste-${data.kiste.name}`}.csv"
 	>
 		<form

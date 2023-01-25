@@ -128,7 +128,6 @@ const getBestellungen = async (pb: PocketBase) => {
 const getBestellungByProjektId = async (pb: PocketBase, id: string) => {
 	let data: Bestellung | undefined = undefined;
 
-	console.warn(`trying to find order for ${id}`);
 	try {
 		data = await pb.collection('bestellungen').getFirstListItem<Bestellung>(`projekt="${id}"`, {
 			sort: '-created',

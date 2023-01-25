@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Image, MobileMenu, Toggle } from '$lib/components';
+	import { Image, MobileMenu, ToggleButton } from '$lib/components';
 	import { Label } from '$lib/constants';
 	import { editMode, selectedTheme } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
@@ -58,11 +58,12 @@
 				<ul class="menu menu-horizontal px-1">
 					{#if isNotNullOrUndefined(data.user)}
 						<li>
-							<Toggle
+							<ToggleButton
 								id="desktop-edit-mode"
-								label={Label.INTERACTIVE_MODE}
+								labelNotToggled={{ desktop: Label.INTERACTIVE_MODE }}
+								labelToggled={{ desktop: Label.INTERACTIVE_MODE }}
 								onClick={() => editMode.set(!$editMode)}
-								checked={$editMode}
+								toggled={$editMode}
 							/>
 						</li>
 					{/if}
