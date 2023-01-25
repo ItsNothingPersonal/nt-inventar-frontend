@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { Label } from '$lib/constants';
 	import { editMode } from '$lib/storeClient';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { MenuIcon } from 'svelte-feather-icons';
+	import { Toggle } from '.';
 
 	export let menuEntries: MenuSegment[] = [] as MenuSegment[];
 </script>
@@ -58,17 +60,12 @@
 			<span>Modus</span>
 		</li>
 		<li>
-			<div class="form-control">
-				<label class={'label cursor-pointer'}>
-					<span class="label-text pr-2">Edit-Modus</span>
-					<input
-						type="checkbox"
-						class="toggle toggle-sm md:toggle-md toggle-warning"
-						on:click={() => editMode.set(!$editMode)}
-						checked={$editMode}
-					/>
-				</label>
-			</div>
+			<Toggle
+				id="mobile-edit-mode"
+				label={Label.INTERACTIVE_MODE}
+				onClick={() => editMode.set(!$editMode)}
+				checked={$editMode}
+			/>
 		</li>
 	</ul>
 </div>

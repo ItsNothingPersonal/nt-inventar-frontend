@@ -7,6 +7,7 @@ import MobileMenu from './MobileMenu.svelte';
 import Modal from './Modal.svelte';
 import Select from './Select.svelte';
 import ThemeSwitch from './ThemeSwitch.svelte';
+import Toggle from './Toggle.svelte';
 
 export {
 	Input,
@@ -17,5 +18,6 @@ export {
 	MobileMenu,
 	AlertError,
 	ThemeSwitch,
-	ImageModalDialog
+	ImageModalDialog,
+	Toggle
 };

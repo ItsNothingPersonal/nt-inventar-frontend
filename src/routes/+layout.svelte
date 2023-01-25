@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Image, MobileMenu } from '$lib/components';
+	import { Image, MobileMenu, Toggle } from '$lib/components';
+	import { Label } from '$lib/constants';
 	import { editMode, selectedTheme } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
@@ -57,17 +58,12 @@
 				<ul class="menu menu-horizontal px-1">
 					{#if isNotNullOrUndefined(data.user)}
 						<li>
-							<div class="form-control">
-								<label class={'label cursor-pointer'}>
-									<span class="label-text pr-2">Bearbeiten</span>
-									<input
-										type="checkbox"
-										class="toggle toggle-sm md:toggle-md toggle-warning"
-										on:click={() => editMode.set(!$editMode)}
-										checked={$editMode}
-									/>
-								</label>
-							</div>
+							<Toggle
+								id="desktop-edit-mode"
+								label={Label.INTERACTIVE_MODE}
+								onClick={() => editMode.set(!$editMode)}
+								checked={$editMode}
+							/>
 						</li>
 					{/if}
 					{#if data.user}
