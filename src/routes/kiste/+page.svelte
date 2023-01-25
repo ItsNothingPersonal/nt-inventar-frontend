@@ -51,6 +51,9 @@
 		textButtonBearbeiten="Kiste aktualisieren"
 		enhanceDelete={submitEnhance}
 		csvName="kisten.csv"
+		allowSLOrders={true}
+		orders={data.bestellungen}
+		userProject={data.userProject?.id}
 	>
 		<form
 			action="?/create"

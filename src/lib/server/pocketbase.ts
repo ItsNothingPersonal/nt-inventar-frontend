@@ -1,6 +1,9 @@
+import type { Bestellung } from '$lib/types/bestellung';
 import type { Gegenstand } from '$lib/types/gegenstand';
 import type { Kiste } from '$lib/types/kiste';
 import type { Lagerort } from '$lib/types/lagerort';
+import type { Projekt } from '$lib/types/projekt';
+import { isNullOrUndefined } from '$lib/util';
 import type PocketBase from 'pocketbase';
 
 const getGegenstaende = async (pb: PocketBase) => {
@@ -107,6 +110,53 @@ const getLagerortById = async (pb: PocketBase, id: string) => {
 	return data;
 };
 
+const getBestellungen = async (pb: PocketBase) => {
+	let data: Bestellung[] = [];
+
+	try {
+		data = await pb.collection('bestellungen').getFullList<Bestellung>(200, {
+			sort: '-created',
+			expand: 'kiste, besteller, projekt'
+		});
+	} catch (error) {
+		console.error(error);
+	}
+
+	return data;
+};
+
+const getBestellungByProjektId = async (pb: PocketBase, id: string) => {
+	let data: Bestellung | undefined = undefined;
+
+	console.warn(`trying to find order for ${id}`);
+	try {
+		data = await pb.collection('bestellungen').getFirstListItem<Bestellung>(`projekt="${id}"`, {
+			sort: '-created',
+			expand: 'kiste, besteller, projekt'
+		});
+	} catch (error) {
+		data = undefined;
+	}
+
+	return data;
+};
+
+const getProjektByUserId = async (pb: PocketBase, id: string | undefined) => {
+	if (isNullOrUndefined(id)) return undefined;
+
+	let data: Projekt | undefined = undefined;
+
+	try {
+		data = await pb.collection('projekte').getFirstListItem<Projekt>(`id="${id}"`, {
+			sort: '-created'
+		});
+	} catch (error) {
+		console.error(error);
+	}
+
+	return data;
+};
+
 export {
 	getGegenstaende,
 	getGegenstaendeForKiste,
@@ -114,5 +164,8 @@ export {
 	getKisteById,
 	getLagerorte,
 	getLagerortById,
-	getKistenByLagerortId
+	getKistenByLagerortId,
+	getBestellungen,
+	getProjektByUserId,
+	getBestellungByProjektId
 };

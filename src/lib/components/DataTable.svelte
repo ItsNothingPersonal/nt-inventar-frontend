@@ -3,13 +3,14 @@
 	import { page } from '$app/stores';
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
 	import { editMode, selectedId } from '$lib/storeClient';
+	import type { Bestellung } from '$lib/types/bestellung';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { DataObject } from '$lib/types/dataRow';
 	import type { PBUser } from '$lib/types/user';
 	import { UserRoles } from '$lib/types/userRoles';
-	import { isNotNullOrUndefined, startCsvDownload } from '$lib/util';
+	import { isNotNullOrUndefined, isNullOrUndefined, startCsvDownload } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { EditIcon, XIcon } from 'svelte-feather-icons';
+	import { EditIcon, PlusSquareIcon, XIcon } from 'svelte-feather-icons';
 	import { Image, ImageModalDialog, Modal } from '.';
 	import type { DBField } from '../types/dataField';
 
@@ -25,6 +26,9 @@
 		| (() => ({ result }: { result: ActionResult }) => Promise<void>)
 		| undefined = undefined;
 	export let csvName: string;
+	export let allowSLOrders = false;
+	export let orders: Bestellung[] | undefined = undefined;
+	export let userProject: string | undefined = undefined;
 
 	let modalOpen: boolean;
 	let checkboxValues: string[] = [];
@@ -58,12 +62,21 @@
 			csvName
 		);
 	}
+
+	function alreadyOrdered(id: string, projectId: string | undefined): boolean {
+		if (isNullOrUndefined(projectId)) return false;
+
+		return (
+			orders?.some((order) => order.kiste.includes(id) && order.expand.projekt?.id === projectId) ??
+			false
+		);
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="relative overflow-x-auto shadow-md print:shadow-none sm:rounded-lg mt-4">
 	{#if $editMode === true}
-		<div class="pb-4">
+		<div class="pb-4 print:hidden">
 			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 				<Modal label="create-button" checked={modalOpen}>
 					<span slot="trigger" class="btn btn-active btn-primary"> Neu </span>
@@ -92,20 +105,24 @@
 		<thead>
 			<tr>
 				{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-					<th scope="col" class="w-3" />
-					<th scope="col" class="w-3" />
+					<th scope="col" class="w-3 print:hidden" />
+					<th scope="col" class="w-3 print:hidden" />
 				{/if}
 
 				{#each tableHeaders as tableHeader}
 					<th scope="col">{tableHeader}</th>
 				{/each}
+
+				{#if user?.role === UserRoles.SPIELLEITUNG && $editMode === true && allowSLOrders}
+					<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+				{/if}
 			</tr>
 		</thead>
 		<tbody>
 			{#each data as dataRow}
 				<tr>
 					{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-						<td>
+						<td class="print:hidden">
 							<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
 								<span
 									slot="trigger"
@@ -142,7 +159,7 @@
 								<input hidden class="hidden" name="id" value={dataRow['id']} />
 							</form>
 						</td>
-						<td>
+						<td class="print:hidden">
 							<label>
 								<input
 									type="checkbox"
@@ -207,19 +224,49 @@
 							<td> {dataRow[dataField.name]} </td>
 						{/if}
 					{/each}
+					{#if user?.role === UserRoles.SPIELLEITUNG && $editMode === true && allowSLOrders}
+						<td class="print:hidden">
+							<button
+								class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
+								type="submit"
+								form="order{dataRow['id']}"
+								id="buttonOrder{dataRow['id']}"
+								disabled={alreadyOrdered(dataRow['id'], userProject)}
+							>
+								{#if innerWidth <= BreakPoints.Large}
+									<PlusSquareIcon />
+								{:else}
+									Bestellen
+								{/if}
+							</button>
+							<form
+								method="post"
+								action="?/order"
+								use:enhance={enhanceDelete}
+								id="order{dataRow['id']}"
+							>
+								<input hidden class="hidden" name="id" value={dataRow['id']} />
+								<input hidden class="hidden" name="projectId" value={userProject} />
+							</form>
+						</td>
+					{/if}
 				</tr>
 			{/each}
 		</tbody>
 		<tfoot>
 			<tr>
 				{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-					<th scope="col" class="w-3" />
-					<th scope="col" class="w-3" />
+					<th scope="col" class="w-3 print:hidden" />
+					<th scope="col" class="w-3 print:hidden" />
 				{/if}
 
 				{#each tableHeaders as tableHeader}
 					<th scope="col">{tableHeader}</th>
 				{/each}
+
+				{#if user?.role === UserRoles.SPIELLEITUNG && $editMode === true && allowSLOrders}
+					<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+				{/if}
 			</tr>
 		</tfoot>
 	</table>
