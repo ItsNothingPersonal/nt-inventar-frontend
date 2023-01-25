@@ -206,7 +206,7 @@
 										/>
 									</ImageModalDialog>
 								{:else}
-									<span>Nicht vorhanden</span>
+									<span class="w-12 h-12"> n/a </span>
 								{/if}
 							</td>
 						{:else if dataField.detailsLink}
