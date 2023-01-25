@@ -30,6 +30,7 @@
 	export let allowSLOrders = false;
 	export let orders: Bestellung[] | undefined = undefined;
 	export let userProject: string | undefined = undefined;
+	export let disableSubComponents = false;
 
 	let modalOpen: boolean;
 	let checkboxValues: string[] = [];
@@ -178,6 +179,7 @@
 									id="buttonOrder{dataRow['id']}"
 									toggled={alreadyOrdered(dataRow['id'], userProject)}
 									isMobile={innerWidth <= BreakPoints.Large}
+									disabled={disableSubComponents}
 									labelNotToggled={{
 										desktop: Label.BESTELLEN,
 										mobile: PlusSquareIcon,

@@ -54,6 +54,7 @@
 		allowSLOrders={true}
 		orders={data.bestellungen}
 		userProject={data.userProject?.id}
+		disableSubComponents={loading}
 	>
 		<form
 			action="?/create"

@@ -13,6 +13,7 @@
 		mobile?: ConstructorOfATypedSvelteComponent;
 		form?: string;
 	};
+	export let disabled = false;
 </script>
 
 {#if toggled}
@@ -23,6 +24,7 @@
 			form={labelToggled.form}
 			id={`${id}-toggled`}
 			on:click={onClick}
+			{disabled}
 		>
 			{#if isMobile && labelToggled.mobile}
 				<svelte:component this={labelToggled.mobile} />
@@ -39,6 +41,7 @@
 			form={labelNotToggled.form}
 			id={`${id}-not-toggled`}
 			on:click={onClick}
+			{disabled}
 		>
 			{#if isMobile && labelNotToggled.mobile}
 				<svelte:component this={labelNotToggled.mobile} />
