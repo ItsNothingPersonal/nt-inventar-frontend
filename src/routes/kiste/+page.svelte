@@ -42,10 +42,10 @@
 		data={data.kisten}
 		dataFields={[
 			{ name: 'name', detailsLink: true },
-			{ name: 'bild', isImage: true },
-			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' }
+			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' },
+			{ name: 'bild', isImage: true }
 		]}
-		tableHeaders={['Name', 'Bild', 'Lagerort']}
+		tableHeaders={['Name', 'Lagerort', 'Bild']}
 		user={data.user}
 		textButtonNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"

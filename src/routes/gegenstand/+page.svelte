@@ -43,10 +43,10 @@
 		dataFields={[
 			{ name: 'name' },
 			{ name: 'anzahl' },
-			{ name: 'bild', isImage: true },
-			{ name: 'kiste', isExpanded: true, fieldName: 'name', detailsLink: 'kiste' }
+			{ name: 'kiste', isExpanded: true, fieldName: 'name', detailsLink: 'kiste' },
+			{ name: 'bild', isImage: true }
 		]}
-		tableHeaders={['Name', 'Anzahl', 'Bild', 'Kiste']}
+		tableHeaders={['Name', 'Anzahl', 'Kiste', 'Bild']}
 		user={data.user}
 		textButtonNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
