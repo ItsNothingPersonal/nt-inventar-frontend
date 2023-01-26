@@ -65,6 +65,8 @@ Bitte haltet euch dabei an den [Verhaltenscodex](CODE_OF_CONDUCT.md).
 - [svelte](https://svelte.dev/)
 - [sveltekit](https://kit.svelte.dev/)
 - [pocketbase](https://pocketbase.io/)
+- [tailwindcss](https://tailwindcss.com/)
+- [daiysUI](https://daisyui.com/)
 
 ## Authoren
 
