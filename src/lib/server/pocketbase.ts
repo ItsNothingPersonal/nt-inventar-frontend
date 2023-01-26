@@ -2,6 +2,7 @@ import type { Bestellung } from '$lib/types/bestellung';
 import type { Gegenstand } from '$lib/types/gegenstand';
 import type { Kiste } from '$lib/types/kiste';
 import type { Lagerort } from '$lib/types/lagerort';
+import type { PbError } from '$lib/types/pbError';
 import type { Projekt } from '$lib/types/projekt';
 import { isNullOrUndefined } from '$lib/util';
 import type PocketBase from 'pocketbase';
@@ -158,14 +159,22 @@ const getBestellungByProjektId = async (pb: PocketBase, id: string) => {
 const getProjektByUserId = async (pb: PocketBase, id: string | undefined) => {
 	if (isNullOrUndefined(id)) return undefined;
 
-	let data: Projekt | undefined = undefined;
+	let data: Projekt | undefined;
 
 	try {
 		data = await pb.collection('projekte').getFirstListItem<Projekt>(`id="${id}"`, {
 			sort: '-created'
 		});
 	} catch (error) {
-		console.error(error);
+		const pbError = error as PbError;
+		if (
+			pbError.status !== 404 ||
+			(pbError.status === 404 && pbError.data.message !== "The requested resource wasn't found.")
+		) {
+			console.error(error);
+		}
+
+		data = undefined;
 	}
 
 	return data;

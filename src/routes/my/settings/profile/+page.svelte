@@ -136,4 +136,8 @@
 	</form>
 	<div class="divider" />
 	<Input id="rolle" label="Rolle" value={data?.user?.role} disabled={true} />
+
+	{#if data.projekt?.name}
+		<Input id="projekt" label="Projekt" value={data.projekt?.name} disabled={true} />
+	{/if}
 </div>
