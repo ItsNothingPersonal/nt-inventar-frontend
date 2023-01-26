@@ -115,8 +115,23 @@ const getBestellungen = async (pb: PocketBase) => {
 
 	try {
 		data = await pb.collection('bestellungen').getFullList<Bestellung>(200, {
-			sort: '-created',
-			expand: 'kiste, besteller, projekt'
+			sort: 'projekt.name',
+			expand: 'kiste, besteller, projekt, kiste.lagerort'
+		});
+	} catch (error) {
+		console.error((error as Error).message);
+	}
+
+	return data;
+};
+
+const getBestellungenById = async (pb: PocketBase, id: string) => {
+	let data: Bestellung | undefined = undefined;
+
+	try {
+		data = await pb.collection('bestellungen').getFirstListItem<Bestellung>(`id="${id}"`, {
+			sort: 'projekt.name',
+			expand: 'kiste, besteller, projekt, kiste.lagerort'
 		});
 	} catch (error) {
 		console.error(error);
@@ -166,5 +181,6 @@ export {
 	getKistenByLagerortId,
 	getBestellungen,
 	getProjektByUserId,
-	getBestellungByProjektId
+	getBestellungByProjektId,
+	getBestellungenById
 };

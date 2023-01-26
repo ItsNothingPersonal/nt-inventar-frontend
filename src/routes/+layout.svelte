@@ -4,6 +4,7 @@
 	import { editMode, selectedTheme } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
+	import { UserRoles } from '$lib/types/userRoles';
 	import { changeToTheme, getImageURL, isNotNullOrUndefined, isNullOrUndefined } from '$lib/util';
 	import { onMount } from 'svelte';
 	import '../app.css';
@@ -25,7 +26,12 @@
 			entries: [
 				{ label: 'Gegenstände', href: '/gegenstand', hidden: isNullOrUndefined(data.user) },
 				{ label: 'Kisten', href: '/kiste', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Lagerorte', href: '/lagerort', hidden: isNullOrUndefined(data.user) }
+				{ label: 'Lagerorte', href: '/lagerort', hidden: isNullOrUndefined(data.user) },
+				{
+					label: 'Bestellungen',
+					href: '/bestellung',
+					hidden: isNullOrUndefined(data.user) || data.user.role !== UserRoles.INVENTARIST
+				}
 			]
 		},
 		{
@@ -71,6 +77,9 @@
 						<li><a href="/gegenstand">Gegenstände</a></li>
 						<li><a href="/kiste">Kisten</a></li>
 						<li><a href="/lagerort">Lagerorte</a></li>
+					{/if}
+					{#if data.user?.role === UserRoles.INVENTARIST}
+						<li><a href="/bestellung">Bestellungen</a></li>
 					{/if}
 					<li><a href="/impressum">Impressum</a></li>
 					{#if !data.user}

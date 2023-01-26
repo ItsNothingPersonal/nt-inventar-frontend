@@ -1,10 +1,10 @@
 import type { Kiste } from './kiste';
 
 export interface Gegenstand {
+	id: string;
+	collectionName: string;
 	name: string;
 	bild?: string;
-	collectionName: string;
-	id: string;
 	anzahl: number;
 	expand: {
 		kiste: Kiste;
