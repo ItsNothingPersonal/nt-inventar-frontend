@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { DataTable, Image, Input, Select } from '$lib/components';
+	import { Button, DataTable, Image, Input, Select } from '$lib/components';
 	import { selectedId } from '$lib/storeClient';
 	import type { Kiste } from '$lib/types/kiste';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -47,7 +47,7 @@
 		]}
 		tableHeaders={['Name', 'Lagerort', 'Bild']}
 		user={data.user}
-		textButtonNeu="Kiste anlegen"
+		textHeadingNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"
 		enhanceForm={submitEnhance}
 		csvName="kisten.csv"
@@ -81,7 +81,7 @@
 				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
-			<button type="submit" class="btn btn-primary w-full" disabled={loading}> Anlegen </button>
+			<Button label="Anlegen" disabled={loading} type="submit" fullWidth={true} />
 		</form>
 		<form
 			action="?/update"
@@ -127,9 +127,7 @@
 				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
-			<button type="submit" class="btn btn-primary w-full" disabled={loading}>
-				Aktualisieren
-			</button>
+			<Button label="Aktualisieren" disabled={loading} type="submit" fullWidth={true} />
 		</form>
 	</DataTable>
 </div>

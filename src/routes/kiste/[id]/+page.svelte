@@ -87,7 +87,7 @@
 		dataFields={[{ name: 'name' }, { name: 'anzahl' }, { name: 'bild', isImage: true }]}
 		tableHeaders={['Name', 'Anzahl', 'Bild']}
 		user={data.user}
-		textButtonNeu="Gegenstand anlegen"
+		textHeadingNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
 		enhanceForm={submitEnhance}
 		csvName="{`kiste-${data.kiste.name}`}.csv"

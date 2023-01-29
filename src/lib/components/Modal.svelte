@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Checkbox from './Checkbox.svelte';
+
 	export let label: string;
 	export let checked: boolean;
 </script>
@@ -7,7 +9,7 @@
 	<slot name="trigger" />
 </label>
 
-<input type="checkbox" id={label} class="modal-toggle" {checked} />
+<Checkbox {checked} id={label} />
 <div class="modal">
 	<div class="modal-box relative">
 		<label for={label} class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>

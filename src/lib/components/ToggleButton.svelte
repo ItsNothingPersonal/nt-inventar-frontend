@@ -1,16 +1,18 @@
 <script lang="ts">
+	import type { ComponentType, SvelteComponentTyped } from 'svelte';
+
 	export let id: string;
 	export let toggled: boolean;
 	export let isMobile: boolean = false;
 	export let onClick: (() => void) | undefined = undefined;
 	export let labelNotToggled: {
 		desktop: string;
-		mobile?: ConstructorOfATypedSvelteComponent;
+		mobile?: ComponentType<SvelteComponentTyped>;
 		form?: string;
 	};
 	export let labelToggled: {
 		desktop: string;
-		mobile?: ConstructorOfATypedSvelteComponent;
+		mobile?: ComponentType<SvelteComponentTyped>;
 		form?: string;
 	};
 	export let disabled = false;

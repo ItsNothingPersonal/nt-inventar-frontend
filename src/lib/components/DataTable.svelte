@@ -11,8 +11,15 @@
 	import { UserRoles } from '$lib/types/userRoles';
 	import { isNotNullOrUndefined, isNullOrUndefined, startCsvDownload } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { EditIcon, MinusSquareIcon, PlusSquareIcon, XIcon } from 'svelte-feather-icons';
-	import { Image, ImageModalDialog, Modal, ToggleButton } from '.';
+	import {
+		DownloadIcon,
+		EditIcon,
+		MinusSquareIcon,
+		PlusSquareIcon,
+		SkipBackIcon,
+		XIcon
+	} from 'svelte-feather-icons';
+	import { Button, Image, ImageModalDialog, Modal, ModalTriggerButton, ToggleButton } from '.';
 	import type { DBField } from '../types/dataField';
 
 	export let tableHeaders: string[] = [];
@@ -21,7 +28,7 @@
 	export let dataFields: DBField[] = [];
 	export let user: PBUser | undefined = undefined;
 	export let disableEdit = false;
-	export let textButtonNeu = '';
+	export let textHeadingNeu = '';
 	export let textButtonBearbeiten = '';
 	export let enhanceForm:
 		| (() => ({ result }: { result: ActionResult }) => Promise<void>)
@@ -31,6 +38,8 @@
 	export let orders: Bestellung[] | undefined = undefined;
 	export let userProject: string | undefined = undefined;
 	export let disableSubComponents = false;
+	export let textHeadingReset: string | undefined = undefined;
+	export let enableReset: boolean = false;
 
 	let modalOpen: boolean;
 	let checkboxValues: string[] = [];
@@ -78,18 +87,29 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="relative overflow-x-auto shadow-md print:shadow-none sm:rounded-lg mt-4">
 	{#if $editMode === true}
-		<div class="pb-4 print:hidden">
+		<div class="pb-4 print:hidden flex flex-row items-center gap-2">
 			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 				<Modal label="create-button" checked={modalOpen}>
-					<span slot="trigger" class="btn btn-active btn-primary"> Neu </span>
-					<h3 slot="heading">{textButtonNeu}</h3>
+					<ModalTriggerButton slot="trigger" label="Neu" icon={PlusSquareIcon} />
+					<h3 slot="heading">{textHeadingNeu}</h3>
 					<slot name="formNeu" />
 				</Modal>
-				<input type="submit" form="massDeleteForm" value="Massen-Löschen" class="btn btn-active" />
+				<Button
+					form="massDeleteForm"
+					label="Massen-Löschen"
+					icon={XIcon}
+					isSecondary={true}
+					type="submit"
+				/>
 			{/if}
-			<button class="btn btn-active btn-primary" type="submit" on:click={download}>
-				CSV-Download
-			</button>
+			{#if user?.role === UserRoles.INVENTARIST && enableReset}
+				<Modal label="reset-button" checked={modalOpen}>
+					<ModalTriggerButton slot="trigger" label="Reset" icon={SkipBackIcon} />
+					<h3 slot="heading">{textHeadingReset}</h3>
+					<slot name="formReset" />
+				</Modal>
+			{/if}
+			<Button label="CSV-Download" onClick={download} icon={DownloadIcon} />
 			<form
 				method="post"
 				action="?/delete"
@@ -127,32 +147,17 @@
 						{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 							<td class="print:hidden">
 								<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
-									<span
+									<ModalTriggerButton
 										slot="trigger"
-										class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-										on:keydown={() => selectedId.set(`${dataRow['id']}`)}
-										on:click={() => selectedId.set(`${dataRow['id']}`)}
-									>
-										{#if innerWidth <= BreakPoints.Large}
-											<EditIcon />
-										{:else}
-											Aktualisieren
-										{/if}
-									</span>
+										label="Aktualisieren"
+										icon={EditIcon}
+										onClick={() => selectedId.set(`${dataRow['id']}`)}
+										onKeyDown={() => selectedId.set(`${dataRow['id']}`)}
+									/>
 									<h3 slot="heading">{textButtonBearbeiten}</h3>
 									<slot name="formAktualisieren" />
 								</Modal>
-								<button
-									class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-									type="submit"
-									form="singleDeleteForm{dataRow['id']}"
-								>
-									{#if innerWidth <= BreakPoints.Large}
-										<XIcon />
-									{:else}
-										Löschen
-									{/if}
-								</button>
+								<Button label="Löschen" form="singleDeleteForm{dataRow['id']}" icon={XIcon} />
 								<form
 									method="post"
 									action="?/delete"

@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { applyAction } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { DataTable } from '$lib/components';
-	import type { FlattendKisteAndBestellung } from '$lib/types/flattendKisteAndBestellung';
-	import { sortByProjektNameAndKisteNameAsc } from '$lib/util';
+	import { DataTable, Select } from '$lib/components';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { PageData } from './$types';
 
@@ -11,6 +9,9 @@
 
 	let loading: boolean;
 	$: loading = false;
+
+	let checked: boolean;
+	$: checked = false;
 
 	const submitEnhance = () => {
 		loading = true;
@@ -29,37 +30,10 @@
 			loading = false;
 		};
 	};
-
-	function kombinierteKistenUndBestellungsDaten() {
-		const result: FlattendKisteAndBestellung[] = [];
-
-		data.bestellungen.forEach((b) => {
-			b.expand.kiste.forEach((k) => {
-				const flatResult: FlattendKisteAndBestellung = {
-					id: k.id,
-					collectionName: k.collectionName,
-					name: k.name,
-					bild: k.bild,
-					expand: {
-						lagerort: k.expand.lagerort,
-						bestellung: {
-							id: b.id,
-							projekt: b.expand.projekt.name,
-							besteller: b.expand.besteller.name
-						}
-					}
-				};
-
-				result.push(flatResult);
-			});
-		});
-
-		return result;
-	}
 </script>
 
 <DataTable
-	data={kombinierteKistenUndBestellungsDaten().sort(sortByProjektNameAndKisteNameAsc)}
+	data={data.flatOrder}
 	dataFields={[
 		{ name: 'name', detailsLink: 'kiste' },
 		{ name: 'bestellung', detailsLink: true, isExpanded: true, fieldName: 'projekt' },
@@ -69,4 +43,29 @@
 	user={data.user}
 	enhanceForm={submitEnhance}
 	csvName="bestellungen.csv"
-/>
+	enableReset={true}
+	textHeadingReset="Bestellung zurücksetzen"
+	disableEdit={true}
+>
+	<form
+		action="?/resetOrder"
+		method="post"
+		class="space-y-2"
+		enctype="multipart/form-data"
+		use:enhance={submitEnhance}
+		slot="formReset"
+		id="formReset"
+	>
+		<Select
+			id="projekt"
+			label="Projekt"
+			options={data.projekte.map((p) => p.name)}
+			required={true}
+			disabled={loading}
+			value={data.projekte.length > 0 ? data.projekte[0].name : ''}
+		/>
+		<button type="submit" class="btn btn-primary w-full" disabled={loading}>
+			Projekt zurücksetzen
+		</button>
+	</form>
+</DataTable>

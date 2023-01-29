@@ -156,6 +156,26 @@ const getBestellungByProjektId = async (pb: PocketBase, id: string) => {
 	return data;
 };
 
+const getProjekte = async (pb: PocketBase) => {
+	let data: Projekt[] = [];
+
+	try {
+		data = await pb.collection('projekte').getFullList<Projekt>(200, {
+			sort: '-created'
+		});
+	} catch (error) {
+		const pbError = error as PbError;
+		if (
+			pbError.status !== 404 ||
+			(pbError.status === 404 && pbError.data.message !== "The requested resource wasn't found.")
+		) {
+			console.error(error);
+		}
+	}
+
+	return data;
+};
+
 const getProjektByUserId = async (pb: PocketBase, id: string | undefined) => {
 	if (isNullOrUndefined(id)) return undefined;
 
@@ -191,5 +211,6 @@ export {
 	getBestellungen,
 	getProjektByUserId,
 	getBestellungByProjektId,
-	getBestellungenById
+	getBestellungenById,
+	getProjekte
 };
