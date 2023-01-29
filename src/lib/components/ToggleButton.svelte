@@ -16,12 +16,15 @@
 		form?: string;
 	};
 	export let disabled = false;
+	export let isSmall = false;
 </script>
 
 {#if toggled}
 	<label class={'label cursor-pointer'}>
 		<button
-			class="btn {isMobile ? 'btn-square' : ''} {toggled ? 'btn-warning' : 'btn-primary'}"
+			class="btn {isMobile ? 'btn-square' : ''} {toggled ? 'btn-warning' : 'btn-primary'} {isSmall
+				? 'btn-sm'
+				: ''}"
 			type="submit"
 			form={labelToggled.form}
 			id={`${id}-toggled`}
@@ -38,7 +41,9 @@
 {:else}
 	<label class={'label cursor-pointer'}>
 		<button
-			class="btn {isMobile ? 'btn-square' : ''} {toggled ? 'btn-warning' : 'btn-primary'}"
+			class="btn {isMobile ? 'btn-square' : ''} {toggled ? 'btn-warning' : 'btn-primary'} {isSmall
+				? 'btn-sm'
+				: ''}"
 			type="submit"
 			form={labelNotToggled.form}
 			id={`${id}-not-toggled`}
