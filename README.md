@@ -65,7 +65,7 @@ Bitte haltet euch dabei an den [Verhaltenscodex](CODE_OF_CONDUCT.md).
 
 ## Authoren
 
-- [@ItsNothingPersonal](https://www.github.com/ItsNothingPersonal)
+- [Sebastian Tremmel](https://www.github.com/ItsNothingPersonal)
 
 ## License
 
