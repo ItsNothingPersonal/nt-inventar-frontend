@@ -66,8 +66,18 @@
 						<li>
 							<ToggleButton
 								id="desktop-edit-mode"
-								labelNotToggled={{ desktop: Label.INTERACTIVE_MODE }}
-								labelToggled={{ desktop: Label.INTERACTIVE_MODE }}
+								labelNotToggled={{
+									desktop:
+										data.user?.role === UserRoles.INVENTARIST
+											? Label.INTERACTIVE_MODE_BEARBEITEN
+											: Label.INTERACTIVE_MODE_BESTELLEN
+								}}
+								labelToggled={{
+									desktop:
+										data.user?.role === UserRoles.INVENTARIST
+											? Label.INTERACTIVE_MODE_BEARBEITEN
+											: Label.INTERACTIVE_MODE_BESTELLEN
+								}}
 								onClick={() => editMode.set(!$editMode)}
 								toggled={$editMode}
 							/>
@@ -118,7 +128,7 @@
 					</div>
 				{/if}
 			{:else}
-				<MobileMenu menuEntries={mobileMenuData} />
+				<MobileMenu menuEntries={mobileMenuData} user={data.user} />
 			{/if}
 		</div>
 	</div>

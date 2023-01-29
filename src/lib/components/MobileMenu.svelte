@@ -2,10 +2,13 @@
 	import { Label } from '$lib/constants';
 	import { editMode } from '$lib/storeClient';
 	import type { MenuSegment } from '$lib/types/menuSegment';
+	import type { PBUser } from '$lib/types/user';
+	import { UserRoles } from '$lib/types/userRoles';
 	import { MenuIcon } from 'svelte-feather-icons';
 	import ToggleButton from './ToggleButton.svelte';
 
 	export let menuEntries: MenuSegment[] = [] as MenuSegment[];
+	export let user: PBUser | undefined;
 </script>
 
 <div class="dropdown dropdown-bottom dropdown-end">
@@ -15,6 +18,28 @@
 		<MenuIcon class="text-secondary" />
 	</label>
 	<ul class="dropdown-content menu bg-base-100 w-56 p-2 rounded-box border-2">
+		<li class="menu-title">
+			<span>Modus</span>
+		</li>
+		<li>
+			<ToggleButton
+				id="mobile-edit-mode"
+				labelNotToggled={{
+					desktop:
+						user?.role === UserRoles.INVENTARIST
+							? Label.INTERACTIVE_MODE_BEARBEITEN
+							: Label.INTERACTIVE_MODE_BESTELLEN
+				}}
+				labelToggled={{
+					desktop:
+						user?.role === UserRoles.INVENTARIST
+							? Label.INTERACTIVE_MODE_BEARBEITEN
+							: Label.INTERACTIVE_MODE_BESTELLEN
+				}}
+				toggled={$editMode}
+				onClick={() => editMode.set(!$editMode)}
+			/>
+		</li>
 		{#each menuEntries as menuEntry}
 			{#if (Array.isArray(menuEntry.entries) && menuEntry.entries.filter((z) => z.hidden === false || z.hidden === undefined).length > 0) || (!Array.isArray(menuEntry.entries) && (menuEntry.entries.hidden === false || menuEntry.entries.hidden === undefined))}
 				<li class="menu-title">
@@ -56,16 +81,5 @@
 				{/if}
 			{/if}
 		{/each}
-		<li class="menu-title">
-			<span>Modus</span>
-		</li>
-		<li>
-			<ToggleButton
-				id="mobile-edit-mode"
-				labelNotToggled={{ desktop: Label.INTERACTIVE_MODE }}
-				labelToggled={{ desktop: Label.INTERACTIVE_MODE }}
-				toggled={$editMode}
-			/>
-		</li>
 	</ul>
 </div>
