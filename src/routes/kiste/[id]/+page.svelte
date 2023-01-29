@@ -102,7 +102,7 @@
 		</div>
 		{#if data.user?.role === UserRoles.SPIELLEITUNG}
 			<div class="flex flex-row items-baseline gap-x-2 print:hidden">
-				<label for={data.kiste?.bild}>
+				<label for="buttonOrder">
 					<span class="font-bold"> Bestellstatus: </span>
 				</label>
 				<ToggleButton
@@ -135,6 +135,13 @@
 				<input hidden class="hidden" name="id" value={data.kiste.id} />
 				<input hidden class="hidden" name="projectId" value={data.userProject?.id} />
 			</form>
+		{:else if data.user?.role === UserRoles.INVENTARIST}
+			<div class="flex flex-row gap-x-2">
+				<label for="lagerort">
+					<span class="font-bold"> Bestellstatus: </span>
+				</label>
+				{alreadyOrdered(data.kiste.id, data.userProject?.id) ? 'Bestellt' : 'Nicht bestellt'}
+			</div>
 		{/if}
 	</div>
 	<div class="divider" />
