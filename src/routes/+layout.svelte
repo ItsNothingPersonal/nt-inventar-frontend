@@ -69,14 +69,14 @@
 								labelNotToggled={{
 									desktop:
 										data.user?.role === UserRoles.INVENTARIST
-											? Label.INTERACTIVE_MODE_BEARBEITEN
-											: Label.INTERACTIVE_MODE_BESTELLEN
+											? Label.INTERACTIVE_MODE_INVENTARIST
+											: Label.INTERACTIVE_MODE_STANDARD
 								}}
 								labelToggled={{
 									desktop:
 										data.user?.role === UserRoles.INVENTARIST
-											? Label.INTERACTIVE_MODE_BEARBEITEN
-											: Label.INTERACTIVE_MODE_BESTELLEN
+											? Label.INTERACTIVE_MODE_INVENTARIST
+											: Label.INTERACTIVE_MODE_STANDARD
 								}}
 								onClick={() => editMode.set(!$editMode)}
 								toggled={$editMode}
