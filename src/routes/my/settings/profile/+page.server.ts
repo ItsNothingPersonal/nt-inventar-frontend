@@ -1,11 +1,23 @@
+import { getProjektByUserId } from '$lib/server/pocketbase';
+import type { Projekt } from '$lib/types/projekt';
 import { isNotNullOrUndefined } from '$lib/util';
 import { error, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ locals }) => {
+export const load = (async ({
+	locals
+}): Promise<{
+	projekt: Projekt | undefined;
+}> => {
 	if (!locals.pb.authStore.isValid) {
 		throw redirect(303, '/login');
 	}
+
+	const projekt = await getProjektByUserId(locals.pb, locals.user?.projekt);
+
+	return {
+		projekt: isNotNullOrUndefined(projekt) ? JSON.parse(JSON.stringify(projekt)) : undefined
+	};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

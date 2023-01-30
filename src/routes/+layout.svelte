@@ -1,9 +1,16 @@
 <script lang="ts">
-	import { Image, MobileMenu } from '$lib/components';
+	import { Image, MobileMenu, ToggleButton } from '$lib/components';
 	import { editMode, selectedTheme } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
-	import { changeToTheme, getImageURL, isNotNullOrUndefined, isNullOrUndefined } from '$lib/util';
+	import { UserRoles } from '$lib/types/userRoles';
+	import {
+		changeToTheme,
+		getImageURL,
+		getModeLabelText,
+		isNotNullOrUndefined,
+		isNullOrUndefined
+	} from '$lib/util';
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import type { LayoutData } from './$types';
@@ -24,7 +31,12 @@
 			entries: [
 				{ label: 'Gegenstände', href: '/gegenstand', hidden: isNullOrUndefined(data.user) },
 				{ label: 'Kisten', href: '/kiste', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Lagerorte', href: '/lagerort', hidden: isNullOrUndefined(data.user) }
+				{ label: 'Lagerorte', href: '/lagerort', hidden: isNullOrUndefined(data.user) },
+				{
+					label: 'Bestellungen',
+					href: '/bestellung',
+					hidden: isNullOrUndefined(data.user) || data.user.role !== UserRoles.INVENTARIST
+				}
 			]
 		},
 		{
@@ -57,23 +69,26 @@
 				<ul class="menu menu-horizontal px-1">
 					{#if isNotNullOrUndefined(data.user)}
 						<li>
-							<div class="form-control">
-								<label class={'label cursor-pointer'}>
-									<span class="label-text pr-2">Bearbeiten</span>
-									<input
-										type="checkbox"
-										class="toggle toggle-sm md:toggle-md toggle-warning"
-										on:click={() => editMode.set(!$editMode)}
-										checked={$editMode}
-									/>
-								</label>
-							</div>
+							<ToggleButton
+								id="desktop-edit-mode"
+								labelNotToggled={{
+									desktop: getModeLabelText(data.user)
+								}}
+								labelToggled={{
+									desktop: getModeLabelText(data.user)
+								}}
+								onClick={() => editMode.set(!$editMode)}
+								toggled={$editMode}
+							/>
 						</li>
 					{/if}
 					{#if data.user}
 						<li><a href="/gegenstand">Gegenstände</a></li>
 						<li><a href="/kiste">Kisten</a></li>
 						<li><a href="/lagerort">Lagerorte</a></li>
+					{/if}
+					{#if data.user?.role === UserRoles.INVENTARIST}
+						<li><a href="/bestellung">Bestellungen</a></li>
 					{/if}
 					<li><a href="/impressum">Impressum</a></li>
 					{#if !data.user}
@@ -112,7 +127,7 @@
 					</div>
 				{/if}
 			{:else}
-				<MobileMenu menuEntries={mobileMenuData} />
+				<MobileMenu menuEntries={mobileMenuData} user={data.user} />
 			{/if}
 		</div>
 	</div>

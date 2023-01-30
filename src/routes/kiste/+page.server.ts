@@ -1,13 +1,29 @@
-import { getKisten, getLagerorte } from '$lib/server/pocketbase';
+import {
+	getBestellungByProjektId,
+	getBestellungen,
+	getKisten,
+	getLagerorte,
+	getProjektByUserId
+} from '$lib/server/pocketbase';
 import { kistenStore, lagerortStore } from '$lib/server/storeServer';
+import type { Bestellung } from '$lib/types/bestellung';
+import type { BestellungAnlegen } from '$lib/types/bestellungAnlegen';
 import type { Kiste } from '$lib/types/kiste';
 import type { Lagerort } from '$lib/types/lagerort';
+import type { Projekt } from '$lib/types/projekt';
 import { isNotNullOrUndefined, isNullOrUndefined, serializeNonPOJOs } from '$lib/util';
 import { redirect } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ locals }): Promise<{ kisten: Kiste[]; lagerorte: string[] }> => {
+export const load = (async ({
+	locals
+}): Promise<{
+	kisten: Kiste[];
+	lagerorte: string[];
+	bestellungen: Bestellung[];
+	userProject: Projekt | undefined;
+}> => {
 	if (!locals.pb.authStore.isValid) {
 		throw redirect(303, '/login');
 	}
@@ -18,9 +34,16 @@ export const load = (async ({ locals }): Promise<{ kisten: Kiste[]; lagerorte: s
 	const kisten = await getKisten(locals.pb);
 	kistenStore.set(kisten);
 
+	const bestellungen = await getBestellungen(locals.pb);
+	const userProject = await getProjektByUserId(locals.pb, locals.user?.projekt);
+
 	return {
 		kisten: JSON.parse(JSON.stringify(kisten)),
-		lagerorte: lagerorte.map((x: Lagerort) => x.name)
+		lagerorte: lagerorte.map((x: Lagerort) => x.name),
+		bestellungen: JSON.parse(JSON.stringify(bestellungen)),
+		userProject: isNotNullOrUndefined(userProject)
+			? JSON.parse(JSON.stringify(userProject))
+			: undefined
 	};
 }) satisfies PageServerLoad;
 
@@ -110,6 +133,79 @@ export const actions: Actions = {
 				};
 			}
 		});
+
+		return { success: true, data: undefined };
+	},
+	order: async ({ locals, request }) => {
+		const formData = await request.formData();
+		const kisteId = formData.get('id') as string;
+		const projectId = formData.get('projectId') as string;
+
+		const existingOrder = await getBestellungByProjektId(locals.pb, projectId);
+
+		if (existingOrder) {
+			const updateOrder: BestellungAnlegen = {
+				kiste: [kisteId, ...existingOrder.kiste],
+				besteller: locals.user?.id,
+				projekt: projectId
+			};
+
+			try {
+				await locals.pb.collection('bestellungen').update(existingOrder.id, updateOrder);
+			} catch (err) {
+				return {
+					error: true,
+					message: `Fehler beim Aktualisieren der bestehenden Bestellung: ${(err as Error).message}`
+				};
+			}
+		} else {
+			const createOrder: BestellungAnlegen = {
+				kiste: [kisteId],
+				besteller: locals.user?.id,
+				projekt: projectId
+			};
+
+			try {
+				await locals.pb.collection('bestellungen').create(createOrder);
+			} catch (err) {
+				return {
+					error: true,
+					message: `Fehler beim Erstellen der neuen Bestellung: ${(err as Error).message}`
+				};
+			}
+		}
+
+		return { success: true, data: undefined };
+	},
+	orderRemove: async ({ locals, request }) => {
+		const formData = await request.formData();
+		const kisteId = formData.get('id') as string;
+		const projectId = formData.get('projectId') as string;
+
+		const existingOrder = await getBestellungByProjektId(locals.pb, projectId);
+
+		if (existingOrder) {
+			const updateOrder: BestellungAnlegen = {
+				kiste: [...existingOrder.kiste.filter((existingKisteId) => existingKisteId !== kisteId)],
+				besteller: locals.user?.id,
+				projekt: projectId
+			};
+
+			try {
+				if (updateOrder.kiste.length === 0) {
+					await locals.pb.collection('bestellungen').delete(existingOrder.id);
+				} else {
+					await locals.pb.collection('bestellungen').update(existingOrder.id, updateOrder);
+				}
+			} catch (err) {
+				return {
+					error: true,
+					message: `Fehler beim Entfernen einer Kiste aus der bestehenden Bestellung: ${
+						(err as Error).message
+					}`
+				};
+			}
+		}
 
 		return { success: true, data: undefined };
 	}

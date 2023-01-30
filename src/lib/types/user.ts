@@ -9,4 +9,5 @@ export interface PBUser {
 	collectionId: string;
 	role: UserRoles;
 	theme?: string;
+	projekt?: string;
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { Input, Modal } from '$lib/components';
+	import { Input, Modal, ModalTriggerButton } from '$lib/components';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { ActionData, PageData } from './$types';
 
@@ -62,7 +62,7 @@
 		<h3 class="text-2xl font-medium">EMail ändern</h3>
 		<div class="divider" />
 		<Modal label="change-email" checked={emailModalOpen}>
-			<span slot="trigger" class="btn btn-primary">EMail ändern</span>
+			<ModalTriggerButton slot="trigger" label="E-Mail-Adresse ändern" />
 			<h3 slot="heading">Ändere deine E-Mail-Adresse</h3>
 			<form action="?/updateEMail" method="post" class="space-y-2" use:enhance={submitUpdateEMail}>
 				<Input
@@ -84,7 +84,7 @@
 		<div class="divider mb-0.5" />
 		<Input id="username" label="Username" value={data?.user?.username} disabled />
 		<Modal label="change-username" checked={usernameModalOpen}>
-			<span slot="trigger" class="btn btn-primary">Benutzernamen ändern</span>
+			<ModalTriggerButton slot="trigger" label="Benutzernamen ändern" />
 			<h3 slot="heading">Ändere deinen Benutzernamen</h3>
 			<form
 				action="?/updateUsername"
