@@ -148,7 +148,7 @@ export function getModeLabelText(user: PBUser | undefined): string {
 			text = Label.INTERACTIVE_MODE_BESTELLEN;
 			break;
 		default:
-			text = Label.INTERACTIVE_MODE_ANZEIGEN;
+			text = Label.INTERACTIVE_MODE_EXPORT;
 	}
 
 	return text;
