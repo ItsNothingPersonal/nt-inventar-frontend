@@ -5,7 +5,7 @@
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
 	import { DataTable, Image, ImageModalDialog, Input, Select, ToggleButton } from '$lib/components';
 	import { Label } from '$lib/constants';
-	import { selectedId } from '$lib/storeClient';
+	import { editMode, selectedId } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { Gegenstand } from '$lib/types/gegenstand';
 	import { UserRoles } from '$lib/types/userRoles';
@@ -100,7 +100,7 @@
 				<span>Nicht vorhanden</span>
 			{/if}
 		</div>
-		{#if data.user?.role === UserRoles.SPIELLEITUNG}
+		{#if $editMode === true && data.user?.role === UserRoles.SPIELLEITUNG}
 			<div class="flex flex-row items-baseline gap-x-2 print:hidden">
 				<label for="buttonOrder">
 					<span class="font-bold"> Bestellstatus: </span>
@@ -135,7 +135,7 @@
 				<input hidden class="hidden" name="id" value={data.kiste.id} />
 				<input hidden class="hidden" name="projectId" value={data.userProject?.id} />
 			</form>
-		{:else if data.user?.role === UserRoles.INVENTARIST}
+		{:else if data.user?.role === UserRoles.INVENTARIST || data.user?.role === UserRoles.SPIELLEITUNG}
 			<div class="flex flex-row gap-x-2">
 				<label for="lagerort">
 					<span class="font-bold"> Bestellstatus: </span>
