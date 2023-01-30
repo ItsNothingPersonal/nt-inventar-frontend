@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { DataTable, Image, Input, Select } from '$lib/components';
+	import { Button, DataTable, Image, Input, Select } from '$lib/components';
 	import { selectedId } from '$lib/storeClient';
 	import type { Kiste } from '$lib/types/kiste';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -42,15 +42,19 @@
 		data={data.kisten}
 		dataFields={[
 			{ name: 'name', detailsLink: true },
-			{ name: 'bild', isImage: true },
-			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' }
+			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' },
+			{ name: 'bild', isImage: true }
 		]}
-		tableHeaders={['Name', 'Bild', 'Lagerort']}
+		tableHeaders={['Name', 'Lagerort', 'Bild']}
 		user={data.user}
-		textButtonNeu="Kiste anlegen"
+		textHeadingNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"
-		enhanceDelete={submitEnhance}
+		enhanceForm={submitEnhance}
 		csvName="kisten.csv"
+		allowSLOrders={true}
+		orders={data.bestellungen}
+		userProject={data.userProject?.id}
+		disableSubComponents={loading}
 	>
 		<form
 			action="?/create"
@@ -77,7 +81,7 @@
 				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
-			<button type="submit" class="btn btn-primary w-full" disabled={loading}> Anlegen </button>
+			<Button label="Anlegen" disabled={loading} type="submit" fullWidth={true} />
 		</form>
 		<form
 			action="?/update"
@@ -123,9 +127,7 @@
 				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
-			<button type="submit" class="btn btn-primary w-full" disabled={loading}>
-				Aktualisieren
-			</button>
+			<Button label="Aktualisieren" disabled={loading} type="submit" fullWidth={true} />
 		</form>
 	</DataTable>
 </div>

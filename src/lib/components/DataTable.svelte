@@ -2,15 +2,24 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
+	import { Label } from '$lib/constants';
 	import { editMode, selectedId } from '$lib/storeClient';
+	import type { Bestellung } from '$lib/types/bestellung';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { DataObject } from '$lib/types/dataRow';
 	import type { PBUser } from '$lib/types/user';
 	import { UserRoles } from '$lib/types/userRoles';
-	import { isNotNullOrUndefined, startCsvDownload } from '$lib/util';
+	import { isNotNullOrUndefined, isNullOrUndefined, startCsvDownload } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { EditIcon, XIcon } from 'svelte-feather-icons';
-	import { Image, ImageModalDialog, Modal } from '.';
+	import {
+		DownloadIcon,
+		EditIcon,
+		MinusSquareIcon,
+		PlusSquareIcon,
+		SkipBackIcon,
+		XIcon
+	} from 'svelte-feather-icons';
+	import { Button, Image, ImageModalDialog, Modal, ModalTriggerButton, ToggleButton } from '.';
 	import type { DBField } from '../types/dataField';
 
 	export let tableHeaders: string[] = [];
@@ -19,12 +28,18 @@
 	export let dataFields: DBField[] = [];
 	export let user: PBUser | undefined = undefined;
 	export let disableEdit = false;
-	export let textButtonNeu = '';
+	export let textHeadingNeu = '';
 	export let textButtonBearbeiten = '';
-	export let enhanceDelete:
+	export let enhanceForm:
 		| (() => ({ result }: { result: ActionResult }) => Promise<void>)
 		| undefined = undefined;
 	export let csvName: string;
+	export let allowSLOrders = false;
+	export let orders: Bestellung[] | undefined = undefined;
+	export let userProject: string | undefined = undefined;
+	export let disableSubComponents = false;
+	export let textHeadingReset: string | undefined = undefined;
+	export let enableReset: boolean = false;
 
 	let modalOpen: boolean;
 	let checkboxValues: string[] = [];
@@ -58,28 +73,48 @@
 			csvName
 		);
 	}
+
+	function alreadyOrdered(id: string, projectId: string | undefined): boolean {
+		if (isNullOrUndefined(projectId)) return false;
+
+		return (
+			orders?.some((order) => order.kiste.includes(id) && order.expand.projekt?.id === projectId) ??
+			false
+		);
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="relative overflow-x-auto shadow-md print:shadow-none sm:rounded-lg mt-4">
 	{#if $editMode === true}
-		<div class="pb-4">
+		<div class="pb-4 print:hidden flex flex-row items-center gap-2">
 			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 				<Modal label="create-button" checked={modalOpen}>
-					<span slot="trigger" class="btn btn-active btn-primary"> Neu </span>
-					<h3 slot="heading">{textButtonNeu}</h3>
+					<ModalTriggerButton slot="trigger" label="Neu" icon={PlusSquareIcon} />
+					<h3 slot="heading">{textHeadingNeu}</h3>
 					<slot name="formNeu" />
 				</Modal>
-				<input type="submit" form="massDeleteForm" value="Massen-Löschen" class="btn btn-active" />
+				<Button
+					form="massDeleteForm"
+					label="Massen-Löschen"
+					icon={XIcon}
+					isSecondary={true}
+					type="submit"
+				/>
 			{/if}
-			<button class="btn btn-active btn-primary" type="submit" on:click={download}>
-				CSV-Download
-			</button>
+			{#if user?.role === UserRoles.INVENTARIST && enableReset}
+				<Modal label="reset-button" checked={modalOpen}>
+					<ModalTriggerButton slot="trigger" label="Reset" icon={SkipBackIcon} />
+					<h3 slot="heading">{textHeadingReset}</h3>
+					<slot name="formReset" />
+				</Modal>
+			{/if}
+			<Button label="CSV-Download" onClick={download} icon={DownloadIcon} />
 			<form
 				method="post"
 				action="?/delete"
 				id="massDeleteForm"
-				use:enhance={enhanceDelete}
+				use:enhance={enhanceForm}
 				on:submit={() => (checkboxValues = [])}
 			>
 				{#each checkboxValues as idToDelete}
@@ -91,9 +126,13 @@
 	<table class="table table-zebra print:table-compact w-full">
 		<thead>
 			<tr>
-				{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-					<th scope="col" class="w-3" />
-					<th scope="col" class="w-3" />
+				{#if $editMode === true}
+					{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
+						<th scope="col" class="w-3 print:hidden" />
+						<th scope="col" class="w-3 print:hidden" />
+					{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
+						<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+					{/if}
 				{/if}
 
 				{#each tableHeaders as tableHeader}
@@ -104,55 +143,79 @@
 		<tbody>
 			{#each data as dataRow}
 				<tr>
-					{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-						<td>
-							<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
-								<span
-									slot="trigger"
-									class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-									on:keydown={() => selectedId.set(`${dataRow['id']}`)}
-									on:click={() => selectedId.set(`${dataRow['id']}`)}
+					{#if $editMode === true}
+						{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
+							<td class="print:hidden">
+								<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
+									<ModalTriggerButton
+										slot="trigger"
+										label="Aktualisieren"
+										icon={EditIcon}
+										onClick={() => selectedId.set(`${dataRow['id']}`)}
+										onKeyDown={() => selectedId.set(`${dataRow['id']}`)}
+									/>
+									<h3 slot="heading">{textButtonBearbeiten}</h3>
+									<slot name="formAktualisieren" />
+								</Modal>
+								<Button label="Löschen" form="singleDeleteForm{dataRow['id']}" icon={XIcon} />
+								<form
+									method="post"
+									action="?/delete"
+									use:enhance={enhanceForm}
+									id="singleDeleteForm{dataRow['id']}"
 								>
-									{#if innerWidth <= BreakPoints.Large}
-										<EditIcon />
-									{:else}
-										Aktualisieren
-									{/if}
-								</span>
-								<h3 slot="heading">{textButtonBearbeiten}</h3>
-								<slot name="formAktualisieren" />
-							</Modal>
-							<button
-								class="btn {innerWidth <= BreakPoints.Large ? 'btn-square' : ''} btn-primary"
-								type="submit"
-								form="singleDeleteForm{dataRow['id']}"
-							>
-								{#if innerWidth <= BreakPoints.Large}
-									<XIcon />
-								{:else}
-									Löschen
-								{/if}
-							</button>
-							<form
-								method="post"
-								action="?/delete"
-								use:enhance={enhanceDelete}
-								id="singleDeleteForm{dataRow['id']}"
-							>
-								<input hidden class="hidden" name="id" value={dataRow['id']} />
-							</form>
-						</td>
-						<td>
-							<label>
-								<input
-									type="checkbox"
-									class="checkbox"
-									bind:group={checkboxValues}
-									value={dataRow['id']}
-									id={`delete-checkbox-${dataRow['id']}`}
+									<input hidden class="hidden" name="id" value={dataRow['id']} />
+								</form>
+							</td>
+							<td class="print:hidden">
+								<label>
+									<input
+										type="checkbox"
+										class="checkbox"
+										bind:group={checkboxValues}
+										value={dataRow['id']}
+										id={`delete-checkbox-${dataRow['id']}`}
+									/>
+								</label>
+							</td>
+						{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
+							<td class="print:hidden">
+								<ToggleButton
+									id="buttonOrder{dataRow['id']}"
+									toggled={alreadyOrdered(dataRow['id'], userProject)}
+									isMobile={innerWidth <= BreakPoints.Large}
+									disabled={disableSubComponents}
+									labelNotToggled={{
+										desktop: Label.BESTELLEN,
+										mobile: PlusSquareIcon,
+										form: `order-${dataRow['id']}`
+									}}
+									labelToggled={{
+										desktop: Label.BESTELLT,
+										mobile: MinusSquareIcon,
+										form: `order-remove-${dataRow['id']}`
+									}}
 								/>
-							</label>
-						</td>
+								<form
+									method="post"
+									action="?/order"
+									use:enhance={enhanceForm}
+									id="order-{dataRow['id']}"
+								>
+									<input hidden class="hidden" name="id" value={dataRow['id']} />
+									<input hidden class="hidden" name="projectId" value={userProject} />
+								</form>
+								<form
+									method="post"
+									action="?/orderRemove"
+									use:enhance={enhanceForm}
+									id="order-remove-{dataRow['id']}"
+								>
+									<input hidden class="hidden" name="id" value={dataRow['id']} />
+									<input hidden class="hidden" name="projectId" value={userProject} />
+								</form>
+							</td>
+						{/if}
 					{/if}
 					{#each dataFields as dataField}
 						{#if dataField.isExpanded}
@@ -189,7 +252,7 @@
 										/>
 									</ImageModalDialog>
 								{:else}
-									<span>Nicht vorhanden</span>
+									<span class="w-12 h-12"> n/a </span>
 								{/if}
 							</td>
 						{:else if dataField.detailsLink}
@@ -212,9 +275,13 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				{#if user?.role === UserRoles.INVENTARIST && $editMode === true && !disableEdit}
-					<th scope="col" class="w-3" />
-					<th scope="col" class="w-3" />
+				{#if $editMode === true}
+					{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
+						<th scope="col" class="w-3 print:hidden" />
+						<th scope="col" class="w-3 print:hidden" />
+					{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
+						<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+					{/if}
 				{/if}
 
 				{#each tableHeaders as tableHeader}

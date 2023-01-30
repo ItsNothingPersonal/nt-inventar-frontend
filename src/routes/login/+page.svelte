@@ -3,7 +3,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { AlertError, Input, Modal } from '$lib/components';
+	import { AlertError, Input, Modal, ModalTriggerButton } from '$lib/components';
 	import { sessionStore } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { AuthProviderInfo } from 'pocketbase';
@@ -88,9 +88,7 @@
 				<button class="btn btn-primary w-full max-w-xs">Login</button>
 			</div>
 			<Modal label="reset-passwort" checked={passwortresetModalOpen}>
-				<span slot="trigger" class="text-primary hover:cursor-point hover:underline">
-					Ich habe mein Passwort vergessen
-				</span>
+				<ModalTriggerButton slot="trigger" label="Ich habe mein Passwort vergessen" asLink={true} />
 				<h3 slot="heading">Passwort neu anfordern</h3>
 				<form
 					action="?/resetPassword"

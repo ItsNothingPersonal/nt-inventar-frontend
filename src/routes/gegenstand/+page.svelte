@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { DataTable, Image, Input, Select } from '$lib/components';
+	import { Button, DataTable, Image, Input, Select } from '$lib/components';
 	import { selectedId } from '$lib/storeClient';
 	import type { Gegenstand } from '$lib/types/gegenstand';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -43,14 +43,14 @@
 		dataFields={[
 			{ name: 'name' },
 			{ name: 'anzahl' },
-			{ name: 'bild', isImage: true },
-			{ name: 'kiste', isExpanded: true, fieldName: 'name', detailsLink: 'kiste' }
+			{ name: 'kiste', isExpanded: true, fieldName: 'name', detailsLink: 'kiste' },
+			{ name: 'bild', isImage: true }
 		]}
-		tableHeaders={['Name', 'Anzahl', 'Bild', 'Kiste']}
+		tableHeaders={['Name', 'Anzahl', 'Kiste', 'Bild']}
 		user={data.user}
-		textButtonNeu="Gegenstand anlegen"
+		textHeadingNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
-		enhanceDelete={submitEnhance}
+		enhanceForm={submitEnhance}
 		csvName="gegenstaende.csv"
 	>
 		<form
@@ -86,7 +86,7 @@
 				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
-			<button type="submit" class="btn btn-primary w-full" disabled={loading}> Anlegen </button>
+			<Button label="Anlegen" disabled={loading} type="submit" fullWidth={true} />
 		</form>
 		<form
 			action="?/update"
@@ -140,9 +140,7 @@
 				cssClass="file-input file-input-bordered w-full max-w-lg"
 			/>
 
-			<button type="submit" class="btn btn-primary w-full" disabled={loading}>
-				Aktualisieren
-			</button>
+			<Button label="Aktualisieren" disabled={loading} type="submit" fullWidth={true} />
 		</form>
 	</DataTable>
 </div>

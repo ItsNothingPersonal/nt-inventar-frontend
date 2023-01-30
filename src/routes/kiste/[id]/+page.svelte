@@ -3,14 +3,22 @@
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
-	import { DataTable, Image, ImageModalDialog, Input, Select } from '$lib/components';
+	import { DataTable, Image, ImageModalDialog, Input, Select, ToggleButton } from '$lib/components';
+	import { Label } from '$lib/constants';
 	import { selectedId } from '$lib/storeClient';
+	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { Gegenstand } from '$lib/types/gegenstand';
+	import { UserRoles } from '$lib/types/userRoles';
+	import { isNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { MinusSquareIcon, PlusSquareIcon } from 'svelte-feather-icons';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
+
+	$: innerWidth = 0;
+	$: innerHeight = 0;
 
 	let loading: boolean;
 	$: loading = false;
@@ -39,14 +47,25 @@
 			loading = false;
 		};
 	};
+
+	function alreadyOrdered(id: string, projectId: string | undefined): boolean {
+		if (isNullOrUndefined(projectId)) return false;
+
+		return (
+			data.bestellungen?.some(
+				(order) => order.kiste.includes(id) && order.expand.projekt?.id === projectId
+			) ?? false
+		);
+	}
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
 <div class="w-full h-full px-2">
 	<div>
 		<h1 class="text-4xl font-bold mb-4">{data.kiste?.name}</h1>
 	</div>
 
-	<div class="flex flex-col gap-y-4">
+	<div class="flex flex-col gap-2">
 		<div class="flex flex-row gap-x-2">
 			<label for="lagerort">
 				<span class="font-bold"> Lagerort: </span>
@@ -81,15 +100,59 @@
 				<span>Nicht vorhanden</span>
 			{/if}
 		</div>
+		{#if data.user?.role === UserRoles.SPIELLEITUNG}
+			<div class="flex flex-row items-baseline gap-x-2 print:hidden">
+				<label for="buttonOrder">
+					<span class="font-bold"> Bestellstatus: </span>
+				</label>
+				<ToggleButton
+					id="buttonOrder"
+					toggled={alreadyOrdered(data.kiste.id, data.userProject?.id)}
+					isMobile={innerWidth <= BreakPoints.Large}
+					labelNotToggled={{
+						desktop: Label.BESTELLEN,
+						mobile: PlusSquareIcon,
+						form: `order-${data.kiste.id}`
+					}}
+					labelToggled={{
+						desktop: Label.BESTELLT,
+						mobile: MinusSquareIcon,
+						form: `order-remove-${data.kiste.id}`
+					}}
+					isSmall={true}
+				/>
+			</div>
+			<form method="post" action="?/order" use:enhance={submitEnhance} id="order-{data.kiste.id}">
+				<input hidden class="hidden" name="id" value={data.kiste.id} />
+				<input hidden class="hidden" name="projectId" value={data.userProject?.id} />
+			</form>
+			<form
+				method="post"
+				action="?/orderRemove"
+				use:enhance={submitEnhance}
+				id="order-remove-{data.kiste.id}"
+			>
+				<input hidden class="hidden" name="id" value={data.kiste.id} />
+				<input hidden class="hidden" name="projectId" value={data.userProject?.id} />
+			</form>
+		{:else if data.user?.role === UserRoles.INVENTARIST}
+			<div class="flex flex-row gap-x-2">
+				<label for="lagerort">
+					<span class="font-bold"> Bestellstatus: </span>
+				</label>
+				{alreadyOrdered(data.kiste.id, data.userProject?.id) ? 'Bestellt' : 'Nicht bestellt'}
+			</div>
+		{/if}
 	</div>
+	<div class="divider" />
 	<DataTable
 		data={data.gegenstaende}
 		dataFields={[{ name: 'name' }, { name: 'anzahl' }, { name: 'bild', isImage: true }]}
 		tableHeaders={['Name', 'Anzahl', 'Bild']}
 		user={data.user}
-		textButtonNeu="Gegenstand anlegen"
+		textHeadingNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"
-		enhanceDelete={submitEnhance}
+		enhanceForm={submitEnhance}
 		csvName="{`kiste-${data.kiste.name}`}.csv"
 	>
 		<form
