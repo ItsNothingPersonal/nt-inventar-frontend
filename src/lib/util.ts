@@ -1,8 +1,11 @@
 import { browser } from '$app/environment';
 import { PUBLIC_PB_BASE_URL } from '$env/static/public';
+import { Label } from './constants';
 import type { DataObject } from './types/dataRow';
 import type { FlattendKisteAndBestellung } from './types/flattendKisteAndBestellung';
 import type { Kiste } from './types/kiste';
+import type { PBUser } from './types/user';
+import { UserRoles } from './types/userRoles';
 
 export function isNullOrUndefined<T>(obj: T | null | undefined): obj is null | undefined {
 	return typeof obj === 'undefined' || obj === null;
@@ -130,4 +133,23 @@ export function sortByProjektNameAndKisteNameAsc(
 	} else {
 		return sortStringDesc(a.expand.bestellung.projekt, b.expand.bestellung.projekt);
 	}
+}
+
+export function getModeLabelText(user: PBUser | undefined): string {
+	if (isNullOrUndefined(user)) return '';
+
+	let text: string;
+
+	switch (user.role) {
+		case UserRoles.INVENTARIST:
+			text = Label.INTERACTIVE_MODE_BEARBEITEN;
+			break;
+		case UserRoles.SPIELLEITUNG:
+			text = Label.INTERACTIVE_MODE_BESTELLEN;
+			break;
+		default:
+			text = Label.INTERACTIVE_MODE_ANZEIGEN;
+	}
+
+	return text;
 }

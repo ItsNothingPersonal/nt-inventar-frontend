@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { Label } from '$lib/constants';
 	import { editMode } from '$lib/storeClient';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import type { PBUser } from '$lib/types/user';
-	import { UserRoles } from '$lib/types/userRoles';
+	import { getModeLabelText } from '$lib/util';
 	import { MenuIcon } from 'svelte-feather-icons';
 	import ToggleButton from './ToggleButton.svelte';
 
@@ -25,16 +24,10 @@
 			<ToggleButton
 				id="mobile-edit-mode"
 				labelNotToggled={{
-					desktop:
-						user?.role === UserRoles.INVENTARIST
-							? Label.INTERACTIVE_MODE_INVENTARIST
-							: Label.INTERACTIVE_MODE_STANDARD
+					desktop: getModeLabelText(user)
 				}}
 				labelToggled={{
-					desktop:
-						user?.role === UserRoles.INVENTARIST
-							? Label.INTERACTIVE_MODE_INVENTARIST
-							: Label.INTERACTIVE_MODE_STANDARD
+					desktop: getModeLabelText(user)
 				}}
 				toggled={$editMode}
 				onClick={() => editMode.set(!$editMode)}

@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { Image, MobileMenu, ToggleButton } from '$lib/components';
-	import { Label } from '$lib/constants';
 	import { editMode, selectedTheme } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import { UserRoles } from '$lib/types/userRoles';
-	import { changeToTheme, getImageURL, isNotNullOrUndefined, isNullOrUndefined } from '$lib/util';
+	import {
+		changeToTheme,
+		getImageURL,
+		getModeLabelText,
+		isNotNullOrUndefined,
+		isNullOrUndefined
+	} from '$lib/util';
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import type { LayoutData } from './$types';
@@ -67,16 +72,10 @@
 							<ToggleButton
 								id="desktop-edit-mode"
 								labelNotToggled={{
-									desktop:
-										data.user?.role === UserRoles.INVENTARIST
-											? Label.INTERACTIVE_MODE_INVENTARIST
-											: Label.INTERACTIVE_MODE_STANDARD
+									desktop: getModeLabelText(data.user)
 								}}
 								labelToggled={{
-									desktop:
-										data.user?.role === UserRoles.INVENTARIST
-											? Label.INTERACTIVE_MODE_INVENTARIST
-											: Label.INTERACTIVE_MODE_STANDARD
+									desktop: getModeLabelText(data.user)
 								}}
 								onClick={() => editMode.set(!$editMode)}
 								toggled={$editMode}
