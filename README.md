@@ -63,9 +63,8 @@ Bitte haltet euch dabei an den [Verhaltenscodex](CODE_OF_CONDUCT.md).
 - [tailwindcss](https://tailwindcss.com/)
 - [daiysUI](https://daisyui.com/)
 
-## Authoren
-
-- [Sebastian Tremmel](https://www.github.com/ItsNothingPersonal)
+## Author
+[Sebastian Tremmel](https://www.github.com/ItsNothingPersonal)
 
 ## License
 
