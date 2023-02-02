@@ -10,8 +10,7 @@
 
 	<DataTable
 		data={data.kisten}
-		dataFields={[{ name: 'name', detailsLink: 'kiste' }]}
-		tableHeaders={['Name']}
+		dataFields={[{ value: 'id', detailsLink: 'kiste', fieldName: 'name', sortKey: 'name' }]}
 		user={data.user}
 		disableEdit={true}
 		csvName="{`lagerort-${data.lagerort.name}`}.csv"

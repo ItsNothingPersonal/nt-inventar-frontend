@@ -12,7 +12,7 @@ const getGegenstaende = async (pb: PocketBase) => {
 
 	try {
 		data = await pb.collection('gegenstaende').getFullList<Gegenstand>(200, {
-			sort: '-created',
+			sort: 'name',
 			expand: 'kiste'
 		});
 	} catch (error) {
@@ -27,7 +27,7 @@ const getGegenstaendeForKiste = async (pb: PocketBase, id: string) => {
 
 	try {
 		data = await pb.collection('gegenstaende').getFullList<Gegenstand>(200, {
-			sort: '-created',
+			sort: 'name',
 			filter: `kiste.id = "${id}"`,
 			expand: 'kiste, kiste.lagerort'
 		});
@@ -43,7 +43,7 @@ const getKisten = async (pb: PocketBase) => {
 
 	try {
 		data = await pb.collection('kisten').getFullList<Kiste>(200, {
-			sort: '-created',
+			sort: 'lagerort.name, name',
 			expand: 'lagerort'
 		});
 	} catch (error) {
@@ -58,7 +58,7 @@ const getKisteById = async (pb: PocketBase, id: string) => {
 
 	try {
 		data = await pb.collection('kisten').getFirstListItem<Kiste>(`id="${id}"`, {
-			sort: '-created',
+			sort: 'name',
 			expand: 'lagerort'
 		});
 	} catch (error) {
@@ -74,7 +74,7 @@ const getKistenByLagerortId = async (pb: PocketBase, id: string) => {
 	try {
 		data = await pb.collection('kisten').getFullList<Kiste>(200, {
 			filter: `lagerort.id="${id}"`,
-			sort: '-created'
+			sort: 'name'
 		});
 	} catch (error) {
 		console.error(error);
@@ -88,7 +88,7 @@ const getLagerorte = async (pb: PocketBase) => {
 
 	try {
 		data = await pb.collection('lagerorte').getFullList<Lagerort>(200, {
-			sort: '-created'
+			sort: 'name'
 		});
 	} catch (error) {
 		console.error(error);
@@ -102,7 +102,7 @@ const getLagerortById = async (pb: PocketBase, id: string) => {
 
 	try {
 		data = await pb.collection('lagerorte').getFirstListItem<Lagerort>(`id="${id}"`, {
-			sort: '-created'
+			sort: 'name'
 		});
 	} catch (error) {
 		console.error(error);

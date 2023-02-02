@@ -41,11 +41,16 @@
 	<DataTable
 		data={data.kisten}
 		dataFields={[
-			{ name: 'name', detailsLink: true },
-			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' },
-			{ name: 'bild', isImage: true }
+			{ value: 'id', fieldName: 'name', detailsLink: 'kiste', sortKey: 'name' },
+			{
+				value: 'expand.lagerort.id',
+				isExpanded: true,
+				fieldName: 'name',
+				detailsLink: 'lagerort',
+				sortKey: 'expand.lagerort.name'
+			},
+			{ value: 'bild', isImage: true }
 		]}
-		tableHeaders={['Name', 'Lagerort', 'Bild']}
 		user={data.user}
 		textHeadingNeu="Kiste anlegen"
 		textButtonBearbeiten="Kiste aktualisieren"

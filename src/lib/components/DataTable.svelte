@@ -7,10 +7,13 @@
 	import type { Bestellung } from '$lib/types/bestellung';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { DataObject } from '$lib/types/dataRow';
+	import type { NestedKeyOf } from '$lib/types/nestedKeyOf';
 	import type { PBUser } from '$lib/types/user';
 	import { UserRoles } from '$lib/types/userRoles';
 	import { isNotNullOrUndefined, isNullOrUndefined, startCsvDownload } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { get as lget } from 'lodash-es';
+	import { afterUpdate, onMount } from 'svelte';
 	import {
 		DownloadIcon,
 		EditIcon,
@@ -19,13 +22,15 @@
 		SkipBackIcon,
 		XIcon
 	} from 'svelte-feather-icons';
+	import { writable, type Writable } from 'svelte/store';
 	import { Button, Image, ImageModalDialog, Modal, ModalTriggerButton, ToggleButton } from '.';
 	import type { DBField } from '../types/dataField';
 
-	export let tableHeaders: string[] = [];
+	type T = $$Generic;
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	export let data: any[] = [];
-	export let dataFields: DBField[] = [];
+	export let data: T[] = [];
+	export let dataFields: DBField<T>[] = [] as DBField<T>[];
 	export let user: PBUser | undefined = undefined;
 	export let disableEdit = false;
 	export let textHeadingNeu = '';
@@ -41,6 +46,39 @@
 	export let textHeadingReset: string | undefined = undefined;
 	export let enableReset: boolean = false;
 
+	let dataStore: Writable<T[]> = writable([]);
+	let sortStore: Writable<{ field: string; sort: 'asc' | 'desc' }> = writable({
+		field: '',
+		sort: 'asc'
+	});
+	let tableHeaderStore: Writable<string[]> = writable([]);
+	let headerToFieldValueStore: Writable<Map<string, NestedKeyOf<T>>> = writable(
+		new Map<string, NestedKeyOf<T>>()
+	);
+
+	let tableHeaders: string[];
+	$: tableHeaders = [];
+
+	onMount(() => {
+		dataStore.set(data);
+		tableHeaderStore.set(
+			dataFields.flatMap((e) => {
+				const detailsLinkOrFieldName = e.detailsLink
+					? e.detailsLink.toString()
+					: e.fieldName?.toString() ?? undefined;
+				const key = detailsLinkOrFieldName ?? e.value;
+				headerToFieldValueStore.update((s) =>
+					s.set(key.toLowerCase(), e.sortKey ? e.sortKey : e.value)
+				);
+				return key;
+			})
+		);
+	});
+
+	afterUpdate(() => {
+		dataStore.set(data);
+	});
+
 	let modalOpen: boolean;
 	let checkboxValues: string[] = [];
 
@@ -54,11 +92,7 @@
 		data.map((row) => {
 			let trimmedRow: DataObject = {} as DataObject;
 			dataFields.forEach((field) => {
-				if (field.isExpanded) {
-					trimmedRow[field.name] = row['expand'][field.name][field.fieldName ?? ''];
-				} else {
-					trimmedRow[field.name] = row[field.name];
-				}
+				trimmedRow[field.value] = lget(row, field.value) as string;
 			});
 			downloadData.push(trimmedRow);
 		});
@@ -68,13 +102,13 @@
 			dataFields.map((entry) =>
 				isNotNullOrUndefined(entry.fieldName) && entry.isExpanded !== true
 					? entry.fieldName
-					: entry.name
+					: entry.value
 			),
 			csvName
 		);
 	}
 
-	function alreadyOrdered(id: string, projectId: string | undefined): boolean {
+	function alreadyOrdered(id: string | any, projectId: string | undefined): boolean {
 		if (isNullOrUndefined(projectId)) return false;
 
 		return (
@@ -82,9 +116,53 @@
 			false
 		);
 	}
+
+	function handleSortClick(tableHeader: string) {
+		const lcHeader = tableHeader.toLowerCase();
+		const valueSource: NestedKeyOf<T> | undefined = $headerToFieldValueStore.get(lcHeader);
+
+		if ($sortStore.field !== lcHeader) {
+			sortStore.set({ field: lcHeader, sort: 'asc' });
+		} else {
+			if ($sortStore.sort === 'asc') {
+				$sortStore.sort = 'desc';
+			} else {
+				$sortStore.sort = 'asc';
+			}
+		}
+
+		let result: T[];
+		if ($sortStore.sort === 'asc') {
+			result = $dataStore.sort((a, b) => {
+				return sortDataAsc(
+					lget(a, valueSource ?? '') as string,
+					lget(b, valueSource ?? '') as string
+				);
+			});
+		} else {
+			result = $dataStore.sort((a, b) =>
+				sortDataDesc(lget(a, valueSource ?? '') as string, lget(b, valueSource ?? '') as string)
+			);
+		}
+
+		dataStore.set(result);
+	}
+
+	function sortDataAsc(a: string, b: string): number {
+		return a < b ? -1 : a > b ? 1 : 0;
+	}
+
+	function sortDataDesc(a: string, b: string): number {
+		return a < b ? 1 : a > b ? -1 : 0;
+	}
+
+	function getToString(dataRow: T, field: string): string {
+		return lget(dataRow, field) as string;
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
+
 <div class="relative overflow-x-auto shadow-md print:shadow-none sm:rounded-lg mt-4">
 	{#if $editMode === true}
 		<div class="pb-4 print:hidden flex flex-row items-center gap-2">
@@ -134,37 +212,41 @@
 						<th scope="col" class="w-3 print:hidden"> Bestellung </th>
 					{/if}
 				{/if}
-
-				{#each tableHeaders as tableHeader}
-					<th scope="col">{tableHeader}</th>
+				{#each $tableHeaderStore as tableHeader (tableHeader)}
+					<th scope="col" on:click={() => handleSortClick(tableHeader)}>{tableHeader}</th>
 				{/each}
 			</tr>
 		</thead>
 		<tbody>
-			{#each data as dataRow}
+			{#each $dataStore as dataRow (lget(dataRow, 'id'))}
 				<tr>
 					{#if $editMode === true}
 						{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 							<td class="print:hidden">
-								<Modal label="update-button-{dataRow['id']}" checked={modalOpen}>
+								<Modal label="update-button-{lget(dataRow, 'id')}" checked={modalOpen}>
 									<ModalTriggerButton
 										slot="trigger"
 										label="Aktualisieren"
 										icon={EditIcon}
-										onClick={() => selectedId.set(`${dataRow['id']}`)}
-										onKeyDown={() => selectedId.set(`${dataRow['id']}`)}
+										onClick={() => selectedId.set(`${lget(dataRow, 'id')}`)}
+										onKeyDown={() => selectedId.set(`${lget(dataRow, 'id')}`)}
 									/>
 									<h3 slot="heading">{textButtonBearbeiten}</h3>
 									<slot name="formAktualisieren" />
 								</Modal>
-								<Button label="Löschen" form="singleDeleteForm{dataRow['id']}" icon={XIcon} />
+								<Button
+									label="Löschen"
+									form="singleDeleteForm{lget(dataRow, 'id')}"
+									icon={XIcon}
+									type="submit"
+								/>
 								<form
 									method="post"
 									action="?/delete"
 									use:enhance={enhanceForm}
-									id="singleDeleteForm{dataRow['id']}"
+									id="singleDeleteForm{lget(dataRow, 'id')}"
 								>
-									<input hidden class="hidden" name="id" value={dataRow['id']} />
+									<input hidden class="hidden" name="id" value={lget(dataRow, 'id')} />
 								</form>
 							</td>
 							<td class="print:hidden">
@@ -173,45 +255,45 @@
 										type="checkbox"
 										class="checkbox"
 										bind:group={checkboxValues}
-										value={dataRow['id']}
-										id={`delete-checkbox-${dataRow['id']}`}
+										value={lget(dataRow, 'id')}
+										id={`delete-checkbox-${lget(dataRow, 'id')}`}
 									/>
 								</label>
 							</td>
 						{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
 							<td class="print:hidden">
 								<ToggleButton
-									id="buttonOrder{dataRow['id']}"
-									toggled={alreadyOrdered(dataRow['id'], userProject)}
+									id="buttonOrder{lget(dataRow, 'id')}"
+									toggled={alreadyOrdered(lget(dataRow, 'id', 'test'), userProject)}
 									isMobile={innerWidth <= BreakPoints.Large}
 									disabled={disableSubComponents}
 									labelNotToggled={{
 										desktop: Label.BESTELLEN,
 										mobile: PlusSquareIcon,
-										form: `order-${dataRow['id']}`
+										form: `order-${lget(dataRow, 'id')}`
 									}}
 									labelToggled={{
 										desktop: Label.BESTELLT,
 										mobile: MinusSquareIcon,
-										form: `order-remove-${dataRow['id']}`
+										form: `order-remove-${lget(dataRow, 'id')}`
 									}}
 								/>
 								<form
 									method="post"
 									action="?/order"
 									use:enhance={enhanceForm}
-									id="order-{dataRow['id']}"
+									id="order-{lget(dataRow, 'id')}"
 								>
-									<input hidden class="hidden" name="id" value={dataRow['id']} />
+									<input hidden class="hidden" name="id" value={lget(dataRow, 'id')} />
 									<input hidden class="hidden" name="projectId" value={userProject} />
 								</form>
 								<form
 									method="post"
 									action="?/orderRemove"
 									use:enhance={enhanceForm}
-									id="order-remove-{dataRow['id']}"
+									id="order-remove-{lget(dataRow, 'id')}"
 								>
-									<input hidden class="hidden" name="id" value={dataRow['id']} />
+									<input hidden class="hidden" name="id" value={lget(dataRow, 'id')} />
 									<input hidden class="hidden" name="projectId" value={userProject} />
 								</form>
 							</td>
@@ -223,29 +305,34 @@
 								<td>
 									<a
 										class="underline underline-offset-4 decoration-dotted print:no-underline hover:cursor-pointer"
-										href="{typeof dataField.detailsLink === 'string'
-											? `${$page.url.origin}/${dataField.detailsLink}`
-											: $page.url.pathname}/{dataRow['expand'][dataField.name]['id']}"
+										href="{$page.url.origin}/{dataField.detailsLink ?? ''}/{lget(
+											dataRow,
+											dataField.value ?? ''
+										)}"
 									>
-										{dataRow['expand'][dataField.name][dataField.fieldName ?? '']}
+										{lget(
+											dataRow,
+											`expand.${dataField.detailsLink.toString() ?? ''}.${dataField.fieldName}`
+										)}
 									</a>
 								</td>
 							{:else}
-								<td> {dataRow['expand'][dataField.name][dataField.fieldName ?? '']} </td>
+								<td> {lget(dataRow, dataField.value)} </td>
 							{/if}
 						{:else if dataField.isImage}
 							<td>
-								{#if dataRow[dataField.name]}
+								{#if lget(dataRow, dataField.value)}
 									<ImageModalDialog
-										id={dataRow[dataField.name]}
-										imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${dataRow['collectionName']}/${
-											dataRow['id']
-										}/${dataRow[dataField.name]}`}
+										id={getToString(dataRow, dataField.value)}
+										imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${lget(
+											dataRow,
+											'collectionName'
+										)}/${lget(dataRow, 'id')}/${lget(dataRow, dataField.value)}`}
 									>
 										<Image
-											imageCollection={dataRow['collectionName']}
-											imageName={dataRow[dataField.name]}
-											itemId={dataRow['id']}
+											imageCollection={getToString(dataRow, 'collectionName')}
+											imageName={getToString(dataRow, dataField.value)}
+											itemId={getToString(dataRow, 'id')}
 											alt="Modal des Bildes"
 											height={512}
 											width={512}
@@ -259,15 +346,16 @@
 							<td>
 								<a
 									class="underline underline-offset-4 decoration-dotted print:no-underline hover:cursor-pointer"
-									href="{typeof dataField.detailsLink === 'string'
-										? `${$page.url.origin}/${dataField.detailsLink}`
-										: $page.url.pathname}/{dataRow['id']}"
+									href="{$page.url.origin}/{dataField.detailsLink ?? ''}/{lget(
+										dataRow,
+										dataField.value ?? ''
+									)}"
 								>
-									{dataRow[dataField.name]}
+									{lget(dataRow, dataField.fieldName ? dataField.fieldName : dataField.value ?? '')}
 								</a>
 							</td>
 						{:else}
-							<td> {dataRow[dataField.name]} </td>
+							<td> {lget(dataRow, dataField.value ?? '')} </td>
 						{/if}
 					{/each}
 				</tr>

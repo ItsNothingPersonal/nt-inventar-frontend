@@ -155,7 +155,6 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const kisteId = formData.get('id') as string;
 		const projectId = formData.get('projectId') as string;
-		console.warn(`kisteId: ${kisteId} projectId: ${projectId}`);
 		const existingOrder = await getBestellungByProjektId(locals.pb, projectId);
 
 		if (existingOrder) {
@@ -196,10 +195,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const kisteId = formData.get('id') as string;
 		const projectId = formData.get('projectId') as string;
-
-		console.warn(`kisteId: ${kisteId} projectId: ${projectId}`);
 		const existingOrder = await getBestellungByProjektId(locals.pb, projectId);
-		console.warn(JSON.stringify(existingOrder, undefined, 2));
 
 		if (existingOrder) {
 			const updateOrder: BestellungAnlegen = {

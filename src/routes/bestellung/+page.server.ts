@@ -71,7 +71,7 @@ function kombinierteKistenUndBestellungsDaten(
 					lagerort: k.expand.lagerort,
 					bestellung: {
 						id: b.id,
-						projekt: b.expand.projekt.name,
+						projekt: b.expand.projekt,
 						besteller: b.expand.besteller?.name
 					}
 				}
