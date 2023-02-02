@@ -30,16 +30,23 @@
 			loading = false;
 		};
 	};
+
+	console.table(data.flatOrder);
 </script>
 
 <DataTable
 	data={data.flatOrder}
 	dataFields={[
-		{ name: 'name', detailsLink: 'kiste' },
-		{ name: 'bestellung', detailsLink: true, isExpanded: true, fieldName: 'projekt' },
-		{ name: 'bild', isImage: true }
+		{ value: 'id', fieldName: 'name', detailsLink: 'kiste', sortKey: 'name' },
+		{
+			value: 'expand.bestellung.id',
+			fieldName: 'projekt.name',
+			detailsLink: 'bestellung',
+			isExpanded: true,
+			sortKey: 'expand.bestellung.projekt.name'
+		},
+		{ value: 'bild', isImage: true }
 	]}
-	tableHeaders={['Kiste', 'Bestellung', 'Bild']}
 	user={data.user}
 	enhanceForm={submitEnhance}
 	csvName="bestellungen.csv"

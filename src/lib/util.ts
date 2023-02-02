@@ -66,11 +66,13 @@ export function startCsvDownload(data: DataObject[], headers: string[], fileName
 	return;
 }
 
-export function toTitleCase(str: string): string | undefined {
-	return str
-		.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-		?.map((x) => x.charAt(0).toUpperCase() + x.slice(1))
-		.join(' ');
+export function toTitleCase(str: string): string {
+	return (
+		str
+			.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+			?.map((x) => x.charAt(0).toUpperCase() + x.slice(1))
+			.join(' ') ?? str
+	);
 }
 
 export function sqlTimeNow(): string {
@@ -131,7 +133,7 @@ export function sortByProjektNameAndKisteNameAsc(
 	if (a.expand.bestellung.projekt === b.expand.bestellung.projekt) {
 		return sortByKisteNameAsc(a, b);
 	} else {
-		return sortStringDesc(a.expand.bestellung.projekt, b.expand.bestellung.projekt);
+		return sortStringDesc(a.expand.bestellung.projekt.name, b.expand.bestellung.projekt.name);
 	}
 }
 

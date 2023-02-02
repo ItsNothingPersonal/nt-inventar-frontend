@@ -147,8 +147,7 @@
 	<div class="divider" />
 	<DataTable
 		data={data.gegenstaende}
-		dataFields={[{ name: 'name' }, { name: 'anzahl' }, { name: 'bild', isImage: true }]}
-		tableHeaders={['Name', 'Anzahl', 'Bild']}
+		dataFields={[{ value: 'name' }, { value: 'anzahl' }, { value: 'bild', isImage: true }]}
 		user={data.user}
 		textHeadingNeu="Gegenstand anlegen"
 		textButtonBearbeiten="Gegenstand aktualisieren"

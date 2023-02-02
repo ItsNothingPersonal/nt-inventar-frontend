@@ -8,8 +8,7 @@
 <div class="w-full h-full px-2">
 	<DataTable
 		data={data.lagerorte}
-		dataFields={[{ name: 'name', detailsLink: true }]}
-		tableHeaders={['Name']}
+		dataFields={[{ value: 'id', detailsLink: 'lagerort', fieldName: 'name', sortKey: 'name' }]}
 		user={data.user}
 		csvName="lagerorte.csv"
 		disableEdit={true}

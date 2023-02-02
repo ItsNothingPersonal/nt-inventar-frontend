@@ -50,11 +50,10 @@
 	<DataTable
 		data={data.bestellung.expand.kiste.sort(sortByLagerortNameAndKisteNameAsc)}
 		dataFields={[
-			{ name: 'name', detailsLink: 'kiste' },
-			{ name: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' },
-			{ name: 'bild', isImage: true }
+			{ value: 'name', detailsLink: 'kiste' },
+			{ value: 'lagerort', isExpanded: true, fieldName: 'name', detailsLink: 'lagerort' },
+			{ value: 'bild', isImage: true }
 		]}
-		tableHeaders={['Name', 'Projekt', 'Bild']}
 		user={data.user}
 		enhanceForm={submitEnhance}
 		csvName={`bestellungen-${data.bestellung.expand.projekt.name}.csv`}
