@@ -25,6 +25,7 @@
 	import { writable, type Writable } from 'svelte/store';
 	import { Button, Image, ImageModalDialog, Modal, ModalTriggerButton, ToggleButton } from '.';
 	import type { DBField } from '../types/dataField';
+	import SortArrow from './SortArrow.svelte';
 
 	type T = $$Generic;
 
@@ -213,7 +214,15 @@
 					{/if}
 				{/if}
 				{#each $tableHeaderStore as tableHeader (tableHeader)}
-					<th scope="col" on:click={() => handleSortClick(tableHeader)}>{tableHeader}</th>
+					<th scope="col" on:click={() => handleSortClick(tableHeader)}>
+						<div class="flex flex-row items-center gap-x-2">
+							{tableHeader}
+							<SortArrow
+								active={$sortStore.field === tableHeader}
+								sortedAsc={$sortStore.sort === 'asc'}
+							/>
+						</div>
+					</th>
 				{/each}
 			</tr>
 		</thead>

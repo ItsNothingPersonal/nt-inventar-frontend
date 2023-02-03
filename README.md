@@ -61,6 +61,7 @@ Bitte haltet euch dabei an den [Verhaltenscodex](CODE_OF_CONDUCT.md).
 - [daiysUI](https://daisyui.com/)
 
 ## Author
+
 [Sebastian Tremmel](https://www.github.com/ItsNothingPersonal)
 
 ## License
