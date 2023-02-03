@@ -5,6 +5,7 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 ## Features
 
 - Auflistung des Inventars des Nächtlichen Theater
+- Bestellmöglichkeit von Kisten & Gegenständen für die Spielleitung
 - Masken zum Anlegen, Aktualisieren und Löschen von Inventareinträgen
 - Userprofile für jeden Anwender inklusive Profilbild(-upload)
 - Mailversand bei Registrierung, Passwortzurücksetzung etc.
@@ -12,10 +13,6 @@ Frontend für das Inventar des [Nächtlichen Theater e.V.](https://naechtlichest
 - Login via Discord, Twitch und Github möglich (OAuth)
 - Bereinigte Print-Ansicht um die verschiedenen Tabellen zu drucken
 - Theme-Selector für angemeldete User
-
-## Roadmap
-
-- Bestellmöglichkeit von Kisten & Gegenständen für die Spielleitung
 
 ## Umgebungsvariablen
 
