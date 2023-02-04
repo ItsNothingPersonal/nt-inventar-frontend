@@ -6,9 +6,11 @@
 </script>
 
 {#if active}
-	{#if sortedAsc}
-		<ChevronDownIcon />
-	{:else}
-		<ChevronUpIcon />
-	{/if}
+	<div class="w-16 h-16 flex items-center">
+		{#if sortedAsc}
+			<ChevronDownIcon />
+		{:else}
+			<ChevronUpIcon />
+		{/if}
+	</div>
 {/if}

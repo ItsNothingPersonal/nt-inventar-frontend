@@ -207,15 +207,15 @@
 			<tr>
 				{#if $editMode === true}
 					{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
-						<th scope="col" class="w-3 print:hidden" />
-						<th scope="col" class="w-3 print:hidden" />
+						<th scope="col" class="w-3 print:hidden max-h-4" />
+						<th scope="col" class="w-3 print:hidden max-h-4" />
 					{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
-						<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+						<th scope="col" class="w-3 print:hidden max-h-4"> Bestellung </th>
 					{/if}
 				{/if}
 				{#each $tableHeaderStore as tableHeader (tableHeader)}
 					<th scope="col" on:click={() => handleSortClick(tableHeader)}>
-						<div class="flex flex-row items-center gap-x-2">
+						<div class="flex flex-row items-center gap-x-2 w-16 max-h-4">
 							{tableHeader}
 							<SortArrow
 								active={$sortStore.field === tableHeader}
@@ -374,15 +374,23 @@
 			<tr>
 				{#if $editMode === true}
 					{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
-						<th scope="col" class="w-3 print:hidden" />
-						<th scope="col" class="w-3 print:hidden" />
+						<th scope="col" class="w-3 print:hidden max-h-4" />
+						<th scope="col" class="w-3 print:hidden max-h-4" />
 					{:else if user?.role === UserRoles.SPIELLEITUNG && allowSLOrders}
-						<th scope="col" class="w-3 print:hidden"> Bestellung </th>
+						<th scope="col" class="w-3 print:hidden max-h-4"> Bestellung </th>
 					{/if}
 				{/if}
 
-				{#each tableHeaders as tableHeader}
-					<th scope="col">{tableHeader}</th>
+				{#each $tableHeaderStore as tableHeader (tableHeader)}
+					<th scope="col" on:click={() => handleSortClick(tableHeader)}>
+						<div class="flex flex-row items-center gap-x-2 w-16 max-h-4">
+							{tableHeader}
+							<SortArrow
+								active={$sortStore.field === tableHeader}
+								sortedAsc={$sortStore.sort === 'asc'}
+							/>
+						</div>
+					</th>
 				{/each}
 			</tr>
 		</tfoot>
