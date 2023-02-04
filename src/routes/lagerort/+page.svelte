@@ -12,5 +12,6 @@
 		user={data.user}
 		csvName="lagerorte.csv"
 		disableEdit={true}
+		initialSortField="lagerort"
 	/>
 </div>

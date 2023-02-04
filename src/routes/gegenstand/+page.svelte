@@ -57,6 +57,7 @@
 		textButtonBearbeiten="Gegenstand aktualisieren"
 		enhanceForm={submitEnhance}
 		csvName="gegenstaende.csv"
+		initialSortField="name"
 	>
 		<form
 			action="?/create"

@@ -60,6 +60,7 @@
 		orders={data.bestellungen}
 		userProject={data.userProject?.id}
 		disableSubComponents={loading}
+		initialSortField="lagerort"
 	>
 		<form
 			action="?/create"

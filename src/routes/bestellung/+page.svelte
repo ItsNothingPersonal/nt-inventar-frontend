@@ -30,8 +30,6 @@
 			loading = false;
 		};
 	};
-
-	console.table(data.flatOrder);
 </script>
 
 <DataTable
@@ -53,6 +51,7 @@
 	enableReset={true}
 	textHeadingReset="Bestellung zurücksetzen"
 	disableEdit={true}
+	initialSortField="bestellung"
 >
 	<form
 		action="?/resetOrder"

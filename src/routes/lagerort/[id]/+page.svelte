@@ -14,5 +14,6 @@
 		user={data.user}
 		disableEdit={true}
 		csvName="{`lagerort-${data.lagerort.name}`}.csv"
+		initialSortField="name"
 	/>
 </div>
