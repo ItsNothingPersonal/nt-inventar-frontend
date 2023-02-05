@@ -53,10 +53,10 @@
 
 		if (isNotNullOrUndefined(files) && files.length > 0) {
 			const src = URL.createObjectURL(files[0]);
-			const preview: HTMLImageElement = document.getElementById(
-				'img-avatar-preview'
-			) as HTMLImageElement;
-			preview.src = src;
+			const preview: HTMLElement | null = document.getElementById('img-avatar-preview');
+			if (isNotNullOrUndefined(preview)) {
+				(preview as HTMLImageElement).src = src;
+			}
 		}
 	};
 

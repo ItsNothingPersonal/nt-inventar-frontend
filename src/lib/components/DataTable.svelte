@@ -46,6 +46,7 @@
 	export let disableSubComponents = false;
 	export let textHeadingReset: string | undefined = undefined;
 	export let enableReset: boolean = false;
+	export let initialSortField: string | undefined = undefined;
 
 	let dataStore: Writable<T[]> = writable([]);
 	let sortStore: Writable<{ field: string; sort: 'asc' | 'desc' }> = writable({
@@ -74,6 +75,10 @@
 				return key;
 			})
 		);
+
+		if (initialSortField) {
+			handleSortClick(initialSortField);
+		}
 	});
 
 	afterUpdate(() => {

@@ -57,5 +57,6 @@
 		user={data.user}
 		enhanceForm={submitEnhance}
 		csvName={`bestellungen-${data.bestellung.expand.projekt.name}.csv`}
+		initialSortField="lagerort"
 	/>
 </div>
