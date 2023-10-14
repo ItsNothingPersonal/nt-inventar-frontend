@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { CodeIcon } from 'svelte-feather-icons';
 </script>
 
 <div class="flex flex-col items-center h-full w-full pt-12">
-	<CodeIcon class="h-24 w-24 text-primary" />
+	<iconify-icon icon="material-symbols:code"></iconify-icon>
+	<!-- <CodeIcon class="h-24 w-24 text-primary" />-->
 	<h2 class="mt-2 text-center text-3xl font-bold tracking-tight text-base-content">
 		Registrier deinen Account
 	</h2>

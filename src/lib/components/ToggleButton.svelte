@@ -1,18 +1,16 @@
 <script lang="ts">
-	import type { ComponentType, SvelteComponentTyped } from 'svelte';
-
 	export let id: string;
 	export let toggled: boolean;
 	export let isMobile: boolean = false;
 	export let onClick: (() => void) | undefined = undefined;
 	export let labelNotToggled: {
 		desktop: string;
-		mobile?: ComponentType<SvelteComponentTyped>;
+		mobile?: string;
 		form?: string;
 	};
 	export let labelToggled: {
 		desktop: string;
-		mobile?: ComponentType<SvelteComponentTyped>;
+		mobile?: string;
 		form?: string;
 	};
 	export let disabled = false;
@@ -32,7 +30,7 @@
 			{disabled}
 		>
 			{#if isMobile && labelToggled.mobile}
-				<svelte:component this={labelToggled.mobile} />
+				<iconify-icon icon={labelNotToggled.mobile}></iconify-icon>
 			{:else}
 				{labelToggled.desktop}
 			{/if}
@@ -51,7 +49,7 @@
 			{disabled}
 		>
 			{#if isMobile && labelNotToggled.mobile}
-				<svelte:component this={labelNotToggled.mobile} />
+				<iconify-icon icon={labelNotToggled.mobile}></iconify-icon>
 			{:else}
 				{labelNotToggled.desktop}
 			{/if}

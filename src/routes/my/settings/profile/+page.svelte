@@ -5,7 +5,6 @@
 	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte';
 	import { getImageURL, isNotNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { EditIcon } from 'svelte-feather-icons';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -96,7 +95,7 @@
 			<label for="avatar" class="avatar w-32 rounded-full hover:cursor-pointer">
 				<label for="avatar" class="absolute -bottom-0.5 -right-0.5 hover:cursor-pointer">
 					<span class="btn btn-circle btn-sm btn-secondary w-8 h-8">
-						<EditIcon />
+						<iconify-icon icon="material-symbols:edit-document-outline"></iconify-icon>
 					</span>
 				</label>
 				<div class="w-32 rounded-full">

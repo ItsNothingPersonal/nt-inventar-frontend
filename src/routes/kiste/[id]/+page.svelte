@@ -11,7 +11,6 @@
 	import { UserRoles } from '$lib/types/userRoles';
 	import { isNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { MinusSquareIcon, PlusSquareIcon } from 'svelte-feather-icons';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
@@ -111,12 +110,12 @@
 					isMobile={innerWidth <= BreakPoints.Large}
 					labelNotToggled={{
 						desktop: Label.BESTELLEN,
-						mobile: PlusSquareIcon,
+						mobile: 'ic:baseline-plus',
 						form: `order-${data.kiste.id}`
 					}}
 					labelToggled={{
 						desktop: Label.BESTELLT,
-						mobile: MinusSquareIcon,
+						mobile: 'ic:baseline-plus',
 						form: `order-remove-${data.kiste.id}`
 					}}
 					isSmall={true}

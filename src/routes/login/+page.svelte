@@ -7,7 +7,6 @@
 	import { sessionStore } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { AuthProviderInfo } from 'pocketbase';
-	import { CodeIcon } from 'svelte-feather-icons';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
@@ -61,7 +60,8 @@
 </script>
 
 <div class="flex flex-col items-center h-full w-full pt-12">
-	<CodeIcon class="text-primary h-24 w-24" />
+	<iconify-icon icon="material-symbols:code"></iconify-icon>
+	<!--<CodeIcon class="text-primary h-24 w-24" />-->
 	<h2 class="mt-2 text-center text-3xl font-bold tracking-tight text-base-content">
 		Logg dich ein
 	</h2>

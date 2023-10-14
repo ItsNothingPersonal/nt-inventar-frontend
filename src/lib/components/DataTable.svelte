@@ -14,14 +14,6 @@
 	import type { ActionResult } from '@sveltejs/kit';
 	import { get as lget } from 'lodash-es';
 	import { afterUpdate, onMount } from 'svelte';
-	import {
-		DownloadIcon,
-		EditIcon,
-		MinusSquareIcon,
-		PlusSquareIcon,
-		SkipBackIcon,
-		XIcon
-	} from 'svelte-feather-icons';
 	import { writable, type Writable } from 'svelte/store';
 	import { Button, Image, ImageModalDialog, Modal, ModalTriggerButton, ToggleButton } from '.';
 	import type { DBField } from '../types/dataField';
@@ -174,26 +166,26 @@
 		<div class="pb-4 print:hidden flex flex-row items-center gap-2">
 			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 				<Modal label="create-button" checked={modalOpen}>
-					<ModalTriggerButton slot="trigger" label="Neu" icon={PlusSquareIcon} />
+					<ModalTriggerButton slot="trigger" label="Neu" icon="ic:baseline-plus" />
 					<h3 slot="heading">{textHeadingNeu}</h3>
 					<slot name="formNeu" />
 				</Modal>
 				<Button
 					form="massDeleteForm"
 					label="Massen-Löschen"
-					icon={XIcon}
+					icon="material-symbols:delete"
 					isSecondary={true}
 					type="submit"
 				/>
 			{/if}
 			{#if user?.role === UserRoles.INVENTARIST && enableReset}
 				<Modal label="reset-button" checked={modalOpen}>
-					<ModalTriggerButton slot="trigger" label="Reset" icon={SkipBackIcon} />
+					<ModalTriggerButton slot="trigger" label="Reset" icon="material-symbols:arrow-back" />
 					<h3 slot="heading">{textHeadingReset}</h3>
 					<slot name="formReset" />
 				</Modal>
 			{/if}
-			<Button label="CSV-Download" onClick={download} icon={DownloadIcon} />
+			<Button label="CSV-Download" onClick={download} icon="material-symbols:cloud-download" />
 			<form
 				method="post"
 				action="?/delete"
@@ -241,7 +233,7 @@
 									<ModalTriggerButton
 										slot="trigger"
 										label="Aktualisieren"
-										icon={EditIcon}
+										icon="material-symbols:edit-document-outline"
 										onClick={() => selectedId.set(`${lget(dataRow, 'id')}`)}
 										onKeyDown={() => selectedId.set(`${lget(dataRow, 'id')}`)}
 									/>
@@ -251,7 +243,7 @@
 								<Button
 									label="Löschen"
 									form="singleDeleteForm{lget(dataRow, 'id')}"
-									icon={XIcon}
+									icon="material-symbols:delete"
 									type="submit"
 								/>
 								<form
@@ -283,12 +275,12 @@
 									disabled={disableSubComponents}
 									labelNotToggled={{
 										desktop: Label.BESTELLEN,
-										mobile: PlusSquareIcon,
+										mobile: 'ic:baseline-plus',
 										form: `order-${lget(dataRow, 'id')}`
 									}}
 									labelToggled={{
 										desktop: Label.BESTELLT,
-										mobile: MinusSquareIcon,
+										mobile: 'ic:baseline-plus',
 										form: `order-remove-${lget(dataRow, 'id')}`
 									}}
 								/>

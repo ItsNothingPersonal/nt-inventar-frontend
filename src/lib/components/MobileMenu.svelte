@@ -3,7 +3,6 @@
 	import type { MenuSegment } from '$lib/types/menuSegment';
 	import type { PBUser } from '$lib/types/user';
 	import { getModeLabelText } from '$lib/util';
-	import { MenuIcon } from 'svelte-feather-icons';
 	import ToggleButton from './ToggleButton.svelte';
 
 	export let menuEntries: MenuSegment[] = [] as MenuSegment[];
@@ -14,7 +13,7 @@
 	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<!-- svelte-ignore a11y-label-has-associated-control -->
 	<label tabindex="0" class="btn m-1">
-		<MenuIcon class="text-secondary" />
+		<iconify-icon icon="material-symbols:menu"></iconify-icon>
 	</label>
 	<ul class="dropdown-content menu bg-base-100 w-56 p-2 rounded-box border-2">
 		<li class="menu-title">
