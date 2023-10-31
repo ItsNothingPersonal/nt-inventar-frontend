@@ -1,135 +1,84 @@
 <script lang="ts">
-	import { Image, MobileMenu, ToggleButton } from '$lib/components';
-	import { editMode, selectedTheme } from '$lib/storeClient';
-	import { BreakPoints } from '$lib/types/breakpoints';
-	import type { MenuSegment } from '$lib/types/menuSegment';
-	import { UserRoles } from '$lib/types/userRoles';
+	import { page } from '$app/stores';
+	import { ImageModalDialog } from '$lib/components';
+	import Navigation from '$lib/components/Navigation/Navigation.svelte';
+	import ResetPasswordModalDialog from '$lib/components/ResetPasswordModalDialog.svelte';
 	import {
-		changeToTheme,
-		getImageURL,
-		getModeLabelText,
-		isNotNullOrUndefined,
-		isNullOrUndefined
-	} from '$lib/util';
-	import { onMount } from 'svelte';
-	import '../app.css';
+		AppBar,
+		AppShell,
+		Drawer,
+		LightSwitch,
+		Modal,
+		getDrawerStore,
+		initializeStores,
+		type ModalComponent
+	} from '@skeletonlabs/skeleton';
+	import 'iconify-icon';
+	import '../app.postcss';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 
-	onMount(() => {
-		selectedTheme.set(data.user?.theme ?? 'dark');
-		changeToTheme('', $selectedTheme);
-	});
-
 	$: innerWidth = 0;
 	$: innerHeight = 0;
+	$: classesSidebar =
+		$page.url.pathname === '/' ||
+		$page.url.pathname === '/login' ||
+		$page.url.pathname === '/register'
+			? 'w-0'
+			: 'w-0 lg:w-64';
 
-	let mobileMenuData: MenuSegment[] = [
-		{
-			categoryName: 'Inventar',
-			entries: [
-				{ label: 'Gegenstände', href: '/gegenstand', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Kisten', href: '/kiste', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Lagerorte', href: '/lagerort', hidden: isNullOrUndefined(data.user) },
-				{
-					label: 'Bestellungen',
-					href: '/bestellung',
-					hidden: isNullOrUndefined(data.user) || data.user.role !== UserRoles.INVENTARIST
-				}
-			]
-		},
-		{
-			categoryName: 'Impressum',
-			entries: { label: 'Impressum', href: '/impressum' }
-		},
-		{
-			categoryName: 'Profile',
-			entries: [
-				{ label: 'Profil', href: '/my/settings/profile', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Account', href: '/my/settings/account', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Security', href: '/my/settings/security', hidden: isNullOrUndefined(data.user) },
-				{ label: 'Login', href: '/login', hidden: isNotNullOrUndefined(data.user) },
-				{ label: 'Logout', href: '/logout', hidden: isNullOrUndefined(data.user), type: 'Button' }
-			]
-		}
-	];
+	initializeStores();
+	const drawerStore = getDrawerStore();
+
+	const modalRegistry: Record<string, ModalComponent> = {
+		imageModalDialog: { ref: ImageModalDialog },
+		passwordResetModalDialog: { ref: ResetPasswordModalDialog }
+	};
+
+	function drawerOpen(): void {
+		drawerStore.open({});
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
-<main class="container mx-auto print:p-0">
-	<div class="navbar bg-base-100 print:hidden">
-		<div class="flex flex-1">
-			<a class="btn btn-ghost normal-case text-xl pl-0" href="/">
-				Nächtliches Theater - Inventar
-			</a>
-		</div>
-		<div class="flex-none">
-			{#if innerWidth > BreakPoints.Large}
-				<ul class="menu menu-horizontal px-1">
-					{#if isNotNullOrUndefined(data.user)}
-						<li>
-							<ToggleButton
-								id="desktop-edit-mode"
-								labelNotToggled={{
-									desktop: getModeLabelText(data.user)
-								}}
-								labelToggled={{
-									desktop: getModeLabelText(data.user)
-								}}
-								onClick={() => editMode.set(!$editMode)}
-								toggled={$editMode}
-							/>
-						</li>
-					{/if}
-					{#if data.user}
-						<li><a href="/gegenstand">Gegenstände</a></li>
-						<li><a href="/kiste">Kisten</a></li>
-						<li><a href="/lagerort">Lagerorte</a></li>
-					{/if}
-					{#if data.user?.role === UserRoles.INVENTARIST}
-						<li><a href="/bestellung">Bestellungen</a></li>
-					{/if}
-					<li><a href="/impressum">Impressum</a></li>
-					{#if !data.user}
-						<li><a href="/login" role="button" class="btn btn-primary">Login</a></li>
-					{/if}
-				</ul>
-				{#if data.user}
-					<div class="dropdown dropdown-end">
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<!-- svelte-ignore a11y-label-has-associated-control -->
-						<label tabindex="0" class="btn btn-ghost btn-circle avatar">
-							<div class="rounded-full">
-								<Image
-									imageName="profilbild"
-									src={data.user?.avatar
-										? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '48x48')
-										: `https://ui-avatars.com/api/?name=${data.user?.name}`}
-									alt="Profilbild in Navbar"
-									height={48}
-									width={48}
-								/>
-							</div>
-						</label>
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<ul
-							tabindex="0"
-							class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52 border-2"
-						>
-							<li><a href="/my/settings">Einstellungen</a></li>
-							<li class="p-0">
-								<form action="/logout" method="post">
-									<button type="submit">Logout</button>
-								</form>
-							</li>
-						</ul>
-					</div>
-				{/if}
-			{:else}
-				<MobileMenu menuEntries={mobileMenuData} user={data.user} />
-			{/if}
-		</div>
-	</div>
+<Modal components={modalRegistry} />
+<Drawer>
+	<h2 class="p-4">Navigation</h2>
+	<hr />
+	<Navigation user={data.user} />
+</Drawer>
+<AppShell slotSidebarLeft="bg-surface-500/5 {classesSidebar}" slotPageContent="px-2">
+	<svelte:fragment slot="header">
+		<AppBar>
+			<svelte:fragment slot="lead">
+				<div class="flex items-center">
+					<button class="lg:hidden btn btn-sm mr-4" on:click={drawerOpen}>
+						<span>
+							<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+								<rect width="100" height="20" />
+								<rect y="30" width="100" height="20" />
+								<rect y="60" width="100" height="20" />
+							</svg>
+						</span>
+					</button>
+					<a href="/">
+						{#if innerWidth > 1024}
+							<strong class="text-xl uppercase"> Nächtliches Theater - Inventar </strong>
+						{:else}
+							<strong class="text-xl uppercase"> NT - Inventar </strong>
+						{/if}
+					</a>
+				</div>
+			</svelte:fragment>
+
+			<svelte:fragment slot="trail">
+				<LightSwitch />
+			</svelte:fragment>
+		</AppBar>
+	</svelte:fragment>
+	<svelte:fragment slot="sidebarLeft">
+		<Navigation user={data.user} />
+	</svelte:fragment>
 	<slot />
-</main>
+</AppShell>

@@ -1,33 +1,22 @@
 <script lang="ts">
-	import Image from './Image.svelte';
+	import { getModalStore } from '@skeletonlabs/skeleton';
+	import type { SvelteComponent } from 'svelte';
 
-	export let imageSrc: string;
-	export let id: string;
-	export let thumbnailHeight = 48;
-	export let thumbnailWidth = 48;
+	export let parent: SvelteComponent;
 
-	let modalShown = false;
+	const modalStore = getModalStore();
+	const cButton = 'fixed top-4 right-4 z-50 font-bold shadow-xl';
+	const cImage = 'max-w-lg max-h-[90%] rounded-container-token overflow-hidden shadow-xl';
 </script>
 
-<label for={`modal-${id}`}>
-	<div class="w-12">
-		<Image
-			src={`${imageSrc}?thumb=${thumbnailWidth}x${thumbnailHeight}`}
-			alt="Thumbnail des Bildes"
-			width={thumbnailWidth}
-			height={thumbnailHeight}
-			imageName="thumbnail von {id}"
-			lazy={false}
-		/>
-	</div>
-</label>
-
-<input type="checkbox" id={`modal-${id}`} class="modal-toggle" bind:value={modalShown} />
-<div class="modal cursor-pointer">
-	<div class="modal-box relative">
-		<label for={`modal-${id}`} class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-		{#if modalShown}
-			<slot />
-		{/if}
-	</div>
-</div>
+{#if $modalStore[0]}
+	<!-- Button -->
+	<button class="btn-icon variant-filled {cButton}" on:click={parent.onClose}>×</button>
+	<!-- Image -->
+	<img
+		src={$modalStore[0]?.image}
+		class={cImage}
+		alt="Example"
+		title="Source: {$modalStore[0]?.meta.source}"
+	/>
+{/if}

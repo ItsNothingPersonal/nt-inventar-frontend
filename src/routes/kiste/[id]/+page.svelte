@@ -2,19 +2,21 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
-	import { DataTable, Image, ImageModalDialog, Input, Select, ToggleButton } from '$lib/components';
+	import { DataTable, Image, Input, Select, ToggleButton } from '$lib/components';
 	import { Label } from '$lib/constants';
 	import { editMode, selectedId } from '$lib/storeClient';
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import type { Gegenstand } from '$lib/types/gegenstand';
 	import { UserRoles } from '$lib/types/userRoles';
-	import { isNullOrUndefined } from '$lib/util';
+	import { getImageURL, isNullOrUndefined } from '$lib/util';
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
+
+	const modalStore = getModalStore();
 
 	$: innerWidth = 0;
 	$: innerHeight = 0;
@@ -56,6 +58,16 @@
 			) ?? false
 		);
 	}
+
+	function modalComponentImage(image: string, source: string): void {
+		const modal: ModalSettings = {
+			type: 'component',
+			component: 'imageModalDialog',
+			image,
+			meta: { source }
+		};
+		modalStore.trigger(modal);
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
@@ -77,24 +89,40 @@
 				{data.kiste?.expand.lagerort.name}
 			</a>
 		</div>
-		<div class="flex flex-row items-baseline gap-x-2 print:hidden">
+		<div class="flex flex-row gap-x-2 print:hidden">
 			<label for={data.kiste?.bild}>
 				<span class="font-bold"> Bild: </span>
 			</label>
-			{#if data.kiste?.bild}
-				<ImageModalDialog
-					id={data.kiste?.bild}
-					imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/kisten/${data.kiste?.id}/${data.kiste?.bild}`}
+			{#if data.kiste.bild}
+				<div
+					role="button"
+					on:click={() => {
+						if (data.kiste.bild) {
+							modalComponentImage(
+								getImageURL('kisten', data.kiste.id, data.kiste.bild, '128x128'),
+								data.kiste?.bild ?? ' K'
+							);
+						}
+					}}
+					on:keyup={() => {
+						if (data.kiste.bild) {
+							modalComponentImage(
+								getImageURL('kisten', data.kiste.id, data.kiste.bild, '128x128'),
+								data.kiste?.bild ?? ' K'
+							);
+						}
+					}}
+					tabindex="0"
 				>
 					<Image
 						imageCollection="kisten"
-						imageName={data.kiste?.bild}
-						itemId={data.kiste?.id}
+						imageName={data.kiste.bild}
+						itemId={data.kiste.id}
 						alt="Modal des Bildes"
-						height={512}
-						width={512}
+						height={48}
+						width={48}
 					/>
-				</ImageModalDialog>
+				</div>
 			{:else}
 				<span>Nicht vorhanden</span>
 			{/if}

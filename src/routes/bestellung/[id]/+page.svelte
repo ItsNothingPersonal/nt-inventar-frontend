@@ -8,12 +8,7 @@
 
 	export let data: PageData;
 
-	let loading: boolean;
-	$: loading = false;
-
 	const submitEnhance = () => {
-		loading = true;
-
 		return async ({ result }: { result: ActionResult }) => {
 			switch (result.type) {
 				case 'success':
@@ -25,7 +20,6 @@
 					applyAction(result);
 					break;
 			}
-			loading = false;
 		};
 	};
 </script>
