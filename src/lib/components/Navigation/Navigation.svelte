@@ -50,7 +50,9 @@
 							</li>
 							<li>
 								<form action="/logout" method="post">
-									<button type="submit" on:click={drawerClose} class="!rounded-none">Logout</button>
+									<button type="submit" on:click={drawerClose} class="!rounded-none w-full">
+										Logout
+									</button>
 								</form>
 							</li>
 						</ul>
