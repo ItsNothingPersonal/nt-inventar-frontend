@@ -26,6 +26,9 @@
 			<a href="/register" role="button" class="btn variant-filled-secondary rounded-none">
 				Registrieren
 			</a>
+			<a href="/impressum" role="button" class="btn variant-filled-tertiary rounded-none">
+				Impressum
+			</a>
 		</div>
 	</div>
 </div>
