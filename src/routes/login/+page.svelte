@@ -99,9 +99,13 @@
 				<div class="items-center text-center">
 					<span class="text-sm font-black pb-4"> oder nutze einen der folgenden Logins... </span>
 
-					<div class="justify-center text-center">
+					<div class="justify-center text-center flex flex-col gap-2">
 						{#each data.authProviders as p}
-							<button type="button" class="btn variant-filled" on:click={() => gotoAuthProvider(p)}>
+							<button
+								type="button"
+								class="btn variant-filled rounded-none"
+								on:click={() => gotoAuthProvider(p)}
+							>
 								<span>
 									<img
 										alt={p.name}
