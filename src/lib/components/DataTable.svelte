@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { ModalSettings } from '@skeletonlabs/skeleton';
+
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	import { PUBLIC_PB_BASE_URL } from '$env/static/public';
 	import { Label } from '$lib/constants';
 	import { editMode, selectedId } from '$lib/storeClient';
 	import type { Bestellung } from '$lib/types/bestellung';
@@ -10,23 +11,23 @@
 	import type { NestedKeyOf } from '$lib/types/nestedKeyOf';
 	import type { PBUser } from '$lib/types/user';
 	import { UserRoles } from '$lib/types/userRoles';
-	import { isNotNullOrUndefined, isNullOrUndefined, startCsvDownload } from '$lib/util';
+	import {
+		getImageURL,
+		isNotNullOrUndefined,
+		isNullOrUndefined,
+		startCsvDownload
+	} from '$lib/util';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { get as lget } from 'lodash-es';
 	import { afterUpdate, onMount } from 'svelte';
-	import {
-		DownloadIcon,
-		EditIcon,
-		MinusSquareIcon,
-		PlusSquareIcon,
-		SkipBackIcon,
-		XIcon
-	} from 'svelte-feather-icons';
 	import { writable, type Writable } from 'svelte/store';
-	import { Button, Image, ImageModalDialog, Modal, ModalTriggerButton, ToggleButton } from '.';
+	import { Button, Modal, ModalTriggerButton, ToggleButton } from '.';
 	import type { DBField } from '../types/dataField';
+	import Image from './Image.svelte';
 	import SortArrow from './SortArrow.svelte';
 
+	// eslint-disable-next-line no-undef
 	type T = $$Generic;
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +49,7 @@
 	export let enableReset: boolean = false;
 	export let initialSortField: string | undefined = undefined;
 
+	const modalStore = getModalStore();
 	let dataStore: Writable<T[]> = writable([]);
 	let sortStore: Writable<{ field: string; sort: 'asc' | 'desc' }> = writable({
 		field: '',
@@ -57,9 +59,6 @@
 	let headerToFieldValueStore: Writable<Map<string, NestedKeyOf<T>>> = writable(
 		new Map<string, NestedKeyOf<T>>()
 	);
-
-	let tableHeaders: string[];
-	$: tableHeaders = [];
 
 	onMount(() => {
 		dataStore.set(data);
@@ -114,7 +113,7 @@
 		);
 	}
 
-	function alreadyOrdered(id: string | any, projectId: string | undefined): boolean {
+	function alreadyOrdered(id: string, projectId: string | undefined): boolean {
 		if (isNullOrUndefined(projectId)) return false;
 
 		return (
@@ -165,35 +164,44 @@
 	function getToString(dataRow: T, field: string): string {
 		return lget(dataRow, field) as string;
 	}
+
+	function modalComponentImage(image: string, source: string): void {
+		const modal: ModalSettings = {
+			type: 'component',
+			component: 'imageModalDialog',
+			image,
+			meta: { source }
+		};
+		modalStore.trigger(modal);
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
-
-<div class="relative overflow-x-auto shadow-md print:shadow-none sm:rounded-lg mt-4">
+<div class="table-container shadow-md print:shadow-none my-4">
 	{#if $editMode === true}
 		<div class="pb-4 print:hidden flex flex-row items-center gap-2">
 			{#if user?.role === UserRoles.INVENTARIST && !disableEdit}
 				<Modal label="create-button" checked={modalOpen}>
-					<ModalTriggerButton slot="trigger" label="Neu" icon={PlusSquareIcon} />
+					<ModalTriggerButton slot="trigger" label="Neu" icon="ic:baseline-plus" />
 					<h3 slot="heading">{textHeadingNeu}</h3>
 					<slot name="formNeu" />
 				</Modal>
 				<Button
 					form="massDeleteForm"
 					label="Massen-Löschen"
-					icon={XIcon}
+					icon="material-symbols:delete"
 					isSecondary={true}
 					type="submit"
 				/>
 			{/if}
 			{#if user?.role === UserRoles.INVENTARIST && enableReset}
 				<Modal label="reset-button" checked={modalOpen}>
-					<ModalTriggerButton slot="trigger" label="Reset" icon={SkipBackIcon} />
+					<ModalTriggerButton slot="trigger" label="Reset" icon="material-symbols:arrow-back" />
 					<h3 slot="heading">{textHeadingReset}</h3>
 					<slot name="formReset" />
 				</Modal>
 			{/if}
-			<Button label="CSV-Download" onClick={download} icon={DownloadIcon} />
+			<Button label="CSV-Download" onClick={download} icon="material-symbols:cloud-download" />
 			<form
 				method="post"
 				action="?/delete"
@@ -207,7 +215,7 @@
 			</form>
 		</div>
 	{/if}
-	<table class="table table-zebra print:table-compact w-full">
+	<table class="table table-hover print:table-compact">
 		<thead>
 			<tr>
 				{#if $editMode === true}
@@ -241,7 +249,7 @@
 									<ModalTriggerButton
 										slot="trigger"
 										label="Aktualisieren"
-										icon={EditIcon}
+										icon="material-symbols:edit-document-outline"
 										onClick={() => selectedId.set(`${lget(dataRow, 'id')}`)}
 										onKeyDown={() => selectedId.set(`${lget(dataRow, 'id')}`)}
 									/>
@@ -251,7 +259,7 @@
 								<Button
 									label="Löschen"
 									form="singleDeleteForm{lget(dataRow, 'id')}"
-									icon={XIcon}
+									icon="material-symbols:delete"
 									type="submit"
 								/>
 								<form
@@ -278,17 +286,17 @@
 							<td class="print:hidden">
 								<ToggleButton
 									id="buttonOrder{lget(dataRow, 'id')}"
-									toggled={alreadyOrdered(lget(dataRow, 'id', 'test'), userProject)}
+									toggled={alreadyOrdered(String(lget(dataRow, 'id', 'test')), userProject)}
 									isMobile={innerWidth <= BreakPoints.Large}
 									disabled={disableSubComponents}
 									labelNotToggled={{
 										desktop: Label.BESTELLEN,
-										mobile: PlusSquareIcon,
+										mobile: 'ic:baseline-plus',
 										form: `order-${lget(dataRow, 'id')}`
 									}}
 									labelToggled={{
 										desktop: Label.BESTELLT,
-										mobile: MinusSquareIcon,
+										mobile: 'ic:baseline-plus',
 										form: `order-remove-${lget(dataRow, 'id')}`
 									}}
 								/>
@@ -336,22 +344,39 @@
 						{:else if dataField.isImage}
 							<td>
 								{#if lget(dataRow, dataField.value)}
-									<ImageModalDialog
-										id={getToString(dataRow, dataField.value)}
-										imageSrc={`${PUBLIC_PB_BASE_URL}/api/files/${lget(
-											dataRow,
-											'collectionName'
-										)}/${lget(dataRow, 'id')}/${lget(dataRow, dataField.value)}`}
+									<div
+										role="button"
+										on:click={() =>
+											modalComponentImage(
+												getImageURL(
+													String(lget(dataRow, 'collectionName')),
+													String(lget(dataRow, 'id')),
+													String(lget(dataRow, dataField.value)),
+													'128x128'
+												),
+												String(lget(dataRow, dataField.value))
+											)}
+										on:keyup={() =>
+											modalComponentImage(
+												getImageURL(
+													String(lget(dataRow, 'collectionName')),
+													String(lget(dataRow, 'id')),
+													String(lget(dataRow, dataField.value)),
+													'128x128'
+												),
+												String(lget(dataRow, dataField.value))
+											)}
+										tabindex="0"
 									>
 										<Image
 											imageCollection={getToString(dataRow, 'collectionName')}
 											imageName={getToString(dataRow, dataField.value)}
 											itemId={getToString(dataRow, 'id')}
 											alt="Modal des Bildes"
-											height={512}
-											width={512}
+											height={48}
+											width={48}
 										/>
-									</ImageModalDialog>
+									</div>
 								{:else}
 									<span class="w-12 h-12"> n/a </span>
 								{/if}

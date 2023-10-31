@@ -2,50 +2,13 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { Image, Input } from '$lib/components';
-	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte';
 	import { getImageURL, isNotNullOrUndefined } from '$lib/util';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { EditIcon } from 'svelte-feather-icons';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	let loading: boolean;
 	$: loading = false;
-
-	let themeSelected: string;
-	$: themeSelected = data.user?.theme ?? 'dark';
-
-	const possibleThemes = [
-		'light',
-		'dark',
-		'cupcake',
-		'bumblebee',
-		'emerald',
-		'corporate',
-		'synthwave',
-		'retro',
-		'cyberpunk',
-		'valentine',
-		'halloween',
-		'garden',
-		'forest',
-		'aqua',
-		'lofi',
-		'pastel',
-		'fantasy',
-		'wireframe',
-		'black',
-		'luxury',
-		'dracula',
-		'cmyk',
-		'autumn',
-		'business',
-		'acid',
-		'lemonade',
-		'night',
-		'coffee',
-		'winter'
-	];
 
 	const showPreview = (event: Event) => {
 		const target = event.target as HTMLInputElement;
@@ -96,7 +59,7 @@
 			<label for="avatar" class="avatar w-32 rounded-full hover:cursor-pointer">
 				<label for="avatar" class="absolute -bottom-0.5 -right-0.5 hover:cursor-pointer">
 					<span class="btn btn-circle btn-sm btn-secondary w-8 h-8">
-						<EditIcon />
+						<iconify-icon icon="material-symbols:edit-document-outline"></iconify-icon>
 					</span>
 				</label>
 				<div class="w-32 rounded-full">
@@ -111,12 +74,6 @@
 					/>
 				</div>
 			</label>
-			<ThemeSwitch
-				bind:value={themeSelected}
-				id={'theme'}
-				options={possibleThemes}
-				preselected={themeSelected}
-			/>
 			<Input
 				type="file"
 				id="avatar"

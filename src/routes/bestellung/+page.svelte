@@ -10,9 +10,6 @@
 	let loading: boolean;
 	$: loading = false;
 
-	let checked: boolean;
-	$: checked = false;
-
 	const submitEnhance = () => {
 		loading = true;
 

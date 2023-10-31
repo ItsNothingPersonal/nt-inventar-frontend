@@ -6,7 +6,7 @@
 	export let disabled: boolean = false;
 	export let form: string | undefined = undefined;
 	export let type: 'submit' | 'button' | 'reset' | undefined = 'button';
-	export let icon: ConstructorOfATypedSvelteComponent | undefined = undefined;
+	export let icon: string | undefined = undefined;
 	export let onClick: (() => void) | undefined = undefined;
 	export let onKeyDown: (() => void) | undefined = undefined;
 	export let isSecondary: boolean = false;
@@ -28,7 +28,7 @@
 	on:keydown={onKeyDown}
 >
 	{#if innerWidth <= BreakPoints.Large && isNotNullOrUndefined(icon)}
-		<svelte:component this={icon} />
+		<iconify-icon {icon}></iconify-icon>
 	{:else}
 		{label}
 	{/if}
