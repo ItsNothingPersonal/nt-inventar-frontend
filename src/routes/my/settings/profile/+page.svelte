@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { Image, Input } from '$lib/components';
+	import { Input } from '$lib/components';
+	import Button from '$lib/components/Button/Button.svelte';
 	import { getImageURL, isNotNullOrUndefined } from '$lib/util';
+	import Icon from '@iconify/svelte';
+	import { Avatar } from '@skeletonlabs/skeleton';
 	import type { ActionResult } from '@sveltejs/kit';
 	import type { PageData } from './$types';
 
@@ -12,6 +15,7 @@
 
 	const showPreview = (event: Event) => {
 		const target = event.target as HTMLInputElement;
+		console.warn(target.files);
 		const files = target?.files;
 
 		if (isNotNullOrUndefined(files) && files.length > 0) {
@@ -40,61 +44,49 @@
 	};
 </script>
 
-<div class="flex flex-col w-full h-full">
-	<form
-		action="?/updateProfile"
-		method="post"
-		class="flex flex-col space-y-2 w-full"
-		enctype="multipart/form-data"
-		use:enhance={submitUpdateProfile}
-	>
-		<div class="w-full">
-			<h3 class="text-2xl font-medium"><h3 class="text-2xl">Profil</h3></h3>
-			<div class="divider" />
-		</div>
-		<div class="form-control w-full max-w-lg">
-			<label for="avatar" class="label font-medium pb-1">
-				<span class="label-text"> Profil Bild </span>
-			</label>
-			<label for="avatar" class="avatar w-32 rounded-full hover:cursor-pointer">
-				<label for="avatar" class="absolute -bottom-0.5 -right-0.5 hover:cursor-pointer">
-					<span class="btn btn-circle btn-sm btn-secondary w-8 h-8">
-						<iconify-icon icon="material-symbols:edit-document-outline"></iconify-icon>
-					</span>
-				</label>
-				<div class="w-32 rounded-full">
-					<Image
-						src={data.user?.avatar
-							? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '128x128')
-							: `https://ui-avatars.com/api/?name=${data.user?.name}`}
-						alt="user avatar"
-						imageName="avatar-preview"
-						height={128}
-						width={128}
-					/>
-				</div>
-			</label>
-			<Input
-				type="file"
-				id="avatar"
-				value=""
-				accept="image/*"
-				onChange={showPreview}
-				disabled={loading}
-				hidden
-			/>
-		</div>
-		<Input id="name" label="Name" value={data?.user?.name} disabled={loading} />
-		<div class="w-full max-w-lg pt-3">
-			<button class="btn btn-primary w-full max-w-lg" type="submit" disabled={loading}>
-				Profil aktualisieren
-			</button>
-		</div>
-	</form>
-	<div class="divider" />
-	<Input id="rolle" label="Rolle" value={data?.user?.role} disabled={true} />
+<h3 class="text-2xl font-medium">Profil</h3>
+<hr class="mb-2" />
 
-	{#if data.projekt?.name}
-		<Input id="projekt" label="Projekt" value={data.projekt?.name} disabled={true} />
-	{/if}
-</div>
+<form
+	action="?/updateProfile"
+	method="post"
+	enctype="multipart/form-data"
+	use:enhance={submitUpdateProfile}
+	class="mb-4"
+>
+	<label for="avatar" class="label font-medium pb-1"> Profil Bild </label>
+	<div class="relative max-w-[128px] group">
+		<label
+			for="avatar"
+			class="absolute bottom-0 left-20 hover:cursor-pointer w-32 z-10 mix-blend-hard-light text-primary-500"
+		>
+			<Icon icon="material-symbols:edit-document-outline" width={32} />
+		</label>
+		<Avatar
+			src={data.user
+				? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '128x128')
+				: undefined}
+			initials={data.user?.username.slice(0, 2)}
+			id="img-avatar-preview"
+			width="w-32"
+			rounded="rounded-full"
+		/>
+	</div>
+	<Input
+		type="file"
+		id="avatar"
+		value=""
+		accept="image/*"
+		onChange={showPreview}
+		disabled={loading}
+		hidden
+	/>
+
+	<Input id="name" label="Name" value={data?.user?.name} disabled={loading} />
+	<Button type="submit" disabled={loading}>Profil aktualisieren</Button>
+</form>
+
+<Input id="rolle" label="Rolle" value={data?.user?.role} disabled={true} />
+{#if data.projekt?.name}
+	<Input id="projekt" label="Projekt" value={data.projekt?.name} disabled={true} />
+{/if}

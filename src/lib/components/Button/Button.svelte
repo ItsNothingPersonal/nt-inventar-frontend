@@ -1,35 +1,37 @@
 <script lang="ts">
 	import { BreakPoints } from '$lib/types/breakpoints';
 	import { isNotNullOrUndefined } from '$lib/util';
+	import Icon from '@iconify/svelte';
 
-	export let label: string;
 	export let disabled: boolean = false;
 	export let form: string | undefined = undefined;
 	export let type: 'submit' | 'button' | 'reset' | undefined = 'button';
 	export let icon: string | undefined = undefined;
 	export let onClick: (() => void) | undefined = undefined;
 	export let onKeyDown: (() => void) | undefined = undefined;
-	export let isSecondary: boolean = false;
-	export let fullWidth: boolean = false;
+	export let style: 'primary' | 'secondary' | 'tertiary' = 'primary';
 
 	$: innerWidth = 0;
-	$: innerHeight = 0;
+	$: buttonStyle =
+		style === 'primary'
+			? 'variant-filled-primary'
+			: style === 'secondary'
+			? 'variant-filled-secondary'
+			: 'variant-filled-tertiary';
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
+<svelte:window bind:innerWidth />
 <button
 	{type}
-	class="btn {isSecondary ? 'btn-secondary' : 'btn-primary'} {fullWidth
-		? 'w-full'
-		: ''} {innerWidth <= BreakPoints.Large ? 'btn-square' : ''}"
 	{disabled}
 	{form}
+	class="btn {buttonStyle} rounded-none w-full max-w-md"
 	on:click={onClick}
-	on:keydown={onKeyDown}
+	on:keydown={isNotNullOrUndefined(onKeyDown) ? onKeyDown : onClick}
 >
 	{#if innerWidth <= BreakPoints.Large && isNotNullOrUndefined(icon)}
-		<iconify-icon {icon}></iconify-icon>
+		<Icon {icon} />
 	{:else}
-		{label}
+		<slot />
 	{/if}
 </button>

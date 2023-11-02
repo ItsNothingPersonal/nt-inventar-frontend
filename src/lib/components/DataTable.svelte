@@ -188,11 +188,12 @@
 				</Modal>
 				<Button
 					form="massDeleteForm"
-					label="Massen-Löschen"
 					icon="material-symbols:delete"
-					isSecondary={true}
+					style="secondary"
 					type="submit"
-				/>
+				>
+					Massen-Löschen
+				</Button>
 			{/if}
 			{#if user?.role === UserRoles.INVENTARIST && enableReset}
 				<Modal label="reset-button" checked={modalOpen}>
@@ -201,7 +202,7 @@
 					<slot name="formReset" />
 				</Modal>
 			{/if}
-			<Button label="CSV-Download" onClick={download} icon="material-symbols:cloud-download" />
+			<Button onClick={download} icon="material-symbols:cloud-download">CSV-Download</Button>
 			<form
 				method="post"
 				action="?/delete"
@@ -257,11 +258,12 @@
 									<slot name="formAktualisieren" />
 								</Modal>
 								<Button
-									label="Löschen"
 									form="singleDeleteForm{lget(dataRow, 'id')}"
 									icon="material-symbols:delete"
 									type="submit"
-								/>
+								>
+									Löschen
+								</Button>
 								<form
 									method="post"
 									action="?/delete"
