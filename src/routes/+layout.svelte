@@ -50,7 +50,7 @@
 </Drawer>
 <AppShell slotSidebarLeft="bg-surface-500/5 {classesSidebar}" slotPageContent="px-2">
 	<svelte:fragment slot="header">
-		<AppBar>
+		<AppBar class="print:hidden">
 			<svelte:fragment slot="lead">
 				<div class="flex items-center">
 					<button class="lg:hidden btn btn-sm mr-4" on:click={drawerOpen}>
