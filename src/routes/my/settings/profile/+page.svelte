@@ -13,17 +13,14 @@
 	let loading: boolean;
 	$: loading = false;
 
+	let previewUrl: string | undefined = undefined;
+
 	const showPreview = (event: Event) => {
 		const target = event.target as HTMLInputElement;
-		console.warn(target.files);
 		const files = target?.files;
 
 		if (isNotNullOrUndefined(files) && files.length > 0) {
-			const src = URL.createObjectURL(files[0]);
-			const preview: HTMLElement | null = document.getElementById('img-avatar-preview');
-			if (isNotNullOrUndefined(preview)) {
-				(preview as HTMLImageElement).src = src;
-			}
+			previewUrl = URL.createObjectURL(files[0]);
 		}
 	};
 
@@ -33,6 +30,7 @@
 			switch (result.type) {
 				case 'success':
 					await invalidateAll();
+					previewUrl = undefined;
 					break;
 				case 'error':
 					break;
@@ -63,11 +61,12 @@
 			<Icon icon="material-symbols:edit-document-outline" width={32} />
 		</label>
 		<Avatar
-			src={data.user
+			src={previewUrl
+				? previewUrl
+				: data.user && data.user.avatar.length > 0
 				? getImageURL(data.user.collectionId, data.user.id, data.user.avatar, '128x128')
 				: undefined}
 			initials={data.user?.username.slice(0, 2)}
-			id="img-avatar-preview"
 			width="w-32"
 			rounded="rounded-full"
 		/>
@@ -75,7 +74,6 @@
 	<Input
 		type="file"
 		id="avatar"
-		value=""
 		accept="image/*"
 		onChange={showPreview}
 		disabled={loading}
