@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { PBUser } from '$lib/types/user';
 	import { UserRoles } from '$lib/types/userRoles';
 	import { getImageURL } from '$lib/util';
@@ -31,7 +32,7 @@
 		{#if user}
 			<hr />
 			<Accordion rounded="!rounded-none">
-				<AccordionItem>
+				<AccordionItem on:click={() => goto('/my/settings/profile')}>
 					<svelte:fragment slot="lead">
 						<Avatar
 							src={getImageURL(user.collectionId, user.id, user.avatar, '48x48')}
@@ -45,8 +46,19 @@
 					<svelte:fragment slot="content">
 						<ul tabindex="-1">
 							<li>
-								<a href="/my/settings" on:click={drawerClose} class="!rounded-none">Einstellungen</a
-								>
+								<a href="/my/settings/profile" on:click={drawerClose} class="!rounded-none">
+									Profil
+								</a>
+							</li>
+							<li>
+								<a href="/my/settings/account" on:click={drawerClose} class="!rounded-none">
+									Account
+								</a>
+							</li>
+							<li>
+								<a href="/my/settings/security" on:click={drawerClose} class="!rounded-none">
+									Sicherheit
+								</a>
 							</li>
 							<li>
 								<form action="/logout" method="post">

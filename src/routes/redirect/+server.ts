@@ -49,5 +49,5 @@ export const GET: RequestHandler = async ({ locals, url, cookies }: RequestEvent
 	}
 
 	// Protected route
-	throw redirect(303, '/my/settings/profile');
+	throw redirect(303, '/');
 };

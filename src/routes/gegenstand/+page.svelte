@@ -91,7 +91,7 @@
 			cssClass="file-input file-input-bordered w-full max-w-lg"
 		/>
 
-		<Button label="Anlegen" disabled={loading} type="submit" fullWidth={true} />
+		<Button disabled={loading} type="submit">Anlegen</Button>
 	</form>
 	<form
 		action="?/update"
@@ -145,6 +145,6 @@
 			cssClass="file-input file-input-bordered w-full max-w-lg"
 		/>
 
-		<Button label="Aktualisieren" disabled={loading} type="submit" fullWidth={true} />
+		<Button disabled={loading} type="submit">Aktualisieren</Button>
 	</form>
 </DataTable>
